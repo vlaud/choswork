@@ -13,7 +13,6 @@ public class SpringArms : CameraProperty
     public CameraSet myFPSCam;
     public CameraSet myTPSCam;
     public CameraSet myUICam;
-
     void ChangeState(ViewState s)
     {
         if (myCameraState == s) return;
@@ -25,6 +24,7 @@ public class SpringArms : CameraProperty
                 break;
             case ViewState.FPS:
                 SelectCamera(myFPSCam);
+                myTPSCam = CopyPaste(myTPSCam, myFPSCam);
                 break;
             case ViewState.TPS:
                 SelectCamera(myTPSCam);
@@ -49,7 +49,7 @@ public class SpringArms : CameraProperty
                 ChangeState(ViewState.TPS);
             }
         }
-        myFPSCam = SpringArmWork(myFPSCam);
+
         myTPSCam = SpringArmWork(myTPSCam);
         MouseWheelMove();
         switch (myCameraState)
@@ -57,9 +57,10 @@ public class SpringArms : CameraProperty
             case ViewState.Create:
                 break;
             case ViewState.FPS:
-               
+                myFPSCam = SpringArmWork(myFPSCam);
                 break;
             case ViewState.TPS:
+                
                 break;
             case ViewState.UI:
                 break;
@@ -74,7 +75,17 @@ public class SpringArms : CameraProperty
 
         return set;
     }
+    public CameraSet CopyPaste(CameraSet origin, CameraSet copy)
+    {
+        CameraSet set = origin;
 
+        set.myRig.localRotation = Quaternion.Euler(copy.curRot.x, 0, 0);
+        set.myRig.parent.localRotation = Quaternion.Euler(0, copy.curRot.y, 0);
+        set.curRot.x = copy.curRot.x;
+        set.curRot.y = copy.curRot.y;
+
+        return set;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -90,13 +101,16 @@ public class SpringArms : CameraProperty
     public CameraSet SpringArmWork(CameraSet s)
     {
         CameraSet set = s;
+        if (Input.GetMouseButton(1))
+        {
+            set.curRot.x -= Input.GetAxisRaw("Mouse Y") * LookupSpeed;
+            set.curRot.x = Mathf.Clamp(set.curRot.x, LookupRange.x, LookupRange.y);
 
-        set.curRot.x -= Input.GetAxisRaw("Mouse Y") * LookupSpeed;
-        set.curRot.x = Mathf.Clamp(set.curRot.x, LookupRange.x, LookupRange.y);
-
-        set.curRot.y += Input.GetAxisRaw("Mouse X") * LookupSpeed;
-        set.myRig.localRotation = Quaternion.Euler(set.curRot.x, 0, 0);
-        set.myRig.parent.localRotation = Quaternion.Euler(0, set.curRot.y, 0);
+            set.curRot.y += Input.GetAxisRaw("Mouse X") * LookupSpeed;
+            set.myRig.localRotation = Quaternion.Euler(set.curRot.x, 0, 0);
+            set.myRig.parent.localRotation = Quaternion.Euler(0, set.curRot.y, 0);
+        }
+           
 
         return set;
     }
@@ -123,7 +137,6 @@ public class SpringArms : CameraProperty
     void Update()
     {
         StateProcess();
-
         if (Input.GetKeyDown(KeyCode.V))
         {
             IsFps = Toggling(IsFps);

@@ -12,7 +12,6 @@ public struct CameraSet
 }
 public class CameraProperty : MonoBehaviour
 {
-    public CameraSet myCamset;
     public LayerMask crashMask;
     public Vector2 LookupRange = new Vector2(-60.0f, 80.0f);
     public Vector3 curRot = Vector3.zero;
