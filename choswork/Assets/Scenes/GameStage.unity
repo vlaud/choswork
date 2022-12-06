@@ -1832,7 +1832,7 @@ GameObject:
   - component: {fileID: 722393793}
   - component: {fileID: 722393792}
   m_Layer: 3
-  m_Name: GameObject
+  m_Name: Volume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2624,7 +2624,7 @@ MonoBehaviour:
   myStat:
     hp: 0
     maxHp: 0
-    moveSpeed: 0
+    moveSpeed: 1
     rotSpeed: 0
     ap: 0
     attackRange: 0
@@ -8563,7 +8563,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 901346ba945cd1d4ca1ff5a329e2e152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DontMove: 1
+  DontMove: 0
+  myPlayer: {fileID: 910030834}
 --- !u!1 &5869553146858574636
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,7 @@ using UnityEngine;
 public class RootMotion : MonoBehaviour
 {
     public bool DontMove = false;
+    public Transform myPlayer;
     Vector3 deltaPosition = Vector3.zero;
     Quaternion deltaRotation = Quaternion.identity;
     
@@ -12,9 +13,9 @@ public class RootMotion : MonoBehaviour
     private void FixedUpdate()
     {
         if (DontMove) return;
-        transform.parent.Translate(deltaPosition, Space.World);
+        myPlayer.Translate(deltaPosition, Space.World);
         deltaPosition = Vector3.zero;
-        transform.parent.rotation *= deltaRotation;
+        myPlayer.rotation *= deltaRotation;
         deltaRotation = Quaternion.identity;
     }
     private void OnAnimatorMove()
