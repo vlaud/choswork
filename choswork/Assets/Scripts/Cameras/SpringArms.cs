@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpringArms : MonoBehaviour
+public class SpringArms : CameraProperty
 {
     public enum ViewState
     {
@@ -13,17 +13,6 @@ public class SpringArms : MonoBehaviour
     public CameraSet myFPSCam;
     public CameraSet myTPSCam;
     public CameraSet myUICam;
-    public Vector2 LookupRange = new Vector2(-60.0f, 80.0f);
-    public float LookupSpeed = 10.0f;
-    public float ZoomSpeed = 3.0f;
-    public float Offset = 0.1f;
-    public Vector3 curRot = Vector3.zero;
-    public Vector3 camPos = Vector3.zero;
-    public Vector2 ZoomRange = new Vector2(-4, -0.8f);
-    public LayerMask crashMask;
-    public bool IsFps = true;
-    public bool IsUI = false;
-    public float desireDistance = 0.0f;
 
     void ChangeState(ViewState s)
     {

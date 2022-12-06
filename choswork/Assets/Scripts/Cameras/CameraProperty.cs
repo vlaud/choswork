@@ -13,16 +13,16 @@ public struct CameraSet
 public class CameraProperty : MonoBehaviour
 {
     public CameraSet myCamset;
+    public LayerMask crashMask;
     public Vector2 LookupRange = new Vector2(-60.0f, 80.0f);
+    public Vector3 curRot = Vector3.zero;
+    public Vector3 camPos = Vector3.zero;
+    public Vector2 ZoomRange = new Vector2(-4, -0.8f);
     public float LookupSpeed = 10.0f;
     public float ZoomSpeed = 3.0f;
     public float Offset = 0.5f;
-    protected Vector3 curRot = Vector3.zero;
-    protected Vector3 camPos = Vector3.zero;
-    public Vector2 ZoomRange = new Vector2(-4, -0.8f);
-    public LayerMask crashMask;
+    public float desireDistance = 0.0f;
     public bool IsFps = true;
     public bool IsUI = false;
-    protected float desireDistance = 0.0f;
-    protected float wheelInput = 0.0f;
+   
 }
