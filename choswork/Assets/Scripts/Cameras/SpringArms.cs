@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class SpringArms : CameraProperty
@@ -18,7 +19,7 @@ public class SpringArms : CameraProperty
     {
         if (myCameraState == s) return;
         myCameraState = s;
-
+        
         switch (myCameraState)
         {
             case ViewState.Create:
@@ -61,11 +62,71 @@ public class SpringArms : CameraProperty
                 myFPSCam = SpringArmWork(myFPSCam);
                 break;
             case ViewState.TPS:
-                
+                if (Input.GetKey(KeyCode.W))
+                {
+                    RotatingRoot(mySpring);
+                }
+                /*
+                if (Input.GetKeyDown(KeyCode.W))
+                {
+                    StartCoroutine(RotatingDownUP(mySpring));
+                }*/
                 break;
             case ViewState.UI:
                 break;
         }
+    }
+    IEnumerator RotatingDownUP(Transform tr)
+    {
+        Vector3 dir = tr.forward;
+        float Angle = Vector3.Angle(myFPSCam.myRig.forward, dir);
+        float rotDir = 1.0f;
+        if (Vector3.Dot(myFPSCam.myRig.up, dir) < 0.0f)
+        {
+            rotDir = -rotDir;
+        }
+        while (Angle > 0.0f)
+        {
+            float delta = myRotSpeed * Time.deltaTime;
+
+            if (delta > Angle)
+            {
+                delta = Angle;
+            }
+
+            Angle -= delta;
+
+            myRoot.Rotate(Vector3.up * delta * rotDir, Space.World);
+            yield return null;
+        }
+        myFPSCam = CopyPaste(myFPSCam, myTPSCam);
+    }
+    void RotatingRoot(Transform tr)
+    {
+        Vector3 dir = tr.forward;
+        float Angle = Vector3.Angle(myRoot.forward, dir);
+        float rotDir = 1.0f;
+        if (Vector3.Dot(myRoot.right, dir) < 0.0f)
+        {
+            rotDir = -rotDir;
+        }
+        if (Angle > 0.0f)
+        {
+            float delta = myRotSpeed * Time.deltaTime;
+
+            if (delta > Angle)
+            {
+                delta = Angle;
+            }
+
+            Angle -= delta;
+
+            myRoot.Rotate(Vector3.up * delta * rotDir, Space.World);
+        }
+        myFPSCam.curRot.x = myFPSCam.myRig.localRotation.eulerAngles.x;
+        myFPSCam.curRot.y = myFPSCam.myRig.parent.localRotation.eulerAngles.y;
+        myFPSCam = CopyCurRot(myFPSCam, myFPSCam);
+        //myFPSCam = CopyPaste(myFPSCam, myTPSCam);
     }
     public CameraSet CameraSetting(CameraSet s)
     {
@@ -76,14 +137,22 @@ public class SpringArms : CameraProperty
 
         return set;
     }
+    public CameraSet CopyCurRot(CameraSet origin, CameraSet copy)
+    {
+        CameraSet set = origin;
+
+        set.curRot.x = copy.curRot.x;
+        set.curRot.y = copy.curRot.y;
+
+        return set;
+    }
     public CameraSet CopyPaste(CameraSet origin, CameraSet copy)
     {
         CameraSet set = origin;
 
         set.myRig.localRotation = Quaternion.Euler(copy.curRot.x, 0, 0);
         set.myRig.parent.localRotation = Quaternion.Euler(0, copy.curRot.y, 0);
-        set.curRot.x = copy.curRot.x;
-        set.curRot.y = copy.curRot.y;
+        set = CopyCurRot(set, copy);
 
         return set;
     }

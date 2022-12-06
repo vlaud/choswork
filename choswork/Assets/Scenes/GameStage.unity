@@ -2625,12 +2625,12 @@ MonoBehaviour:
     hp: 0
     maxHp: 0
     moveSpeed: 1
-    rotSpeed: 0
+    rotSpeed: 360
     ap: 0
     attackRange: 0
     attackDelay: 0
   smoothMoveSpeed: 10
-  myRoot: {fileID: 1673519384}
+  myCameras: {fileID: 1196819678}
 --- !u!1 &911326293 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 6468c9a8e17142b4ca0f0ec3570361ee, type: 3}
@@ -3583,6 +3583,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69b7ee58c5777a147bdbcd9c4e0bb0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myRoot: {fileID: 396468081}
+  mySpring: {fileID: 1413976527}
   crashMask:
     serializedVersion: 2
     m_Bits: 128
@@ -3594,6 +3596,7 @@ MonoBehaviour:
   ZoomSpeed: 3
   Offset: 0.1
   desireDistance: 0
+  myRotSpeed: 360
   IsFps: 1
   IsUI: 0
   myCameraState: 0

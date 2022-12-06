@@ -15,6 +15,15 @@ public class CharacterMovement : CharacterProperty
         StopAllCoroutines();
         attackCo = StartCoroutine(AttackT(target, myStat.AttackRange, myStat.AttackDelay));
     }
+    protected void RotateToTarget(Vector3 pos, UnityAction done = null)
+    {
+        if (CoroutineAngle != null)
+        {
+            StopCoroutine(CoroutineAngle);
+            CoroutineAngle = null;
+        }
+        CoroutineAngle = StartCoroutine(RotatingToPosition(pos));
+    }
     protected void MoveToPosition(Vector3 pos, Vector2 desireAnim, UnityAction done = null, bool Rot = true)
     {
         if(attackCo != null)
