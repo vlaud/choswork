@@ -13,6 +13,7 @@ public class SpringArms : CameraProperty
     public CameraSet myFPSCam;
     public CameraSet myTPSCam;
     public CameraSet myUICam;
+    public Transform myEyes;
     void ChangeState(ViewState s)
     {
         if (myCameraState == s) return;
@@ -98,6 +99,22 @@ public class SpringArms : CameraProperty
         AllCameraOff();
         ChangeState(ViewState.FPS);
     }
+    // Update is called once per frame
+    void Update()
+    {
+        myFPSCam.myCam.GetComponent<Transform>().position = myEyes.position;
+        StateProcess();
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            IsFps = Toggling(IsFps);
+            Debug.Log(IsFps);
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            IsUI = Toggling(IsUI);
+            Debug.Log(IsUI);
+        }
+    }
     public CameraSet SpringArmWork(CameraSet s)
     {
         CameraSet set = s;
@@ -110,8 +127,6 @@ public class SpringArms : CameraProperty
             set.myRig.localRotation = Quaternion.Euler(set.curRot.x, 0, 0);
             set.myRig.parent.localRotation = Quaternion.Euler(0, set.curRot.y, 0);
         }
-           
-
         return set;
     }
 
@@ -132,21 +147,6 @@ public class SpringArms : CameraProperty
             camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.deltaTime * 3.0f);
         }
         myTPSCam.myCam.GetComponent<Transform>().localPosition = camPos;
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        StateProcess();
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            IsFps = Toggling(IsFps);
-            Debug.Log(IsFps);
-        }
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            IsUI = Toggling(IsUI);
-            Debug.Log(IsUI);
-        }
     }
     void SelectCamera(CameraSet cam)
     {
