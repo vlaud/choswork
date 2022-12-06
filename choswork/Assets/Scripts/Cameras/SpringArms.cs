@@ -16,15 +16,14 @@ public class SpringArms : MonoBehaviour
     public Vector2 LookupRange = new Vector2(-60.0f, 80.0f);
     public float LookupSpeed = 10.0f;
     public float ZoomSpeed = 3.0f;
-    public float Offset = 0.5f;
-    Vector3 curRot = Vector3.zero;
-    Vector3 camPos = Vector3.zero;
+    public float Offset = 0.1f;
+    public Vector3 curRot = Vector3.zero;
+    public Vector3 camPos = Vector3.zero;
     public Vector2 ZoomRange = new Vector2(-4, -0.8f);
     public LayerMask crashMask;
     public bool IsFps = true;
     public bool IsUI = false;
-    float desireDistance = 0.0f;
-    float wheelInput = 0.0f;
+    public float desireDistance = 0.0f;
 
     void ChangeState(ViewState s)
     {
@@ -53,15 +52,23 @@ public class SpringArms : MonoBehaviour
         else
         {
             if (IsFps) // fps 활성화
+            {
                 ChangeState(ViewState.FPS);
+            }
             else // tps 활성화
+            {
                 ChangeState(ViewState.TPS);
+            }
         }
+        myFPSCam = SpringArmWork(myFPSCam);
+        myTPSCam = SpringArmWork(myTPSCam);
+        MouseWheelMove();
         switch (myCameraState)
         {
             case ViewState.Create:
                 break;
             case ViewState.FPS:
+               
                 break;
             case ViewState.TPS:
                 break;
@@ -69,18 +76,29 @@ public class SpringArms : MonoBehaviour
                 break;
         }
     }
-    public CameraSet CameraStart(CameraSet s)
+    public CameraSet CameraSetting(CameraSet s)
     {
         CameraSet set = s;
 
         set.curRot.x = set.myRig.localRotation.eulerAngles.x;
         set.curRot.y = set.myRig.parent.localRotation.eulerAngles.y;
-        set.camPos = set.myCam.GetComponent<Transform>().localPosition;
 
-        desireDistance = set.camPos.z;
         return set;
     }
-    public void SpringArmWork(CameraSet s)
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        camPos = myTPSCam.myCam.GetComponent<Transform>().localPosition;
+
+        desireDistance = camPos.z;
+        myFPSCam = CameraSetting(myFPSCam);
+        myTPSCam = CameraSetting(myTPSCam);
+        myUICam = CameraSetting(myUICam);
+        AllCameraOff();
+        ChangeState(ViewState.FPS);
+    }
+    public CameraSet SpringArmWork(CameraSet s)
     {
         CameraSet set = s;
 
@@ -91,45 +109,32 @@ public class SpringArms : MonoBehaviour
         set.myRig.localRotation = Quaternion.Euler(set.curRot.x, 0, 0);
         set.myRig.parent.localRotation = Quaternion.Euler(0, set.curRot.y, 0);
 
-        if(wheelInput < 0.0f)
+        return set;
+    }
+
+    public void MouseWheelMove()
+    {
+        if (myCameraState == ViewState.TPS)
         {
-            IsFps = false;
+            desireDistance += Input.GetAxis("Mouse ScrollWheel") * ZoomSpeed;
+            desireDistance = Mathf.Clamp(desireDistance, ZoomRange.x, ZoomRange.y);
         }
-      
-        if(set.myCam == myFPSCam.myCam)
-        {
 
-        }
-        desireDistance += wheelInput * ZoomSpeed;
-        desireDistance = Mathf.Clamp(desireDistance, ZoomRange.x, ZoomRange.y);
-
-
-        if (Physics.Raycast(transform.position, -transform.forward, out RaycastHit hit, -camPos.z + Offset + 0.1f, crashMask))
+        if (Physics.Raycast(myTPSCam.myRig.position, -myTPSCam.myRig.forward, out RaycastHit hit, -camPos.z + Offset, crashMask))
         {
             camPos.z = -hit.distance + Offset;
         }
         else
         {
             camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.deltaTime * 3.0f);
-
         }
-        //myCam.localPosition = camPos;
+        myTPSCam.myCam.GetComponent<Transform>().localPosition = camPos;
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        myFPSCam = CameraStart(myFPSCam);
-        myTPSCam = CameraStart(myTPSCam);
-        myUICam = CameraStart(myUICam);
-        AllCameraOff();
-        ChangeState(ViewState.FPS);
-    }
-
     // Update is called once per frame
     void Update()
     {
         StateProcess();
-        wheelInput = Input.GetAxis("Mouse ScrollWheel");
+
         if (Input.GetKeyDown(KeyCode.V))
         {
             IsFps = Toggling(IsFps);

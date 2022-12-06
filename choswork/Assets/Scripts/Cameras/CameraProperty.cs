@@ -9,7 +9,6 @@ public struct CameraSet
     public Transform myRig;
     public GameObject myCam;
     public Vector3 curRot;
-    public Vector3 camPos;
 }
 public class CameraProperty : MonoBehaviour
 {
