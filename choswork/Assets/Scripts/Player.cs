@@ -24,12 +24,6 @@ public class Player : BattleSystem
         targetDir.x = Input.GetAxis("Horizontal");
         targetDir.y = Input.GetAxis("Vertical");
         
-        if(Input.GetKeyDown(KeyCode.W))
-        {
-            //myRoot.rotation = mySpring.rotation;
-            
-            
-        }
         float x = Mathf.Lerp(myAnim.GetFloat("x"), targetDir.x, Time.deltaTime * smoothMoveSpeed);
         float y = Mathf.Lerp(myAnim.GetFloat("z"), targetDir.y, Time.deltaTime * smoothMoveSpeed);
         if(Input.GetKey(KeyCode.LeftShift))
@@ -42,7 +36,6 @@ public class Player : BattleSystem
         }
         myAnim.SetFloat("x", x);
         myAnim.SetFloat("z", y);
-        
     }
     
 }
