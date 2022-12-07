@@ -59,7 +59,15 @@ public class SpringArms : CameraProperty
         {
             Debug.Log("쿼터니언 : " + myFPSCam.myRig.rotation.x);
             Debug.Log("오일러 : " + myFPSCam.myRig.rotation.eulerAngles.x);
-            Debug.Log("로컬오일러 : " + myFPSCam.myRig.localRotation.eulerAngles.x);
+            if(myFPSCam.myRig.localRotation.eulerAngles.x > 180.0f)
+            {
+                Debug.Log("로컬오일러 : " + (myFPSCam.myRig.localRotation.eulerAngles.x - 360.0f));
+            }
+            else if(myFPSCam.myRig.localRotation.eulerAngles.x < -180.0f)
+            {
+                Debug.Log("로컬오일러 : " + (myFPSCam.myRig.localRotation.eulerAngles.x + 360.0f));
+            }
+            
         }
         switch (myCameraState)
         {
@@ -72,43 +80,54 @@ public class SpringArms : CameraProperty
                 if (Input.GetKey(KeyCode.W))
                 {
                     RotatingRoot(mySpring);
-                    
-                }
-                if (Input.GetKey(KeyCode.D))
-                {
-                    RotatingRoot(mySpring);
-
                 }
                 if (Input.GetKeyDown(KeyCode.W))
                 {
                     StartCoroutine(RotatingDownUP());
                 }
+                
                 break;
             case ViewState.UI:
                 break;
         }
     }
+    float RotationSetTo_180(float angle)
+    {
+        // -180 ~ 180으로 고정
+        if (angle > 180.0f)
+        {
+            angle = angle - 360.0f;
+        }
+        else if (angle < -180.0f)
+        {
+            angle = angle + 360.0f;
+        }
+
+        return angle;
+    }
     IEnumerator RotatingDownUP()
     {
         //fps카메라 위아래 바꾸기
         float tpsXr = myTPSCam.myRig.rotation.x; //tps 상하값
-        float fpsXr = myFPSCam.myRig.rotation.x; //fps 상하값
+        float fpsXr = myFPSCam.myRig.localRotation.eulerAngles.x; //fps 오일러 상하값
         float tpxYr = mySpring.rotation.y; //tps 좌우값
         float fpxYr = myRoot.rotation.y;//fps 좌우값
         //mySpring.forward; tps 좌우
         //myTPSCam.myRig; tps 상하
         //myRoot fps 좌우
         //myFPSCam.myRig fps 상하
-        Vector3 dir = myFPSCam.myRig.forward;
-        dir.x = 0.0f;
-        dir.Normalize();
-        float Angle = Mathf.Abs(fpsXr);
+       
+        float Angle = 0.0f;
         float rotDir = 1.0f;
 
-        if (Vector3.Dot(myRoot.up, dir) > 0.0f)
+        //x축 회전이 180이 넘으면 360빼기
+        fpsXr = RotationSetTo_180(fpsXr);
+        
+        if (fpsXr > 0.0f)
         {
             rotDir = -rotDir;
         }
+        Angle = Mathf.Abs(fpsXr);
         while (Angle > 0.0f)
         {
             float delta = myRotSpeed * Time.deltaTime;
@@ -176,19 +195,13 @@ public class SpringArms : CameraProperty
         }
         myFPSCam = CameraSetting(myFPSCam);
         myFPSCam = CopyCurRot(myFPSCam, myFPSCam);
-        //myFPSCam = CopyPaste(myFPSCam, myTPSCam);
     }
     public CameraSet CameraSetting(CameraSet s)
     {
         CameraSet set = s;
-
-        set.curRot.x = set.myRig.localRotation.eulerAngles.x;
-        set.curRot.y = set.myRig.parent.localRotation.eulerAngles.y;
         //x축 회전이 180이 넘으면 360빼기
-        if(set.myRig.localRotation.eulerAngles.x > 180.0f)
-        {
-            set.curRot.x = set.myRig.localRotation.eulerAngles.x - 360.0f;
-        }
+        set.curRot.x = RotationSetTo_180(set.myRig.localRotation.eulerAngles.x);
+        set.curRot.y = set.myRig.parent.localRotation.eulerAngles.y;
         return set;
     }
     public CameraSet CopyCurRot(CameraSet origin, CameraSet copy)
