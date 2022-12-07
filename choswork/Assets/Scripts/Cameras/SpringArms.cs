@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static UnityEditor.SceneView;
 
 public class SpringArms : CameraProperty
 {
@@ -54,6 +55,12 @@ public class SpringArms : CameraProperty
 
         myTPSCam = SpringArmWork(myTPSCam);
         MouseWheelMove();
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Debug.Log("쿼터니언 : " + myFPSCam.myRig.rotation.x);
+            Debug.Log("오일러 : " + myFPSCam.myRig.rotation.eulerAngles.x);
+            Debug.Log("로컬오일러 : " + myFPSCam.myRig.localRotation.eulerAngles.x);
+        }
         switch (myCameraState)
         {
             case ViewState.Create:
@@ -65,23 +72,67 @@ public class SpringArms : CameraProperty
                 if (Input.GetKey(KeyCode.W))
                 {
                     RotatingRoot(mySpring);
+                    
                 }
-                /*
+                if (Input.GetKey(KeyCode.D))
+                {
+                    RotatingRoot(mySpring);
+
+                }
                 if (Input.GetKeyDown(KeyCode.W))
                 {
-                    StartCoroutine(RotatingDownUP(mySpring));
-                }*/
+                    StartCoroutine(RotatingDownUP());
+                }
                 break;
             case ViewState.UI:
                 break;
         }
     }
-    IEnumerator RotatingDownUP(Transform tr)
+    IEnumerator RotatingDownUP()
     {
+        //fps카메라 위아래 바꾸기
+        float tpsXr = myTPSCam.myRig.rotation.x; //tps 상하값
+        float fpsXr = myFPSCam.myRig.rotation.x; //fps 상하값
+        float tpxYr = mySpring.rotation.y; //tps 좌우값
+        float fpxYr = myRoot.rotation.y;//fps 좌우값
+        //mySpring.forward; tps 좌우
+        //myTPSCam.myRig; tps 상하
+        //myRoot fps 좌우
+        //myFPSCam.myRig fps 상하
+        Vector3 dir = myFPSCam.myRig.forward;
+        dir.x = 0.0f;
+        dir.Normalize();
+        float Angle = Mathf.Abs(fpsXr);
+        float rotDir = 1.0f;
+
+        if (Vector3.Dot(myRoot.up, dir) > 0.0f)
+        {
+            rotDir = -rotDir;
+        }
+        while (Angle > 0.0f)
+        {
+            float delta = myRotSpeed * Time.deltaTime;
+            
+            if (delta > Angle)
+            {
+                delta = Angle;
+            }
+
+            Angle -= delta;
+
+            myFPSCam.myRig.Rotate(Vector3.right * delta * rotDir);
+            yield return null;
+        }
+        myFPSCam = CameraSetting(myFPSCam);
+        myFPSCam = CopyCurRot(myFPSCam, myFPSCam);
+    }
+    IEnumerator UIRotating(Transform tr)
+    {
+        //UI카메라 시점 변환, 한번 누르면 됨
         Vector3 dir = tr.forward;
         float Angle = Vector3.Angle(myFPSCam.myRig.forward, dir);
         float rotDir = 1.0f;
-        if (Vector3.Dot(myFPSCam.myRig.up, dir) < 0.0f)
+        if (Vector3.Dot(myFPSCam.myRig.right, dir) < 0.0f)
         {
             rotDir = -rotDir;
         }
@@ -103,6 +154,7 @@ public class SpringArms : CameraProperty
     }
     void RotatingRoot(Transform tr)
     {
+        // 캐릭터 3인칭 시점 변환, 눌렀다 떼면 회전 중지
         Vector3 dir = tr.forward;
         float Angle = Vector3.Angle(myRoot.forward, dir);
         float rotDir = 1.0f;
@@ -120,11 +172,9 @@ public class SpringArms : CameraProperty
             }
 
             Angle -= delta;
-
             myRoot.Rotate(Vector3.up * delta * rotDir, Space.World);
         }
-        myFPSCam.curRot.x = myFPSCam.myRig.localRotation.eulerAngles.x;
-        myFPSCam.curRot.y = myFPSCam.myRig.parent.localRotation.eulerAngles.y;
+        myFPSCam = CameraSetting(myFPSCam);
         myFPSCam = CopyCurRot(myFPSCam, myFPSCam);
         //myFPSCam = CopyPaste(myFPSCam, myTPSCam);
     }
@@ -134,7 +184,11 @@ public class SpringArms : CameraProperty
 
         set.curRot.x = set.myRig.localRotation.eulerAngles.x;
         set.curRot.y = set.myRig.parent.localRotation.eulerAngles.y;
-
+        //x축 회전이 180이 넘으면 360빼기
+        if(set.myRig.localRotation.eulerAngles.x > 180.0f)
+        {
+            set.curRot.x = set.myRig.localRotation.eulerAngles.x - 360.0f;
+        }
         return set;
     }
     public CameraSet CopyCurRot(CameraSet origin, CameraSet copy)
