@@ -63,7 +63,7 @@ public class SpringArms : CameraProperty
     {
         if (IsUI) // UI 카메라가 우선시, 켜지면 다른 카메라 비활성화
             ChangeState(ViewState.UI);
-        else //UI 카메라 버그 원인
+        else
         {
             if (myCameraState == ViewState.UI)
                 ChangeState(ViewState.Turn);
@@ -92,16 +92,16 @@ public class SpringArms : CameraProperty
             case ViewState.FPS:
                 myFPSCam = SpringArmWork(myFPSCam);
                 break;
-            case ViewState.TPS:
+            case ViewState.TPS: // 3인칭
                 if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
                 {
-                    RotatingRoot(mySpring);
+                    RotatingRoot(mySpring); // 이동키 꾹 누를시 캐릭터 회전
                 }
                 foreach (KeyCode key in Keylist.Keys)
                 {
                     if (Input.GetKeyDown(key))
                     {
-                        StartCoroutine(RotatingDownUP());
+                        StartCoroutine(RotatingDownUP());  // 이동키 한번 누를시 fps 카메라 상하값 정중앙으로
                     }
                 }
                 break;

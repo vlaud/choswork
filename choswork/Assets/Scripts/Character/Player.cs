@@ -25,21 +25,20 @@ public class Player : BattleSystem
     }
     void PlayerMove()
     {
-        if (myCameras.myCameraState == SpringArms.ViewState.UI) return;
-
-        targetDir.x = Input.GetAxis("Horizontal");
-        targetDir.y = Input.GetAxis("Vertical");
-
-        float x = Mathf.Lerp(myAnim.GetFloat("x"), targetDir.x, Time.deltaTime * smoothMoveSpeed);
-        float y = Mathf.Lerp(myAnim.GetFloat("z"), targetDir.y, Time.deltaTime * smoothMoveSpeed);
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            myAnim.speed = 1.5f;
-        }
+        float x = 0.0f;
+        float y = 0.0f;
+        if (myCameras.myCameraState == SpringArms.ViewState.UI) targetDir = Vector2.zero; //UI 상태에선 못움직이게
         else
         {
-            myAnim.speed = myStat.MoveSpeed;
+            targetDir.x = Input.GetAxis("Horizontal");
+            targetDir.y = Input.GetAxis("Vertical");
         }
+        x = Mathf.Lerp(myAnim.GetFloat("x"), targetDir.x, Time.deltaTime * smoothMoveSpeed);
+        y = Mathf.Lerp(myAnim.GetFloat("z"), targetDir.y, Time.deltaTime * smoothMoveSpeed);
+
+        if (Input.GetKey(KeyCode.LeftShift)) myAnim.speed = 1.5f;
+        else myAnim.speed = myStat.MoveSpeed;
+        
         myAnim.SetFloat("x", x);
         myAnim.SetFloat("z", y);
     }
