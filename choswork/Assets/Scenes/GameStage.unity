@@ -3615,6 +3615,7 @@ MonoBehaviour:
     curRot: {x: 0, y: 0, z: 0}
   myEyes: {fileID: 658428476}
   myUI_basePos: {fileID: 1750508938}
+  myModel: {fileID: 543450652745343936}
 --- !u!1 &1234436767
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class SpringArms : CameraProperty
 {
     public enum ViewState
     {
-        Create, FPS, TPS, UI
+        Create, FPS, TPS, UI, Turn
     }
     public ViewState myCameraState = ViewState.Create;
     public CameraSet myFPSCam;
@@ -17,6 +17,7 @@ public class SpringArms : CameraProperty
     public CameraSet myUICam;
     public Transform myEyes; //fps카메라 눈에 고정
     public Transform myUI_basePos; //UI카메라 원래위치
+    public Transform myModel; //캐릭터 모델
     void ChangeState(ViewState s)
     {
         if (myCameraState == s) return;
@@ -27,15 +28,27 @@ public class SpringArms : CameraProperty
             case ViewState.Create:
                 break;
             case ViewState.FPS:
-                StartCoroutine(UIMoving(myFPSCam.myCam.GetComponent<Transform>(), ()=> SelectCamera(myFPSCam)));
+                SelectCamera(myFPSCam);
                 myTPSCam = CopyPaste(myTPSCam, myFPSCam);
                 break;
             case ViewState.TPS:
-                StartCoroutine(UIMoving(myTPSCam.myCam.GetComponent<Transform>(), () => SelectCamera(myTPSCam)));
+                SelectCamera(myTPSCam);
                 break;
             case ViewState.UI:
                 SelectCamera(myUICam);
                 StartCoroutine(UIMoving(myUI_basePos));
+                StartCoroutine(UIRotating(-myModel.forward));
+                break;
+            case ViewState.Turn:
+                if (IsFps) // fps 활성화
+                {
+                    StartCoroutine(UIMoving(myFPSCam.myCam.transform, ()=> ChangeState(ViewState.FPS)));
+                }
+                else // tps 활성화
+                {
+                    StartCoroutine(UIMoving(myTPSCam.myCam.transform, () => ChangeState(ViewState.TPS)));
+                }
+                StartCoroutine(UIRotating(-myModel.forward));
                 break;
         }
     }
@@ -45,13 +58,18 @@ public class SpringArms : CameraProperty
             ChangeState(ViewState.UI);
         else
         {
-            if (IsFps) // fps 활성화
+            if (myCameraState == ViewState.UI)
+                ChangeState(ViewState.Turn);
+            else
             {
-                ChangeState(ViewState.FPS);
-            }
-            else // tps 활성화
-            {
-                ChangeState(ViewState.TPS);
+                if (IsFps) // fps 활성화
+                {
+                    ChangeState(ViewState.FPS);
+                }
+                else // tps 활성화
+                {
+                    ChangeState(ViewState.TPS);
+                }
             }
         }
         myTPSCam = SpringArmWork(myTPSCam);
@@ -77,6 +95,8 @@ public class SpringArms : CameraProperty
                 UICameraSetPos(myTPSCam);
                 break;
             case ViewState.UI:
+                break;
+            case ViewState.Turn:
                 break;
         }
     }
@@ -136,7 +156,7 @@ public class SpringArms : CameraProperty
     }
     IEnumerator UIMoving(Transform tr, UnityAction done = null) //UI카메라 활성화때 시점 자연스럽게 움직임
     {
-        Transform cam = myUICam.myCam.GetComponent<Transform>();
+        Transform cam = myUICam.myCam.transform;
         Vector3 dir = tr.position - cam.position;
         float dist = dir.magnitude;
         dir.Normalize();
@@ -155,13 +175,13 @@ public class SpringArms : CameraProperty
         }
         done?.Invoke();
     }
-    IEnumerator UIRotating(Transform tr)
+    IEnumerator UIRotating(Vector3 pos)
     {
-        //UI카메라 시점 변환, 한번 누르면 됨
-        Vector3 dir = tr.forward;
-        float Angle = Vector3.Angle(myFPSCam.myRig.forward, dir);
+        //UI카메라 캐릭터 모델 돌리기
+        Vector3 dir = pos;
+        float Angle = Vector3.Angle(myModel.forward, dir);
         float rotDir = 1.0f;
-        if (Vector3.Dot(myFPSCam.myRig.right, dir) < 0.0f)
+        if (Vector3.Dot(myModel.right, dir) < 0.0f)
         {
             rotDir = -rotDir;
         }
@@ -176,10 +196,9 @@ public class SpringArms : CameraProperty
 
             Angle -= delta;
 
-            myRoot.Rotate(Vector3.up * delta * rotDir, Space.World);
+            myModel.Rotate(Vector3.up * delta * rotDir, Space.World);
             yield return null;
         }
-        myFPSCam = CopyPaste(myFPSCam, myTPSCam);
     }
     void RotatingRoot(Transform tr)
     {
