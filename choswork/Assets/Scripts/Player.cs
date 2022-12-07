@@ -21,12 +21,18 @@ public class Player : BattleSystem
     // Update is called once per frame
     void Update()
     {
+        PlayerMove();
+    }
+    void PlayerMove()
+    {
+        if (myCameras.myCameraState == SpringArms.ViewState.UI) return;
+
         targetDir.x = Input.GetAxis("Horizontal");
         targetDir.y = Input.GetAxis("Vertical");
-        
+
         float x = Mathf.Lerp(myAnim.GetFloat("x"), targetDir.x, Time.deltaTime * smoothMoveSpeed);
         float y = Mathf.Lerp(myAnim.GetFloat("z"), targetDir.y, Time.deltaTime * smoothMoveSpeed);
-        if(Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             myAnim.speed = 1.5f;
         }
@@ -37,5 +43,4 @@ public class Player : BattleSystem
         myAnim.SetFloat("x", x);
         myAnim.SetFloat("z", y);
     }
-    
 }

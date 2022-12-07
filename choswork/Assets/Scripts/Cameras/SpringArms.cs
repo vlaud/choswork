@@ -52,23 +52,11 @@ public class SpringArms : CameraProperty
                 ChangeState(ViewState.TPS);
             }
         }
-
+        //myUICam.myCam.GetComponent<Transform>().position = myTPSCam.myCam.GetComponent<Transform>().position;
+        //myUICam.myCam.GetComponent<Transform>().position = myFPSCam.myCam.GetComponent<Transform>().position;
         myTPSCam = SpringArmWork(myTPSCam);
+        KeyMovement();
         MouseWheelMove();
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            Debug.Log("쿼터니언 : " + myFPSCam.myRig.rotation.x);
-            Debug.Log("오일러 : " + myFPSCam.myRig.rotation.eulerAngles.x);
-            if(myFPSCam.myRig.localRotation.eulerAngles.x > 180.0f)
-            {
-                Debug.Log("로컬오일러 : " + (myFPSCam.myRig.localRotation.eulerAngles.x - 360.0f));
-            }
-            else if(myFPSCam.myRig.localRotation.eulerAngles.x < -180.0f)
-            {
-                Debug.Log("로컬오일러 : " + (myFPSCam.myRig.localRotation.eulerAngles.x + 360.0f));
-            }
-            
-        }
         switch (myCameraState)
         {
             case ViewState.Create:
@@ -204,7 +192,7 @@ public class SpringArms : CameraProperty
         set.curRot.y = set.myRig.parent.localRotation.eulerAngles.y;
         return set;
     }
-    public CameraSet CopyCurRot(CameraSet origin, CameraSet copy)
+    public CameraSet CopyCurRot(CameraSet origin, CameraSet copy) // 회전값 복사
     {
         CameraSet set = origin;
 
@@ -213,7 +201,7 @@ public class SpringArms : CameraProperty
 
         return set;
     }
-    public CameraSet CopyPaste(CameraSet origin, CameraSet copy)
+    public CameraSet CopyPaste(CameraSet origin, CameraSet copy) // 오일러를 쿼터니언으로 변환
     {
         CameraSet set = origin;
 
@@ -238,8 +226,11 @@ public class SpringArms : CameraProperty
     // Update is called once per frame
     void Update()
     {
-        myFPSCam.myCam.GetComponent<Transform>().position = myEyes.position;
+        myFPSCam.myCam.GetComponent<Transform>().position = myEyes.position; // 1인칭 카메라 위치를 캐릭터 눈에 고정
         StateProcess();
+    }
+    void KeyMovement() // 키보드 조작
+    {
         if (Input.GetKeyDown(KeyCode.V))
         {
             IsFps = Toggling(IsFps);
@@ -250,8 +241,21 @@ public class SpringArms : CameraProperty
             IsUI = Toggling(IsUI);
             Debug.Log(IsUI);
         }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Debug.Log("쿼터니언 : " + myFPSCam.myRig.rotation.x);
+            Debug.Log("오일러 : " + myFPSCam.myRig.rotation.eulerAngles.x);
+            if (myFPSCam.myRig.localRotation.eulerAngles.x > 180.0f)
+            {
+                Debug.Log("로컬오일러 : " + (myFPSCam.myRig.localRotation.eulerAngles.x - 360.0f));
+            }
+            else if (myFPSCam.myRig.localRotation.eulerAngles.x < -180.0f)
+            {
+                Debug.Log("로컬오일러 : " + (myFPSCam.myRig.localRotation.eulerAngles.x + 360.0f));
+            }
+        }
     }
-    public CameraSet SpringArmWork(CameraSet s)
+    public CameraSet SpringArmWork(CameraSet s) // 카메라 마우스
     {
         CameraSet set = s;
         if (Input.GetMouseButton(1))
@@ -266,14 +270,13 @@ public class SpringArms : CameraProperty
         return set;
     }
 
-    public void MouseWheelMove()
+    public void MouseWheelMove() // 3인칭 시야 거리
     {
         if (myCameraState == ViewState.TPS)
         {
             desireDistance += Input.GetAxis("Mouse ScrollWheel") * ZoomSpeed;
             desireDistance = Mathf.Clamp(desireDistance, ZoomRange.x, ZoomRange.y);
         }
-
         if (Physics.Raycast(myTPSCam.myRig.position, -myTPSCam.myRig.forward, out RaycastHit hit, -camPos.z + Offset, crashMask))
         {
             camPos.z = -hit.distance + Offset;
@@ -284,14 +287,14 @@ public class SpringArms : CameraProperty
         }
         myTPSCam.myCam.GetComponent<Transform>().localPosition = camPos;
     }
-    void SelectCamera(CameraSet cam)
+    void SelectCamera(CameraSet cam) // 카메라 선택
     {
         if (cam.myCam.activeSelf) return;
 
         AllCameraOff();
         cam.myCam.SetActive(true);
     }
-    bool Toggling(bool b)
+    bool Toggling(bool b) // 토글 기능
     {
         bool bRes = false;
 
@@ -300,7 +303,7 @@ public class SpringArms : CameraProperty
 
         return bRes;
     }
-    void AllCameraOff()
+    void AllCameraOff() // 모든 카메라 끄기
     {
         myFPSCam.myCam.SetActive(false);
         myTPSCam.myCam.SetActive(false);
