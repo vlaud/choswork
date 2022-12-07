@@ -96,10 +96,14 @@ public class SpringArms : CameraProperty
                 if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
                 {
                     RotatingRoot(mySpring);
-                    StartCoroutine(RotatingDownUP());
                 }
-               
-                //if(Input.GetKeyDown())
+                foreach (KeyCode key in Keylist.Keys)
+                {
+                    if (Input.GetKeyDown(key))
+                    {
+                        StartCoroutine(RotatingDownUP());
+                    }
+                }
                 break;
             case ViewState.UI:
                 break;
