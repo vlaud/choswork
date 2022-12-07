@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using static UnityEditor.SceneView;
+using UnityEngine.Events;
 
 public class SpringArms : CameraProperty
 {
@@ -15,7 +15,8 @@ public class SpringArms : CameraProperty
     public CameraSet myFPSCam;
     public CameraSet myTPSCam;
     public CameraSet myUICam;
-    public Transform myEyes;
+    public Transform myEyes; //fps카메라 눈에 고정
+    public Transform myUI_basePos; //UI카메라 원래위치
     void ChangeState(ViewState s)
     {
         if (myCameraState == s) return;
@@ -26,14 +27,15 @@ public class SpringArms : CameraProperty
             case ViewState.Create:
                 break;
             case ViewState.FPS:
-                SelectCamera(myFPSCam);
+                StartCoroutine(UIMoving(myFPSCam.myCam.GetComponent<Transform>(), ()=> SelectCamera(myFPSCam)));
                 myTPSCam = CopyPaste(myTPSCam, myFPSCam);
                 break;
             case ViewState.TPS:
-                SelectCamera(myTPSCam);
+                StartCoroutine(UIMoving(myTPSCam.myCam.GetComponent<Transform>(), () => SelectCamera(myTPSCam)));
                 break;
             case ViewState.UI:
                 SelectCamera(myUICam);
+                StartCoroutine(UIMoving(myUI_basePos));
                 break;
         }
     }
@@ -52,8 +54,6 @@ public class SpringArms : CameraProperty
                 ChangeState(ViewState.TPS);
             }
         }
-        //myUICam.myCam.GetComponent<Transform>().position = myTPSCam.myCam.GetComponent<Transform>().position;
-        //myUICam.myCam.GetComponent<Transform>().position = myFPSCam.myCam.GetComponent<Transform>().position;
         myTPSCam = SpringArmWork(myTPSCam);
         KeyMovement();
         MouseWheelMove();
@@ -63,6 +63,7 @@ public class SpringArms : CameraProperty
                 break;
             case ViewState.FPS:
                 myFPSCam = SpringArmWork(myFPSCam);
+                UICameraSetPos(myFPSCam);
                 break;
             case ViewState.TPS:
                 if (Input.GetKey(KeyCode.W))
@@ -73,7 +74,7 @@ public class SpringArms : CameraProperty
                 {
                     StartCoroutine(RotatingDownUP());
                 }
-                
+                UICameraSetPos(myTPSCam);
                 break;
             case ViewState.UI:
                 break;
@@ -132,6 +133,27 @@ public class SpringArms : CameraProperty
         }
         myFPSCam = CameraSetting(myFPSCam);
         myFPSCam = CopyCurRot(myFPSCam, myFPSCam);
+    }
+    IEnumerator UIMoving(Transform tr, UnityAction done = null) //UI카메라 활성화때 시점 자연스럽게 움직임
+    {
+        Transform cam = myUICam.myCam.GetComponent<Transform>();
+        Vector3 dir = tr.position - cam.position;
+        float dist = dir.magnitude;
+        dir.Normalize();
+
+        while (dist > 0.0f)
+        {
+            float delta = LookupSpeed * Time.deltaTime;
+            if (delta > dist)
+            {
+                delta = dist;
+            }
+            dist -= delta;
+            cam.Translate(dir * delta, Space.World);
+
+            yield return null;
+        }
+        done?.Invoke();
     }
     IEnumerator UIRotating(Transform tr)
     {
@@ -254,6 +276,10 @@ public class SpringArms : CameraProperty
                 Debug.Log("로컬오일러 : " + (myFPSCam.myRig.localRotation.eulerAngles.x + 360.0f));
             }
         }
+    }
+    void UICameraSetPos(CameraSet cam) // UI 카메라 위치 설정
+    {
+        myUICam.myCam.GetComponent<Transform>().position = cam.myCam.GetComponent<Transform>().position;
     }
     public CameraSet SpringArmWork(CameraSet s) // 카메라 마우스
     {
