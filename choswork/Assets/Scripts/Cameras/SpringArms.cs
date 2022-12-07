@@ -84,12 +84,9 @@ public class SpringArms : CameraProperty
                 UICameraSetPos(myFPSCam);
                 break;
             case ViewState.TPS:
-                if (Input.GetKey(KeyCode.W))
+                if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
                 {
                     RotatingRoot(mySpring);
-                }
-                if (Input.GetKeyDown(KeyCode.W))
-                {
                     StartCoroutine(RotatingDownUP());
                 }
                 UICameraSetPos(myTPSCam);
