@@ -9,7 +9,7 @@ public class SpringArms : CameraProperty
 {
     public enum ViewState
     {
-        Create, FPS, TPS, UI, Turn
+        Create, FPS, TPS, UI, Turn, Temp
     }
     public ViewState myCameraState = ViewState.Create;
     public CameraSet myFPSCam;
@@ -18,6 +18,7 @@ public class SpringArms : CameraProperty
     public Transform myEyes; //fps카메라 눈에 고정
     public Transform myUI_basePos; //UI카메라 원래위치
     public Transform myModel; //캐릭터 모델
+    public Dictionary<KeyCode, ICommand> Keylist = new Dictionary<KeyCode, ICommand>(); // 키 리스트
     void ChangeState(ViewState s)
     {
         if (myCameraState == s) return;
@@ -35,9 +36,13 @@ public class SpringArms : CameraProperty
                 SelectCamera(myTPSCam);
                 break;
             case ViewState.UI:
-                SelectCamera(myUICam);
+                if(IsFps)
+                    UICameraSetPos(myFPSCam);
+                else
+                    UICameraSetPos(myTPSCam);
                 StartCoroutine(UIMoving(myUI_basePos));
                 StartCoroutine(UIRotating(-myModel.forward));
+                SelectCamera(myUICam);
                 break;
             case ViewState.Turn:
                 if (IsFps) // fps 활성화
@@ -50,13 +55,15 @@ public class SpringArms : CameraProperty
                 }
                 StartCoroutine(UIRotating(-myModel.forward));
                 break;
+            case ViewState.Temp:
+                break;
         }
     }
-    void StateProcess()
+    void CameraCheck()
     {
         if (IsUI) // UI 카메라가 우선시, 켜지면 다른 카메라 비활성화
             ChangeState(ViewState.UI);
-        else
+        else //UI 카메라 버그 원인
         {
             if (myCameraState == ViewState.UI)
                 ChangeState(ViewState.Turn);
@@ -72,6 +79,9 @@ public class SpringArms : CameraProperty
                 }
             }
         }
+    }
+    void StateProcess() 
+    {
         myTPSCam = SpringArmWork(myTPSCam);
         KeyMovement();
         MouseWheelMove();
@@ -81,7 +91,6 @@ public class SpringArms : CameraProperty
                 break;
             case ViewState.FPS:
                 myFPSCam = SpringArmWork(myFPSCam);
-                UICameraSetPos(myFPSCam);
                 break;
             case ViewState.TPS:
                 if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
@@ -89,7 +98,8 @@ public class SpringArms : CameraProperty
                     RotatingRoot(mySpring);
                     StartCoroutine(RotatingDownUP());
                 }
-                UICameraSetPos(myTPSCam);
+               
+                //if(Input.GetKeyDown())
                 break;
             case ViewState.UI:
                 break;
@@ -252,8 +262,11 @@ public class SpringArms : CameraProperty
     // Start is called before the first frame update
     void Start()
     {
-        camPos = myTPSCam.myCam.GetComponent<Transform>().localPosition;
-
+        camPos = myTPSCam.myCam.transform.localPosition;
+        Keylist[KeyCode.A] = new MoveLeft();
+        Keylist[KeyCode.D] = new MoveRight();
+        Keylist[KeyCode.W] = new MoveForward();
+        Keylist[KeyCode.S] = new MoveBack();
         desireDistance = camPos.z;
         myFPSCam = CameraSetting(myFPSCam);
         myTPSCam = CameraSetting(myTPSCam);
@@ -264,7 +277,7 @@ public class SpringArms : CameraProperty
     // Update is called once per frame
     void Update()
     {
-        myFPSCam.myCam.GetComponent<Transform>().position = myEyes.position; // 1인칭 카메라 위치를 캐릭터 눈에 고정
+        myFPSCam.myCam.transform.position = myEyes.position; // 1인칭 카메라 위치를 캐릭터 눈에 고정
         StateProcess();
     }
     void KeyMovement() // 키보드 조작
@@ -272,11 +285,13 @@ public class SpringArms : CameraProperty
         if (Input.GetKeyDown(KeyCode.V))
         {
             IsFps = Toggling(IsFps);
+            CameraCheck();
             Debug.Log(IsFps);
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
             IsUI = Toggling(IsUI);
+            CameraCheck();
             Debug.Log(IsUI);
         }
         if (Input.GetKeyDown(KeyCode.T))
@@ -295,7 +310,7 @@ public class SpringArms : CameraProperty
     }
     void UICameraSetPos(CameraSet cam) // UI 카메라 위치 설정
     {
-        myUICam.myCam.GetComponent<Transform>().position = cam.myCam.GetComponent<Transform>().position;
+        myUICam.myCam.transform.position = cam.myCam.transform.position;
     }
     public CameraSet SpringArmWork(CameraSet s) // 카메라 마우스
     {
@@ -327,7 +342,7 @@ public class SpringArms : CameraProperty
         {
             camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.deltaTime * 3.0f);
         }
-        myTPSCam.myCam.GetComponent<Transform>().localPosition = camPos;
+        myTPSCam.myCam.transform.localPosition = camPos;
     }
     void SelectCamera(CameraSet cam) // 카메라 선택
     {
@@ -344,6 +359,27 @@ public class SpringArms : CameraProperty
         else bRes = true;
 
         return bRes;
+    }
+    void CamerasOnOff(ViewState s)
+    {
+        bool bFps = false;
+        bool bTps = false;
+        bool bUI = false;
+        switch(s)
+        {
+            case ViewState.FPS:
+                bFps = true;
+                break;
+            case ViewState.TPS:
+                bTps = true;
+                break;
+            case ViewState.UI:
+                bUI = true;
+                break;
+        }
+        myFPSCam.myCam.SetActive(bFps);
+        myTPSCam.myCam.SetActive(bTps);
+        myUICam.myCam.SetActive(bUI);
     }
     void AllCameraOff() // 모든 카메라 끄기
     {
