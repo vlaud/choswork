@@ -12,23 +12,47 @@ public class AnimEvent : MonoBehaviour
     // UnityEvent<bool, int> 파라미터 필요한 만큼 넣기
     public Transform leftFoot;
     public Transform rightFoot;
-    public AudioClip leftFootSound;
+    public AudioClip leftFootSound;// 왼발소리 
+    public AudioClip rightFootSound;// 오른발소리 
+    public AudioSource myFootSound; // 발소리 오디오
     public GameObject orgDustEff;
+    public Player myPlayer;
+    public bool noSoundandEffect = false;
     public void LeftFootEvent()
     {
-        if (leftFoot == null || orgDustEff == null) return;
+        foreach (KeyCode key in StudyCommandPattern.Inst.Keylist.Keys)
+        {
+            if (myPlayer.myCameras.myCameraState == SpringArms.ViewState.UI) return;
+            if (Input.GetKey(key))
+            {
+                SoundManager.Inst.PlayOneShot(myFootSound, leftFootSound);
+            }
+        }
+        
+        if (noSoundandEffect) return;
+        if (orgDustEff == null) return;
         Instantiate(orgDustEff, leftFoot.position, Quaternion.identity);
+        
     }
 
     public void RightFootEvent()
     {
-        if (rightFoot == null || orgDustEff == null) return;
+        foreach (KeyCode key in StudyCommandPattern.Inst.Keylist.Keys)
+        {
+            if (myPlayer.myCameras.myCameraState == SpringArms.ViewState.UI) return;
+            if (Input.GetKey(key))
+            {
+                SoundManager.Inst.PlayOneShot(myFootSound, rightFootSound);
+            }
+        }
+        
+        if (noSoundandEffect) return;
+        if (orgDustEff == null) return;
         Instantiate(orgDustEff, rightFoot.position, Quaternion.identity);
     }
 
     public void OnAttack()
     {
-       
         Attack?.Invoke();
     }
 

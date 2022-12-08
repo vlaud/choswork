@@ -18,7 +18,7 @@ public class SpringArms : CameraProperty
     public Transform myEyes; //fps카메라 눈에 고정
     public Transform myUI_basePos; //UI카메라 원래위치
     public Transform myModel; //캐릭터 모델
-    public Dictionary<KeyCode, ICommand> moveKeylist = new Dictionary<KeyCode, ICommand>(); // wasd 리스트
+   
     void ChangeState(ViewState s)
     {
         if (myCameraState == s) return;
@@ -77,7 +77,7 @@ public class SpringArms : CameraProperty
                 {
                     RotatingRoot(mySpring); // 이동키 꾹 누를시 캐릭터 회전
                 }
-                foreach (KeyCode key in moveKeylist.Keys)
+                foreach (KeyCode key in StudyCommandPattern.Inst.Keylist.Keys)
                 {
                     if (Input.GetKeyDown(key))
                     {
@@ -268,10 +268,6 @@ public class SpringArms : CameraProperty
     void Start()
     {
         camPos = myTPSCam.myCam.transform.localPosition;
-        moveKeylist[KeyCode.A] = new MoveLeft();
-        moveKeylist[KeyCode.D] = new MoveRight();
-        moveKeylist[KeyCode.W] = new MoveForward();
-        moveKeylist[KeyCode.S] = new MoveBack();
         desireDistance = camPos.z;
         myFPSCam = CameraSetting(myFPSCam);
         myTPSCam = CameraSetting(myTPSCam);

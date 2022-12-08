@@ -54,9 +54,15 @@ public class MoveBack : ICommand
 }
 public class StudyCommandPattern : MonoBehaviour
 {
+    static public StudyCommandPattern Inst = null;
     Stack<ICommand> Commandlist = new Stack<ICommand>();
-    Dictionary<KeyCode, ICommand> Keylist = new Dictionary<KeyCode, ICommand>();
+    public Dictionary<KeyCode, ICommand> Keylist = new Dictionary<KeyCode, ICommand>(); //wasd ¸®½ºÆ®
     public GameObject orgBullet = null;
+
+    private void Awake()
+    {
+        Inst = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
