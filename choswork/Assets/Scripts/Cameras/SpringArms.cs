@@ -15,7 +15,9 @@ public class SpringArms : CameraProperty
     public CameraSet myFPSCam;
     public CameraSet myTPSCam;
     public CameraSet myUICam;
+    public Player myPlayer;
     public bool UIkeyAvailable = true;
+    public bool isFPSCamRotinTPS = false;
    
     void ChangeState(ViewState s)
     {
@@ -70,6 +72,7 @@ public class SpringArms : CameraProperty
             case ViewState.Create:
                 break;
             case ViewState.FPS:
+                isFPSCamRotinTPS = false;
                 myFPSCam = SpringArmWork(myFPSCam);
                 break;
             case ViewState.TPS: // 3인칭
@@ -77,15 +80,16 @@ public class SpringArms : CameraProperty
                 {
                     RotatingRoot(mySpring); // 이동키 꾹 누를시 캐릭터 회전
                 }
-                foreach (KeyCode key in StudyCommandPattern.Inst.Keylist.Keys)
+                if(myPlayer.ReturnAnim().GetBool("IsMoving") && !isFPSCamRotinTPS)
                 {
-                    if (Input.GetKeyDown(key))
-                    {
-                        StartCoroutine(RotatingDownUP());  // 이동키 한번 누를시 fps 카메라 상하값 정중앙으로
-                    }
+                    StartCoroutine(RotatingDownUP());  //캐릭터가 움직일때 fps 카메라 상하값 정중앙으로
+                    isFPSCamRotinTPS = true;
                 }
+                if (!myPlayer.ReturnAnim().GetBool("IsMoving"))
+                    isFPSCamRotinTPS = false; //캐릭터가 안움직이면 고정 해제
                 break;
             case ViewState.UI:
+                isFPSCamRotinTPS = false;
                 break;
             case ViewState.Turn:
                 break;
@@ -272,6 +276,7 @@ public class SpringArms : CameraProperty
     {
         camPos = myTPSCam.myCam.transform.localPosition;
         desireDistance = camPos.z;
+        myPlayer = transform.parent.GetComponent<Player>();
         myFPSCam = CameraSetting(myFPSCam);
         myTPSCam = CameraSetting(myTPSCam);
         myUICam = CameraSetting(myUICam);
