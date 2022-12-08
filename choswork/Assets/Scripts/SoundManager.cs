@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundManager : Singleton<SoundManager>
+public class SoundManager : Singleton<SoundManager> // 사운드 매니저는 싱클톤 방식으로
 {
-    
     public AudioSource bgmPlayer = null;
 
     public float bgmVolume
@@ -68,7 +67,7 @@ public class SoundManager : Singleton<SoundManager>
         bgmPlayer.Stop();
     }
 
-    public void PlayOneShot(AudioSource audio, AudioClip clip)
+    public void PlayOneShot(AudioSource audio, AudioClip clip) // 효과음 한번만 나오게
     {
         audio.volume = effectVolume;
         audio.PlayOneShot(clip);

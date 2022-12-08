@@ -20,9 +20,9 @@ public class AnimEvent : MonoBehaviour
     public bool noSoundandEffect = false;
     public void LeftFootEvent()
     {
-        foreach (KeyCode key in StudyCommandPattern.Inst.Keylist.Keys)
+        foreach (KeyCode key in StudyCommandPattern.Inst.Keylist.Keys) // 이동키를 눌러야만 발소리 나오게 설정
         {
-            if (myPlayer.myCameras.myCameraState == SpringArms.ViewState.UI) return;
+            if (myPlayer.myCameras.myCameraState == SpringArms.ViewState.UI) return; // UI상태에선 리턴
             if (Input.GetKey(key))
             {
                 SoundManager.Inst.PlayOneShot(myFootSound, leftFootSound);
@@ -31,7 +31,7 @@ public class AnimEvent : MonoBehaviour
         
         if (noSoundandEffect) return;
         if (orgDustEff == null) return;
-        Instantiate(orgDustEff, leftFoot.position, Quaternion.identity);
+        Instantiate(orgDustEff, leftFoot.position, Quaternion.identity); // 나중에 발바닥 이펙트 추가
         
     }
 

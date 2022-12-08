@@ -12,8 +12,8 @@ public struct CameraSet
 }
 public class CameraProperty : MonoBehaviour
 {
-    public Transform myRoot;
-    public Transform mySpring;
+    public Transform myRoot;//fps 謝辦高
+    public Transform mySpring; //tps 謝辦高
     public LayerMask crashMask;
     public Vector2 LookupRange = new Vector2(-60.0f, 80.0f);
     public Vector3 curRot = Vector3.zero;

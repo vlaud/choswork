@@ -9,7 +9,7 @@ public interface ICommand
 }
 public class MoveLeft : ICommand
 {
-    public void Execute(Transform tr)
+    public void Execute(Transform tr) // 나중에 다 수정해야함
     {
         tr.Translate(Vector3.left);
     }

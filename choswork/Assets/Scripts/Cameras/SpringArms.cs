@@ -11,7 +11,7 @@ public class SpringArms : CameraProperty
     {
         Create, FPS, TPS, UI, Turn, Temp
     }
-    public ViewState myCameraState = ViewState.Create;
+    public ViewState myCameraState = ViewState.Create; // 카메라 상태기계
     public CameraSet myFPSCam;
     public CameraSet myTPSCam;
     public CameraSet myUICam;
@@ -30,7 +30,7 @@ public class SpringArms : CameraProperty
                 break;
             case ViewState.FPS:
                 SelectCamera(myFPSCam);
-                myTPSCam = CopyPaste(myTPSCam, myFPSCam);
+                myTPSCam = CopyPaste(myTPSCam, myFPSCam); // 3인칭에서 1인칭 전환시 3인칭 값을 1인칭 값으로
                 break;
             case ViewState.TPS:
                 SelectCamera(myTPSCam);
@@ -62,7 +62,9 @@ public class SpringArms : CameraProperty
     
     void StateProcess() 
     {
-        myTPSCam = SpringArmWork(myTPSCam); // fps에서 시작
+        if(myCameraState != ViewState.UI)
+            myTPSCam = SpringArmWork(myTPSCam); // 1인칭, 3인칭 카메라값을 같게 
+
         KeyMovement(); // 키설정
         MouseWheelMove(); // 3인칭 시야 거리
         switch (myCameraState)
@@ -279,6 +281,8 @@ public class SpringArms : CameraProperty
     void Update()
     {
         myFPSCam.myCam.transform.position = myEyes.position; // 1인칭 카메라 위치를 캐릭터 눈에 고정
+        myUI_basePos.parent.rotation = mySpring.rotation; // ui카메라(부모를 중점으로)를 3인칭 좌우 회전값과 동일하게
+        UICameraSetRot(mySpring);
         StateProcess();
     }
     void KeyMovement() // 키보드 조작
@@ -312,6 +316,10 @@ public class SpringArms : CameraProperty
     void UICameraSetPos(CameraSet cam) // UI 카메라 위치 설정
     {
         myUICam.myCam.transform.position = cam.myCam.transform.position;
+    }
+    void UICameraSetRot(Transform tr) // UI 카메라 회전 설정
+    {
+        myUICam.myRig.rotation = tr.rotation; //UI 카메라 리그가 돌게끔
     }
     public CameraSet SpringArmWork(CameraSet s) // 카메라 마우스
     {
