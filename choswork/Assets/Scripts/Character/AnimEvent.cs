@@ -12,17 +12,18 @@ public class AnimEvent : MonoBehaviour
     // UnityEvent<bool, int> 파라미터 필요한 만큼 넣기
     public Transform leftFoot;
     public Transform rightFoot;
+    public AudioClip leftFootSound;
     public GameObject orgDustEff;
     public void LeftFootEvent()
     {
+        if (leftFoot == null || orgDustEff == null) return;
         Instantiate(orgDustEff, leftFoot.position, Quaternion.identity);
-        
     }
 
     public void RightFootEvent()
     {
+        if (rightFoot == null || orgDustEff == null) return;
         Instantiate(orgDustEff, rightFoot.position, Quaternion.identity);
-       
     }
 
     public void OnAttack()

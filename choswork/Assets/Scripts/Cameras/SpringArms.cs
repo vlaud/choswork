@@ -18,7 +18,7 @@ public class SpringArms : CameraProperty
     public Transform myEyes; //fps카메라 눈에 고정
     public Transform myUI_basePos; //UI카메라 원래위치
     public Transform myModel; //캐릭터 모델
-    public Dictionary<KeyCode, ICommand> Keylist = new Dictionary<KeyCode, ICommand>(); // 키 리스트
+    public Dictionary<KeyCode, ICommand> moveKeylist = new Dictionary<KeyCode, ICommand>(); // wasd 리스트
     void ChangeState(ViewState s)
     {
         if (myCameraState == s) return;
@@ -59,6 +59,38 @@ public class SpringArms : CameraProperty
                 break;
         }
     }
+    
+    void StateProcess() 
+    {
+        myTPSCam = SpringArmWork(myTPSCam); // fps에서 시작
+        KeyMovement(); // 키설정
+        MouseWheelMove(); // 3인칭 시야 거리
+        switch (myCameraState)
+        {
+            case ViewState.Create:
+                break;
+            case ViewState.FPS:
+                myFPSCam = SpringArmWork(myFPSCam);
+                break;
+            case ViewState.TPS: // 3인칭
+                if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+                {
+                    RotatingRoot(mySpring); // 이동키 꾹 누를시 캐릭터 회전
+                }
+                foreach (KeyCode key in moveKeylist.Keys)
+                {
+                    if (Input.GetKeyDown(key))
+                    {
+                        StartCoroutine(RotatingDownUP());  // 이동키 한번 누를시 fps 카메라 상하값 정중앙으로
+                    }
+                }
+                break;
+            case ViewState.UI:
+                break;
+            case ViewState.Turn:
+                break;
+        }
+    }
     void CameraCheck()
     {
         if (IsUI) // UI 카메라가 우선시, 켜지면 다른 카메라 비활성화
@@ -78,37 +110,6 @@ public class SpringArms : CameraProperty
                     ChangeState(ViewState.TPS);
                 }
             }
-        }
-    }
-    void StateProcess() 
-    {
-        myTPSCam = SpringArmWork(myTPSCam);
-        KeyMovement();
-        MouseWheelMove();
-        switch (myCameraState)
-        {
-            case ViewState.Create:
-                break;
-            case ViewState.FPS:
-                myFPSCam = SpringArmWork(myFPSCam);
-                break;
-            case ViewState.TPS: // 3인칭
-                if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
-                {
-                    RotatingRoot(mySpring); // 이동키 꾹 누를시 캐릭터 회전
-                }
-                foreach (KeyCode key in Keylist.Keys)
-                {
-                    if (Input.GetKeyDown(key))
-                    {
-                        StartCoroutine(RotatingDownUP());  // 이동키 한번 누를시 fps 카메라 상하값 정중앙으로
-                    }
-                }
-                break;
-            case ViewState.UI:
-                break;
-            case ViewState.Turn:
-                break;
         }
     }
     float RotationSetTo_180(float angle)
@@ -267,10 +268,10 @@ public class SpringArms : CameraProperty
     void Start()
     {
         camPos = myTPSCam.myCam.transform.localPosition;
-        Keylist[KeyCode.A] = new MoveLeft();
-        Keylist[KeyCode.D] = new MoveRight();
-        Keylist[KeyCode.W] = new MoveForward();
-        Keylist[KeyCode.S] = new MoveBack();
+        moveKeylist[KeyCode.A] = new MoveLeft();
+        moveKeylist[KeyCode.D] = new MoveRight();
+        moveKeylist[KeyCode.W] = new MoveForward();
+        moveKeylist[KeyCode.S] = new MoveBack();
         desireDistance = camPos.z;
         myFPSCam = CameraSetting(myFPSCam);
         myTPSCam = CameraSetting(myTPSCam);

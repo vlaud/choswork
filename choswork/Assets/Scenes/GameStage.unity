@@ -2175,7 +2175,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 255
+    m_Bits: 2147483647
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -8585,8 +8585,8 @@ MonoBehaviour:
   ComboCheck:
     m_PersistentCalls:
       m_Calls: []
-  leftFoot: {fileID: 0}
-  rightFoot: {fileID: 0}
+  leftFoot: {fileID: 3816028668890046737}
+  rightFoot: {fileID: 2476738135074098572}
   orgDustEff: {fileID: 0}
 --- !u!114 &5866666020917934524
 MonoBehaviour:
