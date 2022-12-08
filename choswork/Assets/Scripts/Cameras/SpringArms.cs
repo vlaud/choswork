@@ -15,9 +15,7 @@ public class SpringArms : CameraProperty
     public CameraSet myFPSCam;
     public CameraSet myTPSCam;
     public CameraSet myUICam;
-    public Transform myEyes; //fps카메라 눈에 고정
-    public Transform myUI_basePos; //UI카메라 원래위치
-    public Transform myModel; //캐릭터 모델
+    public bool UIkeyAvailable = true;
    
     void ChangeState(ViewState s)
     {
@@ -41,7 +39,7 @@ public class SpringArms : CameraProperty
                 else
                     UICameraSetPos(myTPSCam);
                 StartCoroutine(UIMoving(myUI_basePos));
-                StartCoroutine(UIRotating(-myModel.forward));
+                StartCoroutine(UIRotating(myModel_baseForward.forward, Space.World)); // UI때 모델 회전
                 SelectCamera(myUICam);
                 break;
             case ViewState.Turn:
@@ -53,7 +51,7 @@ public class SpringArms : CameraProperty
                 {
                     StartCoroutine(UIMoving(myTPSCam.myCam.transform, () => ChangeState(ViewState.TPS)));
                 }
-                StartCoroutine(UIRotating(-myModel.forward));
+                StartCoroutine(UIRotating(myRoot.forward, Space.World)); // 모델 회전값을 fps 회전값과 맞춘다
                 break;
             case ViewState.Temp:
                 break;
@@ -189,11 +187,13 @@ public class SpringArms : CameraProperty
         }
         done?.Invoke();
     }
-    IEnumerator UIRotating(Vector3 pos)
+    IEnumerator UIRotating(Vector3 pos, Space sp)
     {
+        UIkeyAvailable = false; // 잠깐 i키 안먹히게
         //UI카메라 캐릭터 모델 돌리기
         Vector3 dir = pos;
         float Angle = Vector3.Angle(myModel.forward, dir);
+       
         float rotDir = 1.0f;
         if (Vector3.Dot(myModel.right, dir) < 0.0f)
         {
@@ -210,9 +210,10 @@ public class SpringArms : CameraProperty
 
             Angle -= delta;
 
-            myModel.Rotate(Vector3.up * delta * rotDir, Space.World);
+            myModel.Rotate(Vector3.up * delta * rotDir, sp);
             yield return null;
         }
+        UIkeyAvailable = true; // i키 다시 활성화
     }
     void RotatingRoot(Transform tr)
     {
@@ -280,6 +281,8 @@ public class SpringArms : CameraProperty
     // Update is called once per frame
     void Update()
     {
+        myModel_baseForward.position = myModel.position;
+        
         myFPSCam.myCam.transform.position = myEyes.position; // 1인칭 카메라 위치를 캐릭터 눈에 고정
         myUI_basePos.parent.rotation = mySpring.rotation; // ui카메라(부모를 중점으로)를 3인칭 좌우 회전값과 동일하게
         UICameraSetRot(mySpring);
@@ -293,7 +296,7 @@ public class SpringArms : CameraProperty
             CameraCheck();
             Debug.Log(IsFps);
         }
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I) && UIkeyAvailable)
         {
             IsUI = Toggling(IsUI);
             CameraCheck();
@@ -301,6 +304,7 @@ public class SpringArms : CameraProperty
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
+            Debug.Log(myModel.localRotation.eulerAngles.y);
             Debug.Log("쿼터니언 : " + myFPSCam.myRig.rotation.x);
             Debug.Log("오일러 : " + myFPSCam.myRig.rotation.eulerAngles.x);
             if (myFPSCam.myRig.localRotation.eulerAngles.x > 180.0f)

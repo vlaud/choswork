@@ -14,6 +14,10 @@ public class CameraProperty : MonoBehaviour
 {
     public Transform myRoot;//fps 좌우값
     public Transform mySpring; //tps 좌우값
+    public Transform myEyes; //fps카메라 눈에 고정
+    public Transform myUI_basePos; //UI카메라 원래위치
+    public Transform myModel; //캐릭터 모델
+    public Transform myModel_baseForward; //UI상태일때 캐릭터 모델이 바라봐야 할 곳
     public LayerMask crashMask;
     public Vector2 LookupRange = new Vector2(-60.0f, 80.0f);
     public Vector3 curRot = Vector3.zero;
