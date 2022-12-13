@@ -32,18 +32,21 @@ public class Player : BattleSystem
         {
             targetDir.x = Input.GetAxis("Horizontal");
             targetDir.y = Input.GetAxis("Vertical");
+            x = Mathf.Lerp(myAnim.GetFloat("x"), targetDir.x, Time.deltaTime * smoothMoveSpeed);
+            z = Mathf.Lerp(myAnim.GetFloat("z"), targetDir.y, Time.deltaTime * smoothMoveSpeed);
+
+            if (Input.GetKey(KeyCode.LeftShift)) myAnim.speed = 1.5f;
+            else myAnim.speed = myStat.MoveSpeed;
+
+            //x, z값이 0에 가까우면 0으로 고정
+            if (Mathf.Epsilon - 0.01f < x && x < Mathf.Epsilon + 0.01f) x = 0.0f;
+            if (Mathf.Epsilon - 0.01f < z && z < Mathf.Epsilon + 0.01f) z = 0.0f;
+            myAnim.SetFloat("x", x);
+            myAnim.SetFloat("z", z);
+
+            if (Input.GetKeyDown(KeyCode.F)) myAnim.SetTrigger("Kick");
         }
-        x = Mathf.Lerp(myAnim.GetFloat("x"), targetDir.x, Time.deltaTime * smoothMoveSpeed);
-        z = Mathf.Lerp(myAnim.GetFloat("z"), targetDir.y, Time.deltaTime * smoothMoveSpeed);
-
-        if (Input.GetKey(KeyCode.LeftShift)) myAnim.speed = 1.5f;
-        else myAnim.speed = myStat.MoveSpeed;
-
-        //x, z값이 0에 가까우면 0으로 고정
-        if (Mathf.Epsilon - 0.01f < x && x < Mathf.Epsilon + 0.01f) x = 0.0f;
-        if (Mathf.Epsilon - 0.01f < z && z < Mathf.Epsilon + 0.01f) z = 0.0f;
-        myAnim.SetFloat("x", x);
-        myAnim.SetFloat("z", z);
+       
     }
     public Animator ReturnAnim()
     {
