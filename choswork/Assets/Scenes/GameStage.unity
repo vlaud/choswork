@@ -2867,6 +2867,7 @@ MonoBehaviour:
     attackDelay: 0
   smoothMoveSpeed: 10
   myMoveSpeed: 1
+  KickStrength: 12000
   myCameras: {fileID: 1196819678}
   KickPoint: {fileID: 56026811}
   IsWall: 0
@@ -6455,6 +6456,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myRagDolls: {fileID: 1813994999419324607}
+  myEnemy: {fileID: 910030837}
 --- !u!136 &1825153599
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8376,7 +8378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 901346ba945cd1d4ca1ff5a329e2e152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DontMove: 1
+  DontMove: 0
   myPlayer: {fileID: 1825153595}
 --- !u!4 &1852372223688921457
 Transform:

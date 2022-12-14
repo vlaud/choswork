@@ -8,6 +8,7 @@ public class Player : BattleSystem
     Vector2 targetDir = Vector2.zero;
     public float smoothMoveSpeed = 10.0f;
     public float myMoveSpeed = 1.0f;
+    public float KickStrength = 10000.0f;
     public SpringArms myCameras;
     public GameObject KickPoint;
     public bool IsWall = false;
@@ -74,6 +75,7 @@ public class Player : BattleSystem
     public void KickTarget()
     {
         Collider[] list = Physics.OverlapSphere(KickPoint.transform.position, 0.2f, 1 << LayerMask.NameToLayer("Enemy"));
+        // 그냥 LayerMask.NameToLayer("Enemy"))을 하면 레이어가 엉뚱한게 선택된다 
         foreach (Collider col in list)
         {
             Debug.Log(col);
