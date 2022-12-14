@@ -79,8 +79,8 @@ public class StudyCommandPattern : MonoBehaviour
         {
             if(Input.GetKeyDown(key))
             {
-                Keylist[key].Execute(transform);
-                Commandlist.Push(Keylist[key]);
+                //Keylist[key].Execute(transform);
+                //Commandlist.Push(Keylist[key]);
             }
         }
     }

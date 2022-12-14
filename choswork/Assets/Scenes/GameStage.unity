@@ -2866,8 +2866,10 @@ MonoBehaviour:
     attackRange: 0
     attackDelay: 0
   smoothMoveSpeed: 10
+  myMoveSpeed: 1
   myCameras: {fileID: 1196819678}
   KickPoint: {fileID: 56026811}
+  IsWall: 0
 --- !u!1 &911326293 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 6468c9a8e17142b4ca0f0ec3570361ee, type: 3}
@@ -3365,7 +3367,7 @@ GameObject:
   - component: {fileID: 1042933213}
   - component: {fileID: 1042933212}
   - component: {fileID: 1042933211}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4629,7 +4631,7 @@ GameObject:
   - component: {fileID: 1472235645}
   - component: {fileID: 1472235644}
   - component: {fileID: 1472235643}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6314,7 +6316,7 @@ GameObject:
   - component: {fileID: 1771665529}
   - component: {fileID: 1771665528}
   - component: {fileID: 1771665527}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7002,7 +7004,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2010206248}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Floors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
