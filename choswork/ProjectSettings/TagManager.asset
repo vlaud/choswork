@@ -14,8 +14,8 @@ TagManager:
   - Ground
   - Wall
   - TPSmodel
-  - 
-  - 
+  - PlayerKick
+  - Enemy
   - 
   - 
   - 

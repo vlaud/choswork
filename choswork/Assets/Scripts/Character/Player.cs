@@ -26,7 +26,6 @@ public class Player : BattleSystem
     void Update()
     {
         PlayerMove();
-        Debug.Log(myAnim.speed);
     }
     void PlayerMove()
     {
@@ -70,6 +69,15 @@ public class Player : BattleSystem
         {
             //myMoveSpeed = myStat.MoveSpeed;
             IsWall = false;
+        }
+    }
+    public void KickTarget()
+    {
+        Collider[] list = Physics.OverlapSphere(KickPoint.transform.position, 0.2f, 1 << LayerMask.NameToLayer("Enemy"));
+        foreach (Collider col in list)
+        {
+            Debug.Log(col);
+            col.GetComponent<Monster>().GetKick();
         }
     }
     public void KickCheck(bool v)

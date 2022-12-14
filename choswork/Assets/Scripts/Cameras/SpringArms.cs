@@ -299,13 +299,11 @@ public class SpringArms : CameraProperty
         {
             IsFps = Toggling(IsFps);
             CameraCheck();
-            Debug.Log(IsFps);
         }
         if (Input.GetKeyDown(KeyCode.I) && UIkeyAvailable)
         {
             IsUI = Toggling(IsUI);
             CameraCheck();
-            Debug.Log(IsUI);
         }
         if (Input.GetKeyDown(KeyCode.T))
         {

@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class AnimEvent : MonoBehaviour
 {
     public UnityEvent Attack = default;
+    public UnityEvent Kick = default;
     public UnityEvent Skill = default;
     public UnityEvent<bool> ComboCheck = default;
     public UnityEvent<bool> KickCheck = default;
@@ -55,6 +56,10 @@ public class AnimEvent : MonoBehaviour
     public void OnAttack()
     {
         Attack?.Invoke();
+    }
+    public void OnKick()
+    {
+        Kick?.Invoke();
     }
     public void KickCheckStart()
     {
