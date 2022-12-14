@@ -8,6 +8,7 @@ public class Player : BattleSystem
     Vector2 targetDir = Vector2.zero;
     public float smoothMoveSpeed = 10.0f;
     public SpringArms myCameras;
+    public GameObject KickPoint;
     public enum STATE
     {
         Create, Play, Death
@@ -16,6 +17,7 @@ public class Player : BattleSystem
     void Start()
     {
         myAnim.speed = myStat.MoveSpeed;
+        KickPoint.SetActive(false);
     }
    
     // Update is called once per frame
@@ -44,9 +46,13 @@ public class Player : BattleSystem
             myAnim.SetFloat("x", x);
             myAnim.SetFloat("z", z);
 
-            if (Input.GetKeyDown(KeyCode.F)) myAnim.SetTrigger("Kick");
+            if (Input.GetKeyDown(KeyCode.F) && !myAnim.GetBool("IsKicking")) myAnim.SetTrigger("Kick");
         }
        
+    }
+    public void KickCheck(bool v)
+    {
+        KickPoint.SetActive(v);
     }
     public Animator ReturnAnim()
     {
