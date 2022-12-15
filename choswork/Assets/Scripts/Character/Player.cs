@@ -10,7 +10,8 @@ public class Player : BattleSystem
     public float myMoveSpeed = 1.0f;
     public float KickStrength = 10000.0f;
     public SpringArms myCameras;
-    public GameObject KickPoint;
+    public GameObject KickPoint; // 실제 발차기 효과 위치
+    public Transform KickTransform; // 발차기 소리 위치
     public bool IsWall = false;
     public enum STATE
     {

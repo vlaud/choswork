@@ -66,11 +66,10 @@ public class AnimEvent : MonoBehaviour
     }
     public void PlayKickSound()
     {
-        float rad = myPlayer.GetComponent<CapsuleCollider>().radius 
-            + myPlayer.KickPoint.GetComponent<SphereCollider>().radius
-            + 0.5f;
-        Collider[] list = Physics.OverlapSphere(transform.position, rad, KickBlock);
-        // 숫자가 다른 이유 : 애니메이션 진행도에 따라 발 위치가 다름 = 부딪히는 소리가 먼저 실행되어서 범위를 늘려줘야함
+        float rad = myPlayer.KickPoint.GetComponent<SphereCollider>().radius;
+            
+        Collider[] list = Physics.OverlapSphere(myPlayer.KickTransform.position, rad, KickBlock);
+        // 발차기 소리 위치(KickTransform)에서 실행
         foreach (Collider col in list)
         {
             if(col != null) SoundManager.Inst.PlayOneShot(myFootSound, kickWallSound);
