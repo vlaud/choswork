@@ -42,7 +42,7 @@ public class Monster : BattleSystem
             case STATE.Create:
                 break;
             case STATE.Idle:
-                RagDollSet(false);
+                //RagDollSet(false);
                 break;
             case STATE.Roaming:
                 break;
