@@ -52,7 +52,7 @@ public class Monster : BattleSystem
                 RagDollSet(true);
                 break;
             case STATE.StandUp:
-                myAnim.Play(_standupName);
+                myAnim.Play(_standupName, -1, 0.0f);
                 break;
             case STATE.ResetBones:
                 break;
