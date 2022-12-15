@@ -2871,6 +2871,7 @@ MonoBehaviour:
   myCameras: {fileID: 1196819678}
   KickPoint: {fileID: 56026811}
   IsWall: 0
+  myState: 0
 --- !u!1 &911326293 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 6468c9a8e17142b4ca0f0ec3570361ee, type: 3}
@@ -6455,8 +6456,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 881ae16113d9635429f643174597a8a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myStat:
+    hp: 0
+    maxHp: 0
+    moveSpeed: 0
+    rotSpeed: 0
+    ap: 0
+    attackRange: 0
+    attackDelay: 0
   myRagDolls: {fileID: 1813994999419324607}
-  myEnemy: {fileID: 910030837}
+  myHips: {fileID: 6788922139384181392}
+  _timetoWakeup: 3
+  _timeToResetBones: 0.5
+  _standupName: Stand Up
+  _standupClipName: Stand Up
+  myState: 0
 --- !u!136 &1825153599
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8334,6 +8348,8 @@ GameObject:
   - component: {fileID: 1326110511016251908}
   - component: {fileID: 1813994999419324607}
   - component: {fileID: 1813994999419324608}
+  - component: {fileID: 1813994999419324609}
+  - component: {fileID: 1813994999419324610}
   m_Layer: 0
   m_Name: Ch30_nonPBR
   m_TagString: Untagged
@@ -8365,6 +8381,8 @@ MonoBehaviour:
     rightArmRigidBody: {fileID: 5091400506560326379}
     rightForeArmRigidBody: {fileID: 7933934086384912914}
     headRigidBody: {fileID: 8262604047165109901}
+  myRagDollsRigidbodies: []
+  myRagDollsTransforms: []
   OnOff: 0
 --- !u!114 &1813994999419324608
 MonoBehaviour:
@@ -8380,6 +8398,66 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DontMove: 0
   myPlayer: {fileID: 1825153595}
+--- !u!95 &1813994999419324609
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813994999419324606}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 68049f16ca1cc7a41bb790169e3494b7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1813994999419324610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813994999419324606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6055d48f3d5ce94589b6ad7da774639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attack:
+    m_PersistentCalls:
+      m_Calls: []
+  Kick:
+    m_PersistentCalls:
+      m_Calls: []
+  Skill:
+    m_PersistentCalls:
+      m_Calls: []
+  ComboCheck:
+    m_PersistentCalls:
+      m_Calls: []
+  KickCheck:
+    m_PersistentCalls:
+      m_Calls: []
+  leftFoot: {fileID: 0}
+  rightFoot: {fileID: 0}
+  leftFootSound: {fileID: 0}
+  rightFootSound: {fileID: 0}
+  kickSound: {fileID: 0}
+  kickWallSound: {fileID: 0}
+  myFootSound: {fileID: 0}
+  KickBlock:
+    serializedVersion: 2
+    m_Bits: 0
+  orgDustEff: {fileID: 0}
+  myPlayer: {fileID: 0}
+  noSoundandEffect: 0
 --- !u!4 &1852372223688921457
 Transform:
   m_ObjectHideFlags: 0
@@ -10928,7 +11006,12 @@ MonoBehaviour:
   rightFoot: {fileID: 2476738135074098572}
   leftFootSound: {fileID: 8300000, guid: 42e65e088b3f4374e851b8dbd38f3df9, type: 3}
   rightFootSound: {fileID: 8300000, guid: 8bc94ec6ed537e743b481638bdcd503d, type: 3}
+  kickSound: {fileID: 8300000, guid: 482611fe6bc559142a00be6e726b4862, type: 3}
+  kickWallSound: {fileID: 8300000, guid: 74198389e177d0948b63ca9a3fb22801, type: 3}
   myFootSound: {fileID: 5866666020917934525}
+  KickBlock:
+    serializedVersion: 2
+    m_Bits: 1152
   orgDustEff: {fileID: 0}
   myPlayer: {fileID: 910030837}
   noSoundandEffect: 0

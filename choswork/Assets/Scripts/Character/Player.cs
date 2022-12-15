@@ -16,13 +16,14 @@ public class Player : BattleSystem
     {
         Create, Play, Death
     }
+    public STATE myState = STATE.Create;
     // Start is called before the first frame update
     void Start()
     {
         myMoveSpeed = myStat.MoveSpeed;
         KickPoint.SetActive(false);
     }
-   
+
     // Update is called once per frame
     void Update()
     {
@@ -44,7 +45,7 @@ public class Player : BattleSystem
 
             if (Input.GetKey(KeyCode.LeftShift) && !IsWall) myMoveSpeed = 1.5f; // 벽 충돌시엔 질주 off
             else myMoveSpeed = myStat.MoveSpeed;
-           
+
             //x, z값이 0에 가까우면 0으로 고정
             if (Mathf.Epsilon - 0.01f < x && x < Mathf.Epsilon + 0.01f) x = 0.0f;
             if (Mathf.Epsilon - 0.01f < z && z < Mathf.Epsilon + 0.01f) z = 0.0f;
@@ -55,7 +56,6 @@ public class Player : BattleSystem
         }
 
     }
-    
     private void OnCollisionStay(Collision collision) // 벽 충돌시엔 질주 off
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
@@ -79,7 +79,7 @@ public class Player : BattleSystem
         foreach (Collider col in list)
         {
             Debug.Log(col);
-            col.GetComponent<Monster>().GetKick();
+            col.GetComponent<Monster>().GetKick(myCameras.myRoot.transform.forward, KickStrength);
         }
     }
     public void KickCheck(bool v)

@@ -16,7 +16,10 @@ public class AnimEvent : MonoBehaviour
     public Transform rightFoot;
     public AudioClip leftFootSound;// 왼발소리 
     public AudioClip rightFootSound;// 오른발소리 
+    public AudioClip kickSound;// 발차기 소리
+    public AudioClip kickWallSound;// 닿는 발차기 소리
     public AudioSource myFootSound; // 발소리 오디오
+    public LayerMask KickBlock; // 발차기 닿는 레이어
     public GameObject orgDustEff;
     public Player myPlayer;
     public bool noSoundandEffect = false;
@@ -61,6 +64,18 @@ public class AnimEvent : MonoBehaviour
     {
         Kick?.Invoke();
     }
+    public void PlayKickSound()
+    {
+        Collider[] list = Physics.OverlapSphere(myPlayer.KickPoint.transform.position, 1.1f, KickBlock);
+        // 그냥 LayerMask.NameToLayer("Enemy"))을 하면 레이어가 엉뚱한게 선택된다 
+        foreach (Collider col in list)
+        {
+            Debug.Log(col);
+            if(col != null) SoundManager.Inst.PlayOneShot(myFootSound, kickWallSound);
+            else SoundManager.Inst.PlayOneShot(myFootSound, kickSound);
+        }
+        SoundManager.Inst.PlayOneShot(myFootSound, kickSound);
+    }
     public void KickCheckStart()
     {
         KickCheck?.Invoke(true);
@@ -73,7 +88,6 @@ public class AnimEvent : MonoBehaviour
     {
         Skill?.Invoke();
     }
-
     public void ComboCheckStart()
     {
         ComboCheck?.Invoke(true);
