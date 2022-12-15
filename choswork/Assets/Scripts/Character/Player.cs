@@ -75,7 +75,7 @@ public class Player : BattleSystem
     public void KickTarget()
     {
         Collider[] list = Physics.OverlapSphere(KickPoint.transform.position, 0.2f, 1 << LayerMask.NameToLayer("Enemy"));
-        // 그냥 LayerMask.NameToLayer("Enemy"))을 하면 레이어가 엉뚱한게 선택된다 
+        // 그냥 LayerMask.NameToLayer("Enemy"))을 하면 레이어가 엉뚱한게 선택된다
         foreach (Collider col in list)
         {
             Debug.Log(col);

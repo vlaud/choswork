@@ -66,11 +66,13 @@ public class AnimEvent : MonoBehaviour
     }
     public void PlayKickSound()
     {
-        Collider[] list = Physics.OverlapSphere(myPlayer.KickPoint.transform.position, 1.1f, KickBlock);
-        // 그냥 LayerMask.NameToLayer("Enemy"))을 하면 레이어가 엉뚱한게 선택된다 
+        float rad = myPlayer.GetComponent<CapsuleCollider>().radius 
+            + myPlayer.KickPoint.GetComponent<SphereCollider>().radius
+            + 0.5f;
+        Collider[] list = Physics.OverlapSphere(transform.position, rad, KickBlock);
+        // 숫자가 다른 이유 : 애니메이션 진행도에 따라 발 위치가 다름 = 부딪히는 소리가 먼저 실행되어서 범위를 늘려줘야함
         foreach (Collider col in list)
         {
-            Debug.Log(col);
             if(col != null) SoundManager.Inst.PlayOneShot(myFootSound, kickWallSound);
             else SoundManager.Inst.PlayOneShot(myFootSound, kickSound);
         }

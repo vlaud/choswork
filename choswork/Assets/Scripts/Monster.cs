@@ -91,8 +91,8 @@ public class Monster : BattleSystem
         rb = GetComponent<Rigidbody>();
         cs = GetComponent<CapsuleCollider>();
         _origintimetoWake = _timetoWakeup;
-        _bones = myRagDolls.myRagDollsTransforms;
-        //_bones = myHips.GetComponentsInChildren<Transform>();
+        //_bones = myRagDolls.myRagDollsTransforms;
+        _bones = myHips.GetComponentsInChildren<Transform>();
         _standupTransforms = new BoneTransform[_bones.Length];
         _ragdollTransforms = new BoneTransform[_bones.Length];
 
@@ -100,7 +100,7 @@ public class Monster : BattleSystem
         {
             _standupTransforms[boneIndex] = new BoneTransform();
             _ragdollTransforms[boneIndex] = new BoneTransform();
-            Debug.Log(_bones[boneIndex]);
+            //Debug.Log(_bones[boneIndex]);
         }
         PopulateAnimation(_standupClipName, _standupTransforms);
         RagDollSet(false);
