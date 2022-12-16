@@ -350,9 +350,16 @@ public class SpringArms : CameraProperty
             desireDistance += Input.GetAxis("Mouse ScrollWheel") * ZoomSpeed;
             desireDistance = Mathf.Clamp(desireDistance, ZoomRange.x, ZoomRange.y);
         }
+        Debug.DrawRay(myTPSCam.myRig.position, -myTPSCam.myRig.forward * (-camPos.z + Offset), Color.red);
+        Debug.DrawRay(myTPSCam.myCam.transform.position, -myTPSCam.myRig.forward * (-camPos.z + Offset), Color.green);
         if (Physics.Raycast(myTPSCam.myRig.position, -myTPSCam.myRig.forward, out RaycastHit hit, -camPos.z + Offset, crashMask))
         {
             camPos.z = -hit.distance + Offset;
+            
+        }
+        if (Physics.Raycast(myTPSCam.myCam.transform.position, -myTPSCam.myRig.forward, out RaycastHit thit, -camPos.z + Offset, crashMask))
+        {
+            //Debug.DrawRay(myTPSCam.myCam.transform.position, thit.point, Color.red);
         }
         else
         {
