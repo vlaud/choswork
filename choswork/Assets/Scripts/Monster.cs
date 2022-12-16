@@ -13,10 +13,13 @@ public class Monster : BattleSystem
     }
     public RagDollPhysics myRagDolls;
     public Transform myHips;
+    public Transform myEnemy;
     public float _timetoWakeup = 3.0f;
     public float _timeToResetBones;
+    public float _changeStateTime = 3.0f;
     public string _standupName;
     public string _standupClipName;
+    
 
     private Rigidbody rb;
     private CapsuleCollider cs;
@@ -42,9 +45,11 @@ public class Monster : BattleSystem
             case STATE.Create:
                 break;
             case STATE.Idle:
-                //RagDollSet(false);
+                StartCoroutine(DelayState(STATE.Roaming));
                 break;
             case STATE.Roaming:
+                myTarget = myEnemy;
+                MoveToPosition(myTarget.position);
                 break;
             case STATE.Battle:
                 break;
@@ -117,6 +122,11 @@ public class Monster : BattleSystem
         StateProcess();
     }
     
+    IEnumerator DelayState(STATE s)
+    {
+        yield return new WaitForSeconds(_changeStateTime);
+        ChangeState(s);
+    }
     public void GetKick(Vector3 dir, float strength)
     {
         if (myState == STATE.RagDoll) return;
