@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEditor.PlayerSettings;
 //public delegate void MyAction();
 
 public class CharacterMovement : CharacterProperty
 {
     Coroutine CoroutineAngle = null;
-    Coroutine CoroutineLerp = null;
+    //Coroutine CoroutineLerp = null;
     Coroutine attackCo = null;
+    Coroutine CoRoot = null;
 
     protected void AttackTarget(Transform target)
     {
@@ -24,19 +26,19 @@ public class CharacterMovement : CharacterProperty
         }
         CoroutineAngle = StartCoroutine(RotatingToPosition(pos));
     }
-    protected void MoveToPosition(Vector3 pos, Vector2 desireAnim, UnityAction done = null, bool Rot = true)
+    protected void MoveToPosition(Vector3 pos, UnityAction done = null, bool Rot = true)
     {
         if(attackCo != null)
         {
             StopCoroutine(attackCo);
             attackCo = null;
         }
-        if(CoroutineLerp != null)
+        if(CoRoot != null)
         {
-            StopCoroutine(CoroutineLerp);
-            CoroutineLerp = null;
+            StopCoroutine(CoRoot);
+            CoRoot = null;
         }
-        CoroutineLerp = StartCoroutine(LerpToPosition(pos, desireAnim, done));
+        CoRoot = StartCoroutine(RootMotionMoving(pos, done));
 
         if (Rot)
         {
@@ -110,6 +112,33 @@ public class CharacterMovement : CharacterProperty
         //myAnim.SetBool("IsMoving", false);
         done?.Invoke();
     }
+    IEnumerator RootMotionMoving(Vector3 pos, UnityAction done)
+    {
+        Vector3 dir = pos - transform.position;
+        float dist = dir.magnitude;
+        dir.Normalize();
+        //달리기 시작
+        myAnim.SetBool("IsMoving", true);
+
+        while (dist > 0.0f)
+        {
+            if (!myAnim.GetBool("IsAttacking"))
+            {
+                float delta = myStat.MoveSpeed * Time.deltaTime;
+                if (delta > dist)
+                {
+                    delta = dist;
+                }
+                dist -= delta;
+                transform.Translate(dir * delta, Space.World);
+            }
+           
+            yield return null;
+        }
+        //달리기 끝
+        myAnim.SetBool("IsMoving", false);
+        done?.Invoke();
+    }
     IEnumerator MovingToPosition(Vector3 pos, UnityAction done)
     {
         Vector3 dir = pos - transform.position;
@@ -120,25 +149,13 @@ public class CharacterMovement : CharacterProperty
         myAnim.SetBool("IsMoving", true);
         while (dist > 0.0f)
         {
-
-            /*
-            if (GetComponent<Animator>().GetBool("IsAttacking"))
-            {
-                GetComponent<Animator>().SetBool("IsMoving", false);
-                yield break;
-
-            }*/
-
             if (!myAnim.GetBool("IsAttacking"))
             {
-
-
                 float delta = myStat.MoveSpeed * Time.deltaTime;
                 if (delta > dist)
                 {
                     delta = dist;
                 }
-
                 dist -= delta;
                 transform.Translate(dir * delta, Space.World);
             }
