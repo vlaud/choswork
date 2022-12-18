@@ -54,6 +54,7 @@ public class Monster : BattleSystem
             case STATE.Battle:
                 break;
             case STATE.RagDoll:
+                StopAllCoroutines();
                 RagDollSet(true);
                 break;
             case STATE.StandUp:
