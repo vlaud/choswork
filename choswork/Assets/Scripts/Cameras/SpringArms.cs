@@ -357,7 +357,7 @@ public class SpringArms : CameraProperty
             camPos.z = -hit.distance + Offset;
             
         }
-        if (Physics.Raycast(myTPSCam.myCam.transform.position, -myTPSCam.myRig.forward, out RaycastHit thit, -camPos.z + Offset, crashMask))
+        else if (Physics.Raycast(myTPSCam.myCam.transform.position, -myTPSCam.myRig.forward, out RaycastHit thit, -camPos.z + Offset, crashMask))
         {
             //Debug.DrawRay(myTPSCam.myCam.transform.position, thit.point, Color.red);
         }
