@@ -53,6 +53,7 @@ public class CharacterMovement : CharacterProperty
     IEnumerator RotatingToPosition(Vector3 pos)
     {
         Vector3 dir = (pos - transform.position).normalized;
+        dir.y = 0.0f;
         float Angle = Vector3.Angle(transform.forward, dir);
         float rotDir = 1.0f;
         if (Vector3.Dot(transform.right, dir) < 0.0f)
@@ -115,24 +116,21 @@ public class CharacterMovement : CharacterProperty
     IEnumerator RootMotionMoving(Vector3 pos, UnityAction done)
     {
         Vector3 dir = pos - transform.position;
+        dir.y = 0.0f;
         float dist = dir.magnitude;
         dir.Normalize();
         //달리기 시작
         myAnim.SetBool("IsMoving", true);
 
-        while (dist > 0.0f)
+        while (dist > 1.0f)
         {
             if (!myAnim.GetBool("IsAttacking"))
             {
-                float delta = myStat.MoveSpeed * Time.deltaTime;
-                if (delta > dist)
-                {
-                    delta = dist;
-                }
-                dist -= delta;
-                transform.Translate(dir * delta, Space.World);
+                dir = pos - transform.position;
+                dir.y = 0.0f;
+                dist = dir.magnitude;
+               
             }
-           
             yield return null;
         }
         //달리기 끝

@@ -13,7 +13,9 @@ public class Monster : BattleSystem
     }
     public RagDollPhysics myRagDolls;
     public Transform myHips;
-    public Transform myEnemy;
+    public Transform myStart;
+    public Transform myEnd;
+    public bool IsStart = false;
     public float _timetoWakeup = 3.0f;
     public float _timeToResetBones;
     public float _changeStateTime = 3.0f;
@@ -45,11 +47,13 @@ public class Monster : BattleSystem
             case STATE.Create:
                 break;
             case STATE.Idle:
+                myAnim.SetBool("IsMoving", false);
+                IsStart = Toggle.Inst.Toggling(IsStart);
                 StartCoroutine(DelayState(STATE.Roaming));
                 break;
             case STATE.Roaming:
-                myTarget = myEnemy;
-                MoveToPosition(myTarget.position);
+                if(IsStart) MoveToPosition(myEnd.position, ()=>ChangeState(STATE.Idle));
+                else MoveToPosition(myStart.position, ()=> ChangeState(STATE.Idle));
                 break;
             case STATE.Battle:
                 break;
@@ -110,6 +114,7 @@ public class Monster : BattleSystem
         }
         PopulateAnimation(_standupClipName, _standupTransforms);
         RagDollSet(false);
+        transform.position = myStart.position;
     }
     // Start is called before the first frame update
     void Start()

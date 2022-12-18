@@ -297,12 +297,12 @@ public class SpringArms : CameraProperty
     {
         if (Input.GetKeyDown(KeyCode.V))
         {
-            IsFps = Toggling(IsFps);
+            IsFps = Toggle.Inst.Toggling(IsFps);
             CameraCheck();
         }
         if (Input.GetKeyDown(KeyCode.I) && UIkeyAvailable)
         {
-            IsUI = Toggling(IsUI);
+            IsUI = Toggle.Inst.Toggling(IsUI);
             CameraCheck();
         }
         if (Input.GetKeyDown(KeyCode.T))
@@ -373,15 +373,6 @@ public class SpringArms : CameraProperty
 
         AllCameraOff();
         cam.myCam.SetActive(true);
-    }
-    bool Toggling(bool b) // 토글 기능
-    {
-        bool bRes = false;
-
-        if (b) bRes = false;
-        else bRes = true;
-
-        return bRes;
     }
     void CamerasOnOff(ViewState s)
     {
