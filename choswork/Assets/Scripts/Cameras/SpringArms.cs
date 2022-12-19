@@ -351,19 +351,21 @@ public class SpringArms : CameraProperty
             desireDistance = Mathf.Clamp(desireDistance, ZoomRange.x, ZoomRange.y);
         }
         Debug.DrawRay(myTPSCam.myRig.position, -myTPSCam.myRig.forward * (-camPos.z + Offset), Color.red);
-        Debug.DrawRay(myTPSCam.myCam.transform.position, -myTPSCam.myRig.forward * (-camPos.z + Offset), Color.green);
+        Debug.DrawRay(myTPSCam.myCam.transform.position, -myTPSCam.myRig.forward * (Offset), Color.green);
         if (Physics.Raycast(myTPSCam.myRig.position, -myTPSCam.myRig.forward, out RaycastHit hit, -camPos.z + Offset, crashMask))
         {
             camPos.z = -hit.distance + Offset;
-            
         }
-        else if (Physics.Raycast(myTPSCam.myCam.transform.position, -myTPSCam.myRig.forward, out RaycastHit thit, -camPos.z + Offset, crashMask))
+        else if (Physics.Raycast(myTPSCam.myCam.transform.position, -myTPSCam.myRig.forward, out RaycastHit thit, 0.01f + Offset, crashMask))
         {
-            //Debug.DrawRay(myTPSCam.myCam.transform.position, thit.point, Color.red);
+            if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            {
+                camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.deltaTime * ZoomSpeed);
+            }
         }
         else
         {
-            camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.deltaTime * 3.0f);
+            camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.deltaTime * ZoomSpeed);
         }
         myTPSCam.myCam.transform.localPosition = camPos;
     }
