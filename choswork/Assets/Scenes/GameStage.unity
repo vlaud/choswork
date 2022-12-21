@@ -7409,14 +7409,17 @@ MonoBehaviour:
     hp: 100
     maxHp: 100
     moveSpeed: 1
-    rotSpeed: 180
+    rotSpeed: 360
     ap: 1
-    attackRange: 2
+    attackRange: 1.5
     attackDelay: 1
   myRagDolls: {fileID: 450554896}
   myHips: {fileID: 5465940246961711986}
   myStart: {fileID: 685049426}
   myEnd: {fileID: 624279258}
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 8
   IsStart: 0
   _timetoWakeup: 3
   _timeToResetBones: 0.5
@@ -11700,6 +11703,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DontMove: 0
+  DontRot: 0
   myPlayer: {fileID: 910030834}
 --- !u!82 &5866666020917934525
 AudioSource:
@@ -11830,6 +11834,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DontMove: 0
+  DontRot: 0
   myPlayer: {fileID: 1905050036}
 --- !u!114 &5866666021462102430
 MonoBehaviour:
@@ -11845,7 +11850,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Attack:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1905050035}
+        m_TargetAssemblyTypeName: Monster, Assembly-CSharp
+        m_MethodName: Attack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   Kick:
     m_PersistentCalls:
       m_Calls: []
@@ -11857,7 +11874,19 @@ MonoBehaviour:
       m_Calls: []
   KickCheck:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1905050035}
+        m_TargetAssemblyTypeName: Monster, Assembly-CSharp
+        m_MethodName: AttackCheck
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   leftFoot: {fileID: 0}
   rightFoot: {fileID: 0}
   leftFootSound: {fileID: 0}

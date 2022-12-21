@@ -15,6 +15,7 @@ public class Monster : BattleSystem
     public Transform myHips;
     public Transform myStart;
     public Transform myEnd;
+    public LayerMask enemyMask = default;
     public bool IsStart = false;
     public float _timetoWakeup = 3.0f;
     public float _timeToResetBones;
@@ -33,7 +34,7 @@ public class Monster : BattleSystem
 
     public enum STATE
     {
-        Create, Idle, Roaming, Battle, RagDoll, StandUp, ResetBones, Death
+        Create, Idle, Roaming, Angry, Battle, RagDoll, StandUp, ResetBones, Death
     }
     public STATE myState = STATE.Create;
 
@@ -46,14 +47,22 @@ public class Monster : BattleSystem
         {
             case STATE.Create:
                 break;
-            case STATE.Idle:
-                myAnim.SetBool("IsMoving", false);
+            case STATE.Idle: // 평상시
+                myAnim.SetBool("IsMoving", false); // 움직임 비활성화
                 IsStart = Toggle.Inst.Toggling(IsStart);
                 StartCoroutine(DelayState(STATE.Roaming));
                 break;
             case STATE.Roaming:
                 if(IsStart) MoveToPosition(myEnd.position, ()=>ChangeState(STATE.Idle));
                 else MoveToPosition(myStart.position, ()=> ChangeState(STATE.Idle));
+                break;
+            case STATE.Angry:
+                myAnim.SetBool("IsMoving", false); // 움직임 비활성화
+                if (myTarget == null)
+                {
+                    myTarget = GameObject.Find("Player").GetComponent<Transform>();
+                }
+                AttackTarget(myTarget);
                 break;
             case STATE.Battle:
                 break;
@@ -79,6 +88,8 @@ public class Monster : BattleSystem
             case STATE.Idle:
                 break;
             case STATE.Roaming:
+                break;
+            case STATE.Angry:
                 break;
             case STATE.Battle:
                 break;
@@ -142,6 +153,7 @@ public class Monster : BattleSystem
         force = dir * strength;
         force.y = strength;
         myRagDolls.myRagDoll.spineRigidBody.AddForce(force);
+        myAnim.SetBool("IsAngry", true);
     }
 
     public void RagDollSet(bool v)
@@ -199,7 +211,7 @@ public class Monster : BattleSystem
     {
         if (!myAnim.GetCurrentAnimatorStateInfo(0).IsName(_standupName))
         {
-            ChangeState(STATE.Idle);
+            ChangeState(STATE.Angry);
         }
     }
     void ResetBonesBehaviour()
@@ -249,5 +261,13 @@ public class Monster : BattleSystem
         }
         transform.position = positionBeforeSampling;
         transform.rotation = rotationBeforeSampling;
+    }
+    public void Attack()
+    {
+
+    }
+    public void AttackCheck(bool v)
+    {
+        //myAnim.GetComponent<RootMotion>().DontRot = v;
     }
 }
