@@ -297,12 +297,12 @@ public class SpringArms : CameraProperty
     {
         if (Input.GetKeyDown(KeyCode.V))
         {
-            IsFps = Toggling(IsFps);
+            IsFps = Toggle.Inst.Toggling(IsFps);
             CameraCheck();
         }
         if (Input.GetKeyDown(KeyCode.I) && UIkeyAvailable)
         {
-            IsUI = Toggling(IsUI);
+            IsUI = Toggle.Inst.Toggling(IsUI);
             CameraCheck();
         }
         if (Input.GetKeyDown(KeyCode.T))
@@ -350,13 +350,22 @@ public class SpringArms : CameraProperty
             desireDistance += Input.GetAxis("Mouse ScrollWheel") * ZoomSpeed;
             desireDistance = Mathf.Clamp(desireDistance, ZoomRange.x, ZoomRange.y);
         }
+        Debug.DrawRay(myTPSCam.myRig.position, -myTPSCam.myRig.forward * (-camPos.z + Offset), Color.red);
+        Debug.DrawRay(myTPSCam.myCam.transform.position, -myTPSCam.myRig.forward * (Offset), Color.green);
         if (Physics.Raycast(myTPSCam.myRig.position, -myTPSCam.myRig.forward, out RaycastHit hit, -camPos.z + Offset, crashMask))
         {
             camPos.z = -hit.distance + Offset;
         }
+        else if (Physics.Raycast(myTPSCam.myCam.transform.position, -myTPSCam.myRig.forward, out RaycastHit thit, 0.01f + Offset, crashMask))
+        {
+            if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            {
+                camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.deltaTime * ZoomSpeed);
+            }
+        }
         else
         {
-            camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.deltaTime * 3.0f);
+            camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.deltaTime * ZoomSpeed);
         }
         myTPSCam.myCam.transform.localPosition = camPos;
     }
@@ -366,15 +375,6 @@ public class SpringArms : CameraProperty
 
         AllCameraOff();
         cam.myCam.SetActive(true);
-    }
-    bool Toggling(bool b) // 토글 기능
-    {
-        bool bRes = false;
-
-        if (b) bRes = false;
-        else bRes = true;
-
-        return bRes;
     }
     void CamerasOnOff(ViewState s)
     {
