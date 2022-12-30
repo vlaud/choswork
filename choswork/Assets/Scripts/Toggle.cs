@@ -11,11 +11,6 @@ public class Toggle : MonoBehaviour
     }
     public bool Toggling(bool b) // 토글 기능
     {
-        bool bRes = false;
-
-        if (b) bRes = false;
-        else bRes = true;
-
-        return bRes;
+        return !b;
     }
 }
