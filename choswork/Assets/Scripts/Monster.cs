@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR;
+using UnityEngine.AI;
+using static UnityEditor.PlayerSettings;
+using static UnityEngine.GraphicsBuffer;
 
 public class Monster : BattleSystem
 {
@@ -22,8 +24,8 @@ public class Monster : BattleSystem
     public float _changeStateTime = 3.0f;
     public string _standupName;
     public string _standupClipName;
-    
 
+    private NavMeshPath myPath;
     private Rigidbody rb;
     private CapsuleCollider cs;
     private float _origintimetoWake;
@@ -53,8 +55,14 @@ public class Monster : BattleSystem
                 StartCoroutine(DelayState(STATE.Roaming));
                 break;
             case STATE.Roaming:
-                if(IsStart) MoveToPosition(myEnd.position, ()=>ChangeState(STATE.Idle));
-                else MoveToPosition(myStart.position, ()=> ChangeState(STATE.Idle));
+                if (IsStart)
+                {
+                    RePath(myPath, myEnd.position, () => ChangeState(STATE.Idle));
+                }
+                else
+                {
+                    RePath(myPath, myStart.position, () => ChangeState(STATE.Idle));
+                }
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
@@ -62,7 +70,7 @@ public class Monster : BattleSystem
                 {
                     myTarget = GameObject.Find("Player").GetComponent<Transform>();
                 }
-                AttackTarget(myTarget);
+                AttackTarget(myPath, myTarget);
                 break;
             case STATE.Battle:
                 break;
@@ -117,7 +125,7 @@ public class Monster : BattleSystem
         _standupTransforms = new BoneTransform[_bones.Length];
         _ragdollTransforms = new BoneTransform[_bones.Length];
 
-        for(int boneIndex = 0; boneIndex < _bones.Length; ++boneIndex)
+        for (int boneIndex = 0; boneIndex < _bones.Length; ++boneIndex)
         {
             _standupTransforms[boneIndex] = new BoneTransform();
             _ragdollTransforms[boneIndex] = new BoneTransform();
@@ -130,6 +138,8 @@ public class Monster : BattleSystem
     // Start is called before the first frame update
     void Start()
     {
+        myPath = new NavMeshPath();
+        //RePath(myPath, "IsMoving", myEnd.position);
         ChangeState(STATE.Idle);
     }
 
@@ -138,7 +148,6 @@ public class Monster : BattleSystem
     {
         StateProcess();
     }
-    
     IEnumerator DelayState(STATE s)
     {
         yield return new WaitForSeconds(_changeStateTime);
@@ -197,7 +206,7 @@ public class Monster : BattleSystem
     {
         _timetoWakeup -= Time.deltaTime;
 
-        if(_timetoWakeup <= 0.0f)
+        if (_timetoWakeup <= 0.0f)
         {
             AlignRotationToHips();
             AlignPositonToHips();
@@ -219,7 +228,7 @@ public class Monster : BattleSystem
         _elapsedResetBonesTime += Time.deltaTime;
         float elapsedPercentage = _elapsedResetBonesTime / _timeToResetBones;
 
-        for(int i = 0; i < _bones.Length; ++i)
+        for (int i = 0; i < _bones.Length; ++i)
         {
             _bones[i].localPosition = Vector3.Lerp(
                 _ragdollTransforms[i].Position,
@@ -231,7 +240,7 @@ public class Monster : BattleSystem
                     _standupTransforms[i].Rotation,
                     elapsedPercentage);
         }
-        if(elapsedPercentage >= 1.0f)
+        if (elapsedPercentage >= 1.0f)
         {
             ChangeState(STATE.StandUp);
             RagDollSet(false);
@@ -252,7 +261,7 @@ public class Monster : BattleSystem
         Quaternion rotationBeforeSampling = transform.rotation;
         foreach (AnimationClip clip in myAnim.runtimeAnimatorController.animationClips)
         {
-            if(clip.name == clipName)
+            if (clip.name == clipName)
             {
                 clip.SampleAnimation(myAnim.gameObject, 0);
                 PopulateBoneTransforms(bonetransforms);

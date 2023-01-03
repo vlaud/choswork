@@ -47,8 +47,8 @@ public class Player : BattleSystem
             myMoveSpeed = (Input.GetKey(KeyCode.LeftShift) && !IsWall) ? 1.5f : myStat.MoveSpeed; // 벽 충돌시엔 질주 off
 
             //x, z값이 0에 가까우면 0으로 고정
-            x = Mathf.Abs(x) < Mathf.Epsilon ? 0.0f : x;
-            z = Mathf.Abs(z) < Mathf.Epsilon ? 0.0f : z;
+            if (Mathf.Epsilon - 0.01f < x && x < Mathf.Epsilon + 0.01f) x = 0.0f;
+            if (Mathf.Epsilon - 0.01f < z && z < Mathf.Epsilon + 0.01f) z = 0.0f;
             myAnim.SetFloat("x", x);
             myAnim.SetFloat("z", z);
 

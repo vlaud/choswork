@@ -1,6 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.ConstrainedExecution;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Events;
 using static UnityEditor.PlayerSettings;
 //public delegate void MyAction();
@@ -11,11 +15,48 @@ public class CharacterMovement : CharacterProperty
     //Coroutine CoroutineLerp = null;
     Coroutine attackCo = null;
     Coroutine CoRoot = null;
-
-    protected void AttackTarget(Transform target)
+    public void RePath(NavMeshPath myPath, Vector3 pos, UnityAction done = null)
     {
         StopAllCoroutines();
-        attackCo = StartCoroutine(AttackRoot(target, myStat.AttackRange, myStat.AttackDelay));
+        Debug.Log("목표지점: " + pos);
+        StartCoroutine(MovingByPath(myPath, pos, done));
+    }
+    IEnumerator MovingByPath(NavMeshPath myPath, Vector3 pos, UnityAction done)
+    {
+        int cur = 1;
+        NavMesh.CalculatePath(transform.position, pos, NavMesh.AllAreas, myPath);
+        Vector3[] list = myPath.corners;
+
+        Vector3 dir = pos - transform.position;
+        dir.y = 0.0f;
+        float dist = dir.magnitude;
+        dir.Normalize();
+
+        while (dist > 1.0f) // 도착 판정
+        {
+            dir = pos - transform.position;
+            dir.y = 0.0f;
+            dist = dir.magnitude;
+
+            if (cur < list.Length)
+            {
+                NavMesh.CalculatePath(transform.position, pos, NavMesh.AllAreas, myPath); // 실시간으로 네비메쉬 검사
+                list = myPath.corners;
+                for (int i = 0; i < list.Length - 1; ++i)
+                {
+                    Debug.DrawLine(list[i], list[i + 1], Color.red);
+                }
+                Debug.Log("현재 코너: " + cur + "번째: " + list[cur] + "총 코너: " + list.Length);
+                MoveToPosition(list[cur], () => cur++);
+            }
+            yield return null;
+        }
+        done?.Invoke();
+    }
+    protected void AttackTarget(NavMeshPath myPath, Transform target)
+    {
+        StopAllCoroutines();
+        attackCo = StartCoroutine(AttackRoot(myPath, target, myStat.AttackRange, myStat.AttackDelay));
     }
     protected void RotateToTarget(Vector3 pos, UnityAction done = null)
     {
@@ -60,7 +101,7 @@ public class CharacterMovement : CharacterProperty
         {
             rotDir = -rotDir;
         }
-        while (Angle > 0.0f)
+        while (Angle > Mathf.Epsilon)
         {
             if (!myAnim.GetBool("IsAttacking"))
             {
@@ -124,14 +165,13 @@ public class CharacterMovement : CharacterProperty
         //달리기 시작
         myAnim.SetBool("IsMoving", true);
 
-        while (dist > 1.0f)
+        while (dist > 0.0f)
         {
             if (!myAnim.GetBool("IsAttacking"))
             {
                 dir = pos - transform.position;
                 dir.y = 0.0f;
                 dist = dir.magnitude;
-               
             }
             yield return null;
         }
@@ -180,7 +220,6 @@ public class CharacterMovement : CharacterProperty
             float dist = dir.magnitude;
             dir.Normalize();
 
-
             if (dist > AttackRange)
             {
                 myAnim.SetBool("IsMoving", true);
@@ -214,13 +253,12 @@ public class CharacterMovement : CharacterProperty
                 delta = Angle;
             transform.Rotate(Vector3.up * delta * rotDir, Space.World);
             
-
             yield return null;
         }
         myAnim.SetBool("IsMoving", false);
     }
     // 루트모션 공격
-    IEnumerator AttackRoot(Transform target, float AttackRange, float AttackDelay)
+    IEnumerator AttackRoot(NavMeshPath myPath, Transform target, float AttackRange, float AttackDelay)
     {
         float playTime = 0.0f;
         float delta = 0.0f;
@@ -228,14 +266,27 @@ public class CharacterMovement : CharacterProperty
         {
             if (!myAnim.GetBool("IsAttacking")) playTime += Time.deltaTime;
             // 이동
+            NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, myPath);
+            Vector3[] list = myPath.corners;
             Vector3 dir = target.position - transform.position;
             dir.y = 0.0f;
             float dist = dir.magnitude;
             dir.Normalize();
-
+            int cur = 1;
+            for (int i = 0; i < list.Length - 1; ++i)
+            {
+                Debug.DrawLine(list[i], list[i + 1], Color.red);
+            }
             if (dist > AttackRange)
             {
-                myAnim.SetBool("IsRunning", true); // 루트모션이니 애니메이션만 활성화
+                myAnim.SetBool("IsRunning", true);
+
+                if (cur < list.Length)
+                {
+                    dir = list[cur++] - transform.position;
+                    dir.y = 0.0f;
+                    dist = dir.magnitude;
+                }
             }
             else
             {
@@ -260,7 +311,6 @@ public class CharacterMovement : CharacterProperty
                 if (delta > Angle)
                     delta = Angle;
                 transform.Rotate(Vector3.up * delta * rotDir, Space.World);
-
             }
             yield return null;
         }
