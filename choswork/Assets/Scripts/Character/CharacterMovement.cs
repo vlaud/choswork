@@ -18,7 +18,7 @@ public class CharacterMovement : CharacterProperty
     public void RePath(NavMeshPath myPath, Vector3 pos, UnityAction done = null)
     {
         StopAllCoroutines();
-        Debug.Log("목표지점: " + pos);
+        //Debug.Log("목표지점: " + pos);
         StartCoroutine(MovingByPath(myPath, pos, done));
     }
     IEnumerator MovingByPath(NavMeshPath myPath, Vector3 pos, UnityAction done)
@@ -46,7 +46,7 @@ public class CharacterMovement : CharacterProperty
                 {
                     Debug.DrawLine(list[i], list[i + 1], Color.red);
                 }
-                Debug.Log("현재 코너: " + cur + "번째: " + list[cur] + "총 코너: " + list.Length);
+                //Debug.Log("현재 코너: " + cur + "번째: " + list[cur] + "총 코너: " + list.Length);
                 MoveToPosition(list[cur], () => cur++);
             }
             yield return null;

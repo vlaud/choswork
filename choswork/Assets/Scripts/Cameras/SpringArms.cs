@@ -18,12 +18,12 @@ public class SpringArms : CameraProperty
     public Player myPlayer;
     public bool UIkeyAvailable = true;
     public bool isFPSCamRotinTPS = false;
-   
+
     void ChangeState(ViewState s)
     {
         if (myCameraState == s) return;
         myCameraState = s;
-        
+
         switch (myCameraState)
         {
             case ViewState.Create:
@@ -36,7 +36,7 @@ public class SpringArms : CameraProperty
                 SelectCamera(myTPSCam);
                 break;
             case ViewState.UI:
-                if(IsFps)
+                if (IsFps)
                     UICameraSetPos(myFPSCam);
                 else
                     UICameraSetPos(myTPSCam);
@@ -47,7 +47,7 @@ public class SpringArms : CameraProperty
             case ViewState.Turn:
                 if (IsFps) // fps 활성화
                 {
-                    StartCoroutine(UIMoving(myFPSCam.myCam.transform, ()=> ChangeState(ViewState.FPS)));
+                    StartCoroutine(UIMoving(myFPSCam.myCam.transform, () => ChangeState(ViewState.FPS)));
                 }
                 else // tps 활성화
                 {
@@ -59,10 +59,10 @@ public class SpringArms : CameraProperty
                 break;
         }
     }
-    
-    void StateProcess() 
+
+    void StateProcess()
     {
-        if(myCameraState != ViewState.UI)
+        if (myCameraState != ViewState.UI)
             myTPSCam = SpringArmWork(myTPSCam); // 1인칭, 3인칭 카메라값을 같게 
 
         KeyMovement(); // 키설정
@@ -80,7 +80,7 @@ public class SpringArms : CameraProperty
                 {
                     RotatingRoot(mySpring); // 이동키 꾹 누를시 캐릭터 회전
                 }
-                if(myPlayer.ReturnAnim().GetBool("IsMoving") && !isFPSCamRotinTPS)
+                if (myPlayer.ReturnAnim().GetBool("IsMoving") && !isFPSCamRotinTPS)
                 {
                     StartCoroutine(RotatingDownUP());  //캐릭터가 움직일때 fps 카메라 상하값 정중앙으로
                     isFPSCamRotinTPS = true;
@@ -137,17 +137,17 @@ public class SpringArms : CameraProperty
         float fpsXr = myFPSCam.myRig.localRotation.eulerAngles.x; //fps 오일러 상하값
         float tpxYr = mySpring.rotation.y; //tps 좌우값
         float fpxYr = myRoot.rotation.y;//fps 좌우값
-        //mySpring.forward; tps 좌우
-        //myTPSCam.myRig; tps 상하
-        //myRoot fps 좌우
-        //myFPSCam.myRig fps 상하
-       
+                                        //mySpring.forward; tps 좌우
+                                        //myTPSCam.myRig; tps 상하
+                                        //myRoot fps 좌우
+                                        //myFPSCam.myRig fps 상하
+
         float Angle = 0.0f;
         float rotDir = 1.0f;
 
         //x축 회전이 180이 넘으면 360빼기
         fpsXr = RotationSetTo_180(fpsXr);
-        
+
         if (fpsXr > 0.0f)
         {
             rotDir = -rotDir;
@@ -156,7 +156,7 @@ public class SpringArms : CameraProperty
         while (Angle > 0.0f)
         {
             float delta = myRotSpeed * Time.deltaTime;
-            
+
             if (delta > Angle)
             {
                 delta = Angle;
@@ -197,7 +197,7 @@ public class SpringArms : CameraProperty
         //UI카메라 캐릭터 모델 돌리기
         Vector3 dir = pos;
         float Angle = Vector3.Angle(myModel.forward, dir);
-       
+
         float rotDir = 1.0f;
         if (Vector3.Dot(myModel.right, dir) < 0.0f)
         {
@@ -287,7 +287,7 @@ public class SpringArms : CameraProperty
     void Update()
     {
         myModel_baseForward.position = myModel.position;
-        
+
         myFPSCam.myCam.transform.position = myEyes.position; // 1인칭 카메라 위치를 캐릭터 눈에 고정
         myUI_basePos.parent.rotation = mySpring.rotation; // ui카메라(부모를 중점으로)를 3인칭 좌우 회전값과 동일하게
         UICameraSetRot(mySpring);
@@ -342,7 +342,17 @@ public class SpringArms : CameraProperty
         }
         return set;
     }
-
+    public Transform GetMyCamera() //현재 카메라 트랜스폼 리턴
+    {
+        switch (myCameraState)
+        {
+            case ViewState.FPS:
+                return myFPSCam.myCam.transform;
+            case ViewState.TPS:
+                return myTPSCam.myCam.transform;
+        }
+        return null; 
+    }
     public void MouseWheelMove() // 3인칭 시야 거리
     {
         if (myCameraState == ViewState.TPS)
@@ -381,7 +391,7 @@ public class SpringArms : CameraProperty
         bool bFps = false;
         bool bTps = false;
         bool bUI = false;
-        switch(s)
+        switch (s)
         {
             case ViewState.FPS:
                 bFps = true;

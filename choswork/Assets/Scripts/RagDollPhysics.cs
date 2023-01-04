@@ -21,9 +21,6 @@ public struct RagDoll
 public class RagDollPhysics : MonoBehaviour
 {
     public RagDoll myRagDoll;
-    public Rigidbody[] myRagDollsRigidbodies;
-    public Transform[] myRagDollsTransforms;
-    public bool OnOff = false;
     public void RagDollOnOff(bool v) //래그돌 온오프 함수
     {
         myRagDoll.headRigidBody.isKinematic = !v;
@@ -48,15 +45,5 @@ public class RagDollPhysics : MonoBehaviour
         myRagDoll.rightArmRigidBody.GetComponent<Collider>().enabled = v;
         myRagDoll.rightForeArmRigidBody.isKinematic = !v;
         myRagDoll.rightForeArmRigidBody.GetComponent<Collider>().enabled = v;
-    }
-    private void Awake()
-    {
-        myRagDollsRigidbodies = myRagDoll.hipsRigidBody.GetComponentsInChildren<Rigidbody>();
-        myRagDollsTransforms = new Transform[myRagDollsRigidbodies.Length];
-        for (int i = 0; i < myRagDollsRigidbodies.Length; ++i)
-        {
-            myRagDollsTransforms[i] = myRagDollsRigidbodies[i].transform;
-            //Debug.Log(myRagDollsTransforms[i]);
-        }
     }
 }
