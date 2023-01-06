@@ -13,6 +13,8 @@ public class Player : BattleSystem
     public GameObject KickPoint; // 실제 발차기 효과 위치
     public Transform KickTransform; // 발차기 소리 위치
     public bool IsWall = false;
+
+    private float animOffset = 0.01f;
     public enum STATE
     {
         Create, Play, Death
@@ -47,8 +49,8 @@ public class Player : BattleSystem
             myMoveSpeed = (Input.GetKey(KeyCode.LeftShift) && !IsWall) ? 1.5f : myStat.MoveSpeed; // 벽 충돌시엔 질주 off
 
             //x, z값이 0에 가까우면 0으로 고정
-            if (Mathf.Epsilon - 0.01f < x && x < Mathf.Epsilon + 0.01f) x = 0.0f;
-            if (Mathf.Epsilon - 0.01f < z && z < Mathf.Epsilon + 0.01f) z = 0.0f;
+            if (Mathf.Epsilon - animOffset < x && x < Mathf.Epsilon + animOffset) x = 0.0f;
+            if (Mathf.Epsilon - animOffset < z && z < Mathf.Epsilon + animOffset) z = 0.0f;
             myAnim.SetFloat("x", x);
             myAnim.SetFloat("z", z);
 

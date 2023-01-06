@@ -24,18 +24,11 @@ public class PlayerPickUpDrop : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
-                out RaycastHit thit, pickUpDistance, pickUpLayerMask))
+                out RaycastHit hit, pickUpDistance, pickUpLayerMask))
             {
-                //Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * pickUpDistance, Color.red);
-                Debug.Log(thit.transform);
+                Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * pickUpDistance, Color.red);
+                Debug.Log(hit.transform);
             }
         }
-        if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
-                out RaycastHit hit, pickUpDistance, pickUpLayerMask))
-        {
-            //Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * pickUpDistance, Color.red);
-            Debug.Log(hit.transform);
-        }
-        Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * pickUpDistance, Color.blue);
     }
 }
