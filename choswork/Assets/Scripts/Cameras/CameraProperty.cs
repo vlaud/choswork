@@ -7,6 +7,7 @@ using UnityEngine;
 public struct CameraSet
 {
     public Transform myRig;
+    public Transform GrabPoint;
     public GameObject myCam;
     public Vector3 curRot;
 }
@@ -25,7 +26,7 @@ public class CameraProperty : MonoBehaviour
     public Vector2 ZoomRange = new Vector2(-3, -0.8f);
     public float LookupSpeed = 10.0f;
     public float ZoomSpeed = 3.0f;
-    public float Offset = 0.5f;
+    public float Offset = 0.1f;
     public float desireDistance = 0.0f;
     public float myRotSpeed;
     public bool IsFps = true;

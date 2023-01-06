@@ -342,14 +342,14 @@ public class SpringArms : CameraProperty
         }
         return set;
     }
-    public Transform GetMyCamera() //현재 카메라 트랜스폼 리턴
+    public CameraSet? GetMyCamera() //현재 카메라 트랜스폼 리턴
     {
         switch (myCameraState)
         {
             case ViewState.FPS:
-                return myFPSCam.myCam.transform;
+                return myFPSCam;
             case ViewState.TPS:
-                return myTPSCam.myCam.transform;
+                return myTPSCam;
         }
         return null; 
     }

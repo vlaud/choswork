@@ -5,12 +5,16 @@ using UnityEngine;
 public class PlayerPickUpDrop : MonoBehaviour
 {
     [SerializeField] private Transform playerCameraTransform;
+    [SerializeField] private Transform objectGrabPointTransform;
     [SerializeField] private Player myPlayer;
     [SerializeField] private LayerMask pickUpLayerMask;
+    [SerializeField] private CameraSet? curCamset;
     float pickUpDistance = 2f;
     private void Awake()
     {
-        playerCameraTransform = myPlayer.myCameras.GetMyCamera();
+        curCamset = myPlayer.myCameras.GetMyCamera();
+        playerCameraTransform = curCamset?.myRig;
+        objectGrabPointTransform = curCamset?.GrabPoint;
     }
     private void Update()
     {
@@ -18,7 +22,9 @@ public class PlayerPickUpDrop : MonoBehaviour
     }
     void CheckItem()
     {
-        playerCameraTransform = myPlayer.myCameras.GetMyCamera();
+        curCamset = myPlayer.myCameras.GetMyCamera();
+        playerCameraTransform = curCamset?.myRig;
+        objectGrabPointTransform = curCamset?.GrabPoint;
         if (playerCameraTransform == null) return;
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -26,9 +32,14 @@ public class PlayerPickUpDrop : MonoBehaviour
             if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
                 out RaycastHit hit, pickUpDistance, pickUpLayerMask))
             {
-                Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * pickUpDistance, Color.red);
-                Debug.Log(hit.transform);
+                if(hit.transform.TryGetComponent(out ObjectGrabbable objectGrabbable))
+                {
+                    Debug.Log(objectGrabbable);
+                    objectGrabbable.Grab(objectGrabPointTransform);
+                }
             }
         }
+        
+        Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * pickUpDistance, Color.blue);
     }
 }
