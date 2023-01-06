@@ -9,12 +9,14 @@ public class PlayerPickUpDrop : MonoBehaviour
     [SerializeField] private Player myPlayer;
     [SerializeField] private LayerMask pickUpLayerMask;
     [SerializeField] private CameraSet? curCamset;
+    [SerializeField] private float Strength = 10000.0f;
+    private ObjectGrabbable objectGrabbable;
+
     float pickUpDistance = 2f;
     private void Awake()
     {
         curCamset = myPlayer.myCameras.GetMyCamera();
         playerCameraTransform = curCamset?.myRig;
-        objectGrabPointTransform = curCamset?.GrabPoint;
     }
     private void Update()
     {
@@ -24,22 +26,39 @@ public class PlayerPickUpDrop : MonoBehaviour
     {
         curCamset = myPlayer.myCameras.GetMyCamera();
         playerCameraTransform = curCamset?.myRig;
-        objectGrabPointTransform = curCamset?.GrabPoint;
         if (playerCameraTransform == null) return;
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetMouseButtonDown(0))
         {
-            if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
-                out RaycastHit hit, pickUpDistance, pickUpLayerMask))
+            if (objectGrabbable != null)
             {
-                if(hit.transform.TryGetComponent(out ObjectGrabbable objectGrabbable))
-                {
-                    Debug.Log(objectGrabbable);
-                    objectGrabbable.Grab(objectGrabPointTransform);
-                }
+                objectGrabbable.Throw(objectGrabPointTransform.forward, Strength);
+                objectGrabbable = null;
             }
         }
-        
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (objectGrabbable == null)
+            {
+                // 물체 X
+                if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
+                out RaycastHit hit, pickUpDistance, pickUpLayerMask))
+                {
+                    if (hit.transform.TryGetComponent(out objectGrabbable))
+                    {
+                        Debug.Log(objectGrabbable);
+                        objectGrabbable.Grab(objectGrabPointTransform);
+                    }
+                }
+            }
+            else
+            {
+                // 물체 O
+                objectGrabbable.Drop();
+                objectGrabbable = null;
+            }
+        }
+
         Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * pickUpDistance, Color.blue);
     }
 }

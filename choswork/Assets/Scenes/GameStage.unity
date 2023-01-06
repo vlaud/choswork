@@ -3317,11 +3317,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCameraTransform: {fileID: 0}
-  objectGrabPointTransform: {fileID: 0}
+  objectGrabPointTransform: {fileID: 1971497463}
   myPlayer: {fileID: 910030837}
   pickUpLayerMask:
     serializedVersion: 2
     m_Bits: 2048
+  Strength: 1000
 --- !u!65 &911326294
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4617,17 +4618,14 @@ MonoBehaviour:
   myCameraState: 0
   myFPSCam:
     myRig: {fileID: 1673519384}
-    GrabPoint: {fileID: 1971497463}
     myCam: {fileID: 810102847}
     curRot: {x: 0, y: 0, z: 0}
   myTPSCam:
     myRig: {fileID: 1556920912}
-    GrabPoint: {fileID: 1683163987}
     myCam: {fileID: 1520845980}
     curRot: {x: 0, y: 0, z: 0}
   myUICam:
     myRig: {fileID: 1505737308}
-    GrabPoint: {fileID: 0}
     myCam: {fileID: 1933621568}
     curRot: {x: 0, y: 0, z: 0}
   myPlayer: {fileID: 0}
@@ -5210,7 +5208,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1401147894}
-  - component: {fileID: 1404539351}
   - component: {fileID: 1404539350}
   - component: {fileID: 1403441942}
   - component: {fileID: 936710626}
@@ -5271,18 +5268,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1401179606}
   m_Mesh: {fileID: 4300000, guid: 61f3d7cc546baf14a98f26525765a434, type: 3}
---- !u!114 &1404539351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1401179606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6f3f5a39e2c59d48848044f8bd37006, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1411366298
 GameObject:
   m_ObjectHideFlags: 0
@@ -5902,8 +5887,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: -1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1683163987}
+  m_Children: []
   m_Father: {fileID: 1556920912}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6867,37 +6851,6 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: d7a59112f0ac6dd47a66ec5359d4100c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 486f62fac68241f41b0ee233cb2d3c44, type: 3}
---- !u!1 &1683163986
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1683163987}
-  m_Layer: 0
-  m_Name: TP ObjectGrabPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1683163987
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1683163986}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1520845981}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1683415111
 MeshRenderer:
   m_ObjectHideFlags: 0

@@ -7,7 +7,6 @@ using UnityEngine;
 public struct CameraSet
 {
     public Transform myRig;
-    public Transform GrabPoint;
     public GameObject myCam;
     public Vector3 curRot;
 }
