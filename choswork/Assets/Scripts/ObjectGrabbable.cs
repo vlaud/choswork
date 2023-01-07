@@ -21,9 +21,9 @@ public class ObjectGrabbable : MonoBehaviour
     }
     public void Drop()
     {
-        Throw(Vector3.down, dropSpeed, false);
+        Throw(Vector3.down, dropSpeed);
     }
-    public void Throw(Vector3 dir, float strength, bool bFlying = true)
+    public void Throw(Vector3 dir, float strength)
     {
         this.objectGrabPointTransform = null;
         objectRigidbody.useGravity = true;
@@ -31,7 +31,6 @@ public class ObjectGrabbable : MonoBehaviour
         Vector3 force;
         Debug.Log(dir);
         force = dir * strength;
-        if (bFlying) force.y = strength * 0.5f;
         objectRigidbody.AddForce(force);
     }
     private void FixedUpdate()
