@@ -31,7 +31,8 @@ public class ObjectGrabbable : MonoBehaviour
         Vector3 force;
         Debug.Log(dir);
         force = dir * strength;
-        objectRigidbody.AddForce(force);
+        //objectRigidbody.AddForce(force);
+        objectRigidbody.velocity = force;
     }
     private void FixedUpdate()
     {
@@ -41,5 +42,6 @@ public class ObjectGrabbable : MonoBehaviour
             Vector3 newPos = Vector3.Lerp(transform.position, objectGrabPointTransform.position, speed * Time.deltaTime);
             objectRigidbody.MovePosition(newPos);
         }
+        if (objectRigidbody.useGravity) objectRigidbody.AddForce(Physics.gravity * (objectRigidbody.mass * objectRigidbody.mass));
     }
 }

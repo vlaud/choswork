@@ -3322,7 +3322,7 @@ MonoBehaviour:
   pickUpLayerMask:
     serializedVersion: 2
     m_Bits: 2048
-  Strength: 1000
+  Strength: 20
 --- !u!65 &911326294
 BoxCollider:
   m_ObjectHideFlags: 0
