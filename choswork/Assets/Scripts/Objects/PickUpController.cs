@@ -1,18 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PickUpController : ObjectGrabbable
 {
-    // Start is called before the first frame update
-    void Start()
+    public void CanPickUp()
     {
-        PickUpMsg = " »πµÊ ";
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Debug.Log(GetComponent<ItemPickUp>().item.itemName + " »πµÊ «ﬂΩ¿¥œ¥Ÿ.");  // ¿Œ∫•≈‰∏Æ ≥÷±‚
+        Destroy(gameObject);
+        SetItemInfoAppear(false);
     }
 }

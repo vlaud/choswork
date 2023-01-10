@@ -15,8 +15,8 @@ public class ObjectGrabbable : MonoBehaviour
     private void Awake()
     {
         objectRigidbody = GetComponent<Rigidbody>();
-        //SetText();
-        //SetItemInfoAppear(false);
+        SetText();
+        SetItemInfoAppear(false);
     }
     public void Grab(Transform objectGrabPointTransform)
     {
@@ -39,14 +39,14 @@ public class ObjectGrabbable : MonoBehaviour
         //objectRigidbody.AddForce(force);
         objectRigidbody.velocity = force;
     }
-    public void SetItemInfoAppear(bool v)
+    public void SetItemInfoAppear(bool v) //오브젝트와 아이템 집기 UI 보이기
     {
         actionText.gameObject.SetActive(v);
     }
     public void SetText()
     {
         if (actionText == null) return;
-        actionText.text = transform.GetComponent<ItemPickUp>().item.itemName + PickUpMsg + "<color=yellow>" + "(E)" + "</color>";
+        actionText.text = transform.GetComponent<ItemPickUp>()?.item.itemName + PickUpMsg + "<color=yellow>" + "(E)" + "</color>";
     }
     private void FixedUpdate()
     {

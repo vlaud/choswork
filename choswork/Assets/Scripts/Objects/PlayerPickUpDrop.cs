@@ -13,6 +13,7 @@ public class PlayerPickUpDrop : MonoBehaviour
     [SerializeField] private float pickUpDistance = 2f;
 
     private ObjectGrabbable objectGrabbable;
+    private ObjectGrabbable showObject;
     private void Awake()
     {
         curCamset = myPlayer.myCameras.GetMyCamera();
@@ -36,8 +37,29 @@ public class PlayerPickUpDrop : MonoBehaviour
         {
             PickUpAndDrop();
         }
-
+        if (Input.GetKeyUp(KeyCode.E))
+        {
+            objectGrabbable?.GetComponent<PickUpController>()?.CanPickUp();
+        }
+        ShowItemUI();
         Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * pickUpDistance, Color.blue);
+    }
+    void ShowItemUI()
+    {
+        if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
+            out RaycastHit hit, pickUpDistance, pickUpLayerMask))
+        {
+            if (objectGrabbable == null)
+            {
+                showObject = hit.transform.GetComponent<ObjectGrabbable>();
+                showObject?.SetText();
+                showObject?.SetItemInfoAppear(true);
+            }
+        }
+        else
+        {
+            showObject?.SetItemInfoAppear(false);
+        }
     }
     void PickUpAndDrop()
     {
@@ -49,8 +71,9 @@ public class PlayerPickUpDrop : MonoBehaviour
             {
                 if (hit.transform.TryGetComponent(out objectGrabbable))
                 {
-                    Debug.Log(objectGrabbable);
                     objectGrabbable.Grab(objectGrabPointTransform);
+                    objectGrabbable.SetItemInfoAppear(false);
+                    Debug.Log(objectGrabbable);
                 }
             }
         }
