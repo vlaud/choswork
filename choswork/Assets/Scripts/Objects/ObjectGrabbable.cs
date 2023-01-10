@@ -1,23 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ObjectGrabbable : MonoBehaviour
 {
     [SerializeField] private float dropSpeed;
+    [SerializeField] private TMPro.TMP_Text actionText;  // 행동을 보여 줄 텍스트
     private Rigidbody objectRigidbody;
     private Transform objectGrabPointTransform;
+    public string PickUpMsg = " 집기 ";
     private void Awake()
     {
         objectRigidbody = GetComponent<Rigidbody>();
+        //SetText();
+        //SetItemInfoAppear(false);
     }
     public void Grab(Transform objectGrabPointTransform)
     {
         this.objectGrabPointTransform = objectGrabPointTransform;
         objectRigidbody.useGravity = false;
         objectRigidbody.isKinematic = true;
-        
     }
     public void Drop()
     {
@@ -33,6 +38,15 @@ public class ObjectGrabbable : MonoBehaviour
         force = dir * strength;
         //objectRigidbody.AddForce(force);
         objectRigidbody.velocity = force;
+    }
+    public void SetItemInfoAppear(bool v)
+    {
+        actionText.gameObject.SetActive(v);
+    }
+    public void SetText()
+    {
+        if (actionText == null) return;
+        actionText.text = transform.GetComponent<ItemPickUp>().item.itemName + PickUpMsg + "<color=yellow>" + "(E)" + "</color>";
     }
     private void FixedUpdate()
     {

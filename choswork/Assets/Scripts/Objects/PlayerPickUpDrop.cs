@@ -10,9 +10,9 @@ public class PlayerPickUpDrop : MonoBehaviour
     [SerializeField] private LayerMask pickUpLayerMask;
     [SerializeField] private CameraSet? curCamset;
     [SerializeField] private float Strength = 10000.0f;
-    private ObjectGrabbable objectGrabbable;
+    [SerializeField] private float pickUpDistance = 2f;
 
-    float pickUpDistance = 2f;
+    private ObjectGrabbable objectGrabbable;
     private void Awake()
     {
         curCamset = myPlayer.myCameras.GetMyCamera();
@@ -30,35 +30,43 @@ public class PlayerPickUpDrop : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (objectGrabbable != null)
-            {
-                objectGrabbable.Throw(objectGrabPointTransform.forward, Strength);
-                objectGrabbable = null;
-            }
+            ThrowObject();
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (objectGrabbable == null)
-            {
-                // 물체 X
-                if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
-                out RaycastHit hit, pickUpDistance, pickUpLayerMask))
-                {
-                    if (hit.transform.TryGetComponent(out objectGrabbable))
-                    {
-                        Debug.Log(objectGrabbable);
-                        objectGrabbable.Grab(objectGrabPointTransform);
-                    }
-                }
-            }
-            else
-            {
-                // 물체 O
-                objectGrabbable.Drop();
-                objectGrabbable = null;
-            }
+            PickUpAndDrop();
         }
 
         Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * pickUpDistance, Color.blue);
+    }
+    void PickUpAndDrop()
+    {
+        if (objectGrabbable == null)
+        {
+            // 물체 X
+            if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
+            out RaycastHit hit, pickUpDistance, pickUpLayerMask))
+            {
+                if (hit.transform.TryGetComponent(out objectGrabbable))
+                {
+                    Debug.Log(objectGrabbable);
+                    objectGrabbable.Grab(objectGrabPointTransform);
+                }
+            }
+        }
+        else
+        {
+            // 물체 O
+            objectGrabbable.Drop();
+            objectGrabbable = null;
+        }
+    }
+    void ThrowObject()
+    {
+        if (objectGrabbable != null)
+        {
+            objectGrabbable.Throw(objectGrabPointTransform.forward, Strength);
+            objectGrabbable = null;
+        }
     }
 }
