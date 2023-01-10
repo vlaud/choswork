@@ -39,10 +39,16 @@ public class PlayerPickUpDrop : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.E))
         {
-            objectGrabbable?.GetComponent<PickUpController>()?.CanPickUp();
+            GetItem();
         }
         ShowItemUI();
         Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * pickUpDistance, Color.blue);
+    }
+    void GetItem()
+    {
+        if (objectGrabbable?.GetComponent<PickUpController>() == null) return;
+        objectGrabbable?.GetComponent<PickUpController>()?.CanPickUp();
+        objectGrabbable = null;
     }
     void ShowItemUI()
     {
