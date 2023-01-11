@@ -51,7 +51,7 @@ public class PlayerAction : MonoBehaviour, PickUpHandler, PlayerHandler, CameraH
     }
     public virtual bool IsKickKeyPressed()
     {
-        return Input.GetKey(KeyCode.F);
+        return Input.GetKeyDown(KeyCode.F);
     }
     public virtual bool IsDashKeyPressed()
     {
