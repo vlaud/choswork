@@ -51,7 +51,7 @@ public class Monster : BattleSystem
                 break;
             case STATE.Idle: // 평상시
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
-                IsStart = Toggle.Inst.Toggling(IsStart);
+                Toggle.Inst.Toggling(ref IsStart);
                 StartCoroutine(DelayState(STATE.Roaming));
                 break;
             case STATE.Roaming:

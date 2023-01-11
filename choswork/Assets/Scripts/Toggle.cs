@@ -9,8 +9,8 @@ public class Toggle : MonoBehaviour
     {
         Inst = this;
     }
-    public bool Toggling(bool b) // 토글 기능
+    public void Toggling(ref bool b) // 토글 기능
     {
-        return !b;
+        b = !b;
     }
 }

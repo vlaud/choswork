@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerPickUpDrop : MonoBehaviour
+public class PlayerPickUpDrop : InputManager
 {
     [SerializeField] private Transform playerCameraTransform;
     [SerializeField] private Transform objectGrabPointTransform;
@@ -29,22 +29,12 @@ public class PlayerPickUpDrop : MonoBehaviour
         playerCameraTransform = curCamset?.myRig;
         if (playerCameraTransform == null) return;
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            ThrowObject();
-        }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            PickUpAndDrop();
-        }
-        if (Input.GetKeyUp(KeyCode.E))
-        {
-            GetItem();
-        }
+        // Handle object pickup and throw
+        HandleObjectPickupAndThrow();
         ShowItemUI();
         Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * pickUpDistance, Color.blue);
     }
-    void GetItem()
+    public override void GetItem()
     {
         if (objectGrabbable?.GetComponent<PickUpController>() == null) return;
         objectGrabbable?.GetComponent<PickUpController>()?.CanPickUp();
@@ -67,7 +57,7 @@ public class PlayerPickUpDrop : MonoBehaviour
             showObject?.SetItemInfoAppear(false);
         }
     }
-    void PickUpAndDrop()
+    public override void PickUpAndDrop()
     {
         if (objectGrabbable == null)
         {
@@ -90,7 +80,7 @@ public class PlayerPickUpDrop : MonoBehaviour
             objectGrabbable = null;
         }
     }
-    void ThrowObject()
+    public override void ThrowObject()
     {
         if (objectGrabbable != null)
         {

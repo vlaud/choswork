@@ -65,7 +65,7 @@ public class SpringArms : CameraProperty
         if (myCameraState != ViewState.UI)
             myTPSCam = SpringArmWork(myTPSCam); // 1인칭, 3인칭 카메라값을 같게 
 
-        KeyMovement(); // 키설정
+        HandleCameraSwitching(); // 키설정
         MouseWheelMove(); // 3인칭 시야 거리
         switch (myCameraState)
         {
@@ -293,32 +293,33 @@ public class SpringArms : CameraProperty
         UICameraSetRot(mySpring);
         StateProcess();
     }
-    void KeyMovement() // 키보드 조작
+    public override void DebugCamera()
     {
-        if (Input.GetKeyDown(KeyCode.V))
+        Debug.Log(myModel.localRotation.eulerAngles.y);
+        Debug.Log("쿼터니언 : " + myFPSCam.myRig.rotation.x);
+        Debug.Log("오일러 : " + myFPSCam.myRig.rotation.eulerAngles.x);
+        if (myFPSCam.myRig.localRotation.eulerAngles.x > 180.0f)
         {
-            IsFps = Toggle.Inst.Toggling(IsFps);
-            CameraCheck();
+            Debug.Log("로컬오일러 : " + (myFPSCam.myRig.localRotation.eulerAngles.x - 360.0f));
         }
-        if (Input.GetKeyDown(KeyCode.I) && UIkeyAvailable)
+        else if (myFPSCam.myRig.localRotation.eulerAngles.x < -180.0f)
         {
-            IsUI = Toggle.Inst.Toggling(IsUI);
-            CameraCheck();
+            Debug.Log("로컬오일러 : " + (myFPSCam.myRig.localRotation.eulerAngles.x + 360.0f));
         }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            Debug.Log(myModel.localRotation.eulerAngles.y);
-            Debug.Log("쿼터니언 : " + myFPSCam.myRig.rotation.x);
-            Debug.Log("오일러 : " + myFPSCam.myRig.rotation.eulerAngles.x);
-            if (myFPSCam.myRig.localRotation.eulerAngles.x > 180.0f)
-            {
-                Debug.Log("로컬오일러 : " + (myFPSCam.myRig.localRotation.eulerAngles.x - 360.0f));
-            }
-            else if (myFPSCam.myRig.localRotation.eulerAngles.x < -180.0f)
-            {
-                Debug.Log("로컬오일러 : " + (myFPSCam.myRig.localRotation.eulerAngles.x + 360.0f));
-            }
-        }
+    }
+    public override void ToggleFPS()
+    {
+        Toggle.Inst.Toggling(ref IsFps);
+        CameraCheck();
+    }
+    public override void ToggleUI()
+    {
+        Toggle.Inst.Toggling(ref IsUI);
+        CameraCheck();
+    }
+    public override bool GetIsUI()
+    {
+        return UIkeyAvailable;
     }
     void UICameraSetPos(CameraSet cam) // UI 카메라 위치 설정
     {

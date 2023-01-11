@@ -32,7 +32,7 @@ public class Player : BattleSystem
     {
         PlayerMove();
     }
-    void PlayerMove()
+    public override void PlayerMove()
     {
         myAnim.speed = myMoveSpeed;
 
@@ -41,8 +41,8 @@ public class Player : BattleSystem
         if (myCameras.myCameraState == SpringArms.ViewState.UI) targetDir = Vector2.zero; //UI 상태에선 못움직이게
         else
         {
-            targetDir.x = Input.GetAxisRaw("Horizontal");
-            targetDir.y = Input.GetAxisRaw("Vertical");
+            targetDir.x = GetMoveRaw().x;
+            targetDir.y = GetMoveRaw().y;
             x = Mathf.Lerp(myAnim.GetFloat("x"), targetDir.x, Time.deltaTime * smoothMoveSpeed);
             z = Mathf.Lerp(myAnim.GetFloat("z"), targetDir.y, Time.deltaTime * smoothMoveSpeed);
 

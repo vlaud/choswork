@@ -10,7 +10,7 @@ public struct CameraSet
     public GameObject myCam;
     public Vector3 curRot;
 }
-public class CameraProperty : MonoBehaviour
+public class CameraProperty : InputManager
 {
     public Transform myRoot;//fps 謝辦高
     public Transform mySpring; //tps 謝辦高

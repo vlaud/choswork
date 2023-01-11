@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterProperty : MonoBehaviour
+public class CharacterProperty : InputManager
 {
     public CharacterStat myStat;
     Animator _anim = null;
