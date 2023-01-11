@@ -1,5 +1,9 @@
 using UnityEngine;
 
+public enum CamState
+{
+    FPS, UI
+}
 public interface PickUpHandler
 {
     void ThrowObject();
@@ -10,11 +14,13 @@ public interface PlayerHandler
 {
     void PlayerMove();
     Vector2 GetMoveRaw();
+    bool IsKickKeyPressed();
+    bool IsDashKeyPressed();
+    Animator ReturnAnim();
 }
 public interface CameraHandler
 {
-    void ToggleFPS();
-    void ToggleUI();
+    void ToggleCam(CamState cam);
     void DebugCamera();
     bool GetIsUI();
 }
@@ -43,11 +49,20 @@ public class PlayerAction : MonoBehaviour, PickUpHandler, PlayerHandler, CameraH
         targetDir.y = Input.GetAxisRaw("Vertical");
         return targetDir;
     }
-    public virtual void ToggleFPS()
+    public virtual bool IsKickKeyPressed()
     {
-
+        return Input.GetKey(KeyCode.F);
     }
-    public virtual void ToggleUI()
+    public virtual bool IsDashKeyPressed()
+    {
+        return Input.GetKey(KeyCode.LeftShift);
+    }
+    public virtual Animator ReturnAnim()
+    {
+        Animator myAnim = null;
+        return myAnim;
+    }
+    public virtual void ToggleCam(CamState cam)
     {
 
     }
@@ -74,16 +89,8 @@ public class InputManager : PlayerAction, InputManagement
 {
     public virtual void HandlePlayerMovement()
     {
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-
-        }
         // 플레이어 움직임
+        if (IsKickKeyPressed() && !ReturnAnim().GetBool("IsKicking")) ReturnAnim().SetTrigger("Kick");
     }
 
     public virtual void HandleObjectPickupAndThrow()
@@ -108,11 +115,11 @@ public class InputManager : PlayerAction, InputManagement
         // 카메라
         if (Input.GetKeyDown(KeyCode.V))
         {
-            ToggleFPS();
+            ToggleCam(CamState.FPS);
         }
         if (Input.GetKeyDown(KeyCode.I) && GetIsUI())
         {
-            ToggleUI();
+            ToggleCam(CamState.UI);
         }
         if (Input.GetKeyDown(KeyCode.T))
         {

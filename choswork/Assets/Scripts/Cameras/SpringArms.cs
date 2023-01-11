@@ -307,15 +307,19 @@ public class SpringArms : CameraProperty
             Debug.Log("로컬오일러 : " + (myFPSCam.myRig.localRotation.eulerAngles.x + 360.0f));
         }
     }
-    public override void ToggleFPS()
+    public override void ToggleCam(CamState cam)
     {
-        Toggle.Inst.Toggling(ref IsFps);
-        CameraCheck();
-    }
-    public override void ToggleUI()
-    {
-        Toggle.Inst.Toggling(ref IsUI);
-        CameraCheck();
+        switch(cam)
+        {
+            case CamState.FPS:
+                Toggle.Inst.Toggling(ref IsFps);
+                CameraCheck();
+                break;
+            case CamState.UI:
+                Toggle.Inst.Toggling(ref IsUI);
+                CameraCheck();
+                break;
+        }
     }
     public override bool GetIsUI()
     {

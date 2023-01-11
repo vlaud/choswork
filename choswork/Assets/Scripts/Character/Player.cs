@@ -54,7 +54,7 @@ public class Player : BattleSystem
             myAnim.SetFloat("x", x);
             myAnim.SetFloat("z", z);
 
-            if (Input.GetKeyDown(KeyCode.F) && !myAnim.GetBool("IsKicking")) myAnim.SetTrigger("Kick");
+            HandlePlayerMovement();
         }
 
     }
@@ -88,7 +88,7 @@ public class Player : BattleSystem
     {
         KickPoint.SetActive(v);
     }
-    public Animator ReturnAnim()
+    public override Animator ReturnAnim()
     {
         return myAnim;
     }
