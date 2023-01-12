@@ -24,8 +24,13 @@ public interface CameraHandler
     void DebugCamera();
     bool GetIsUI();
 }
-public class PlayerAction : MonoBehaviour, PickUpHandler, PlayerHandler, CameraHandler
+public interface UIHandler
 {
+    void ToggleInventory();
+}
+public class PlayerAction : MonoBehaviour, PickUpHandler, PlayerHandler, CameraHandler, UIHandler
+{
+    //PickUpHandler
     public virtual void ThrowObject()
     {
 
@@ -38,6 +43,7 @@ public class PlayerAction : MonoBehaviour, PickUpHandler, PlayerHandler, CameraH
     {
 
     }
+    //PlayerHandler
     public virtual void PlayerMove()
     {
 
@@ -62,6 +68,7 @@ public class PlayerAction : MonoBehaviour, PickUpHandler, PlayerHandler, CameraH
         Animator myAnim = null;
         return myAnim;
     }
+    //CameraHandler
     public virtual void ToggleCam(CamState cam)
     {
 
@@ -73,6 +80,11 @@ public class PlayerAction : MonoBehaviour, PickUpHandler, PlayerHandler, CameraH
     public virtual bool GetIsUI()
     {
         return false;
+    }
+    //UIHandler
+    public virtual void ToggleInventory()
+    {
+
     }
 }
 
@@ -87,6 +99,15 @@ public interface InputManagement
 }
 public class InputManager : PlayerAction, InputManagement
 {
+    GameObject _inventory = null;
+    protected GameObject myInventory
+    {
+        get => _inventory;
+        set
+        {
+            _inventory = value;
+        }
+    }
     public virtual void HandlePlayerMovement()
     {
         // 플레이어 움직임
@@ -109,7 +130,6 @@ public class InputManager : PlayerAction, InputManagement
             GetItem();
         }
     }
-   
     public virtual void HandleCameraSwitching()
     {
         // 카메라
@@ -120,6 +140,7 @@ public class InputManager : PlayerAction, InputManagement
         if (Input.GetKeyDown(KeyCode.I) && GetIsUI())
         {
             ToggleCam(CamState.UI);
+            myInventory.GetComponent<InputManager>()?.ToggleInventory();
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
