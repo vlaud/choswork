@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.PlayerSettings;
@@ -51,7 +52,7 @@ public class Monster : BattleSystem
                 break;
             case STATE.Idle: // 평상시
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
-                Toggle.Inst.Toggling(ref IsStart);
+                IsStart = !IsStart;
                 StartCoroutine(DelayState(STATE.Roaming));
                 break;
             case STATE.Roaming:

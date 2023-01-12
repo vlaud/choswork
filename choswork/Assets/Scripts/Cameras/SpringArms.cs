@@ -314,11 +314,11 @@ public class SpringArms : CameraProperty
         switch(cam)
         {
             case CamState.FPS:
-                Toggle.Inst.Toggling(ref IsFps);
+                IsFps = !IsFps;
                 CameraCheck();
                 break;
             case CamState.UI:
-                Toggle.Inst.Toggling(ref IsUI);
+                IsUI = !IsUI;
                 CameraCheck();
                 break;
         }
