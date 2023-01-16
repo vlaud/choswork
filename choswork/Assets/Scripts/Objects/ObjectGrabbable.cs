@@ -5,7 +5,7 @@ using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ObjectGrabbable : MonoBehaviour
+public class ObjectGrabbable : InputManager
 {
     [SerializeField] private float dropSpeed;
     [SerializeField] private TMPro.TMP_Text actionText;  // 행동을 보여 줄 텍스트

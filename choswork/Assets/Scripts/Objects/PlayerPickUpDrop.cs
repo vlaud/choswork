@@ -9,8 +9,8 @@ public class PlayerPickUpDrop : InputManager
     [SerializeField] private Player myPlayer;
     [SerializeField] private LayerMask pickUpLayerMask;
     [SerializeField] private CameraSet? curCamset;
-    [SerializeField] private float Strength = 10000.0f;
-    [SerializeField] private float pickUpDistance = 2f;
+    [SerializeField] private float Strength = 20.0f;
+    [SerializeField] private float pickUpDistance = 6f;
 
     private ObjectGrabbable objectGrabbable;
     private ObjectGrabbable showObject;

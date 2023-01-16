@@ -1,29 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class ItemSlot : MonoBehaviour
 {
-    public Item item; // »πµÊ«— æ∆¿Ã≈€
     public int itemCount; // »πµÊ«— æ∆¿Ã≈€¿« ∞≥ºˆ
+    public bool IsItem = false;
+    public Transform mySlotMask;
     [SerializeField] private Text text_Count;
     [SerializeField] private GameObject go_CountImage;
-
-    // Start is called before the first frame update
-    void Start()
+   
+    public void GetItem(Item _item)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    public void SetChildren(Transform child)
-    {
-        child.SetParent(transform);
-        child.localPosition = Vector3.zero;
+        GameObject obj = Instantiate(_item.itemImage, mySlotMask);
+        obj.transform.SetAsLastSibling();
+        IsItem = true;
     }
 }

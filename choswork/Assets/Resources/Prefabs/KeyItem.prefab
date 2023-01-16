@@ -64,6 +64,7 @@ MonoBehaviour:
   dropSpeed: 1
   actionText: {fileID: 0}
   PickUpMsg: " \uD68D\uB4DD "
+  GetInventory: {fileID: 0}
 --- !u!54 &2598752933757531053
 Rigidbody:
   m_ObjectHideFlags: 0

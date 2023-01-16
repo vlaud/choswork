@@ -5495,6 +5495,7 @@ MonoBehaviour:
   SlotParent: {fileID: 1728353112}
   isInventory: 0
   mySlots: []
+  ActiveSlots: 0
 --- !u!1 &1161175701
 GameObject:
   m_ObjectHideFlags: 0
@@ -14875,6 +14876,10 @@ PrefabInstance:
       propertyPath: actionText
       value: 
       objectReference: {fileID: 1563748614}
+    - target: {fileID: 5983322753918676851, guid: afa4d7e0cd4a85542bd1c930bddf7bb6, type: 3}
+      propertyPath: GetInventory
+      value: 
+      objectReference: {fileID: 1128442914}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: afa4d7e0cd4a85542bd1c930bddf7bb6, type: 3}
 --- !u!4 &6377868583378406431
