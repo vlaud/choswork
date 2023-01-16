@@ -13,7 +13,7 @@ public class PlayerPickUpDrop : InputManager
     [SerializeField] private float pickUpDistance = 6f;
 
     private ObjectGrabbable objectGrabbable;
-    private ObjectGrabbable showObject;
+    private ObjectInteractable showObject;
     private void Awake()
     {
         curCamset = myPlayer.myCameras.GetMyCamera();
@@ -47,7 +47,7 @@ public class PlayerPickUpDrop : InputManager
         {
             if (objectGrabbable == null)
             {
-                showObject = hit.transform.GetComponent<ObjectGrabbable>();
+                showObject = hit.transform.GetComponent<ObjectInteractable>();
                 showObject?.SetText();
                 showObject?.SetItemInfoAppear(true);
             }
