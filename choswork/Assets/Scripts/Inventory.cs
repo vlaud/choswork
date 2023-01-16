@@ -5,11 +5,14 @@ using UnityEngine;
 public class Inventory : InputManager
 {
     [SerializeField] private GameObject InventoryBase;
+    [SerializeField] private GameObject SlotParent;
     [SerializeField] private bool isInventory = false;
+    [SerializeField] private ItemSlot[] mySlots;
     // Start is called before the first frame update
     void Start()
     {
         InventoryBase.SetActive(false);
+        mySlots = SlotParent.GetComponentsInChildren<ItemSlot>();
     }
 
     // Update is called once per frame

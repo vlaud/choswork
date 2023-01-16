@@ -5492,7 +5492,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InventoryBase: {fileID: 197541554}
+  SlotParent: {fileID: 1728353112}
   isInventory: 0
+  mySlots: []
 --- !u!1 &1161175701
 GameObject:
   m_ObjectHideFlags: 0
