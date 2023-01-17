@@ -15,7 +15,6 @@ public class SpringArms : CameraProperty
     public CameraSet myFPSCam;
     public CameraSet myTPSCam;
     public CameraSet myUICam;
-    public GameObject GetInventory;
     public Player myPlayer;
     public bool UIkeyAvailable = true;
     public bool isFPSCamRotinTPS = false;
@@ -275,10 +274,10 @@ public class SpringArms : CameraProperty
     // Start is called before the first frame update
     void Start()
     {
-        myInventory = GetInventory;
+        myInventory = GameManagement.Inst.myInventory.gameObject;
         camPos = myTPSCam.myCam.transform.localPosition;
         desireDistance = camPos.z;
-        myPlayer = transform.parent.GetComponent<Player>();
+        myPlayer = GameManagement.Inst.myPlayer;
         myFPSCam = CameraSetting(myFPSCam);
         myTPSCam = CameraSetting(myTPSCam);
         myUICam = CameraSetting(myUICam);

@@ -12,11 +12,25 @@ public class ItemSlot : MonoBehaviour
     public Transform mySlotMask;
     [SerializeField] private Text text_Count;
     [SerializeField] private GameObject go_CountImage;
-   
+    [SerializeField] private GameObject ItemImage;
+    [SerializeField] private Item myItem;
     public void GetItem(Item _item)
     {
-        GameObject obj = Instantiate(_item.itemImage, mySlotMask);
-        obj.transform.SetAsLastSibling();
+        myItem = _item;
+        ItemImage = Instantiate(_item.itemImage, mySlotMask);
+        ItemImage.transform.SetAsLastSibling();
         IsItem = true;
+    }
+    public Item GetItemValue()
+    {
+        return myItem;
+    }
+    public void DestroyItem()
+    {
+        if(myItem != null)
+        {
+            Destroy(ItemImage);
+            IsItem = false;
+        }
     }
 }

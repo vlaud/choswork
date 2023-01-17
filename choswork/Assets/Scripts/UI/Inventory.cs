@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Inventory : InputManager
 {
@@ -20,7 +21,7 @@ public class Inventory : InputManager
     // Update is called once per frame
     void Update()
     {
-       
+        
     }
     public override void ToggleInventory()
     {
@@ -34,19 +35,43 @@ public class Inventory : InputManager
             if (!mySlots[i].IsItem)
             {
                 mySlots[i].GetItem(_item);
+                ActiveSlots++;
                 return;
             }
         }
     }
-    public void ActiveCounts()
+    public ItemSlot FindLastSlotNotEmpty()
     {
-        ActiveSlots = 0;
+        int slotNum;
         for (int i = 0; i < mySlots.Length; ++i)
         {
-            if (mySlots[i].IsItem)
+            slotNum = mySlots.Length - i - 1;
+
+            if (mySlots[slotNum].IsItem)
             {
-                ActiveSlots++;
+                return mySlots[slotNum];
             }
         }
+        return null;
+    }
+    public ItemSlot FindItem(Item _item)
+    {
+        int slotNum;
+        for (int i = 0; i < mySlots.Length; ++i)
+        {
+            slotNum = mySlots.Length - i - 1;
+            if (!mySlots[slotNum].IsItem) continue;
+
+            if (mySlots[slotNum].GetItemValue() == _item)
+            {
+                return mySlots[slotNum];
+            }
+        }
+        return null;
+    }
+    public void DestroyItem(Item _item)
+    {
+        FindItem(_item).DestroyItem();
+        ActiveSlots--;
     }
 }
