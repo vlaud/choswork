@@ -11,13 +11,23 @@ public class Inventory : InputManager
     [SerializeField] private GameObject SlotParent;
     [SerializeField] private bool isInventory = false;
     [SerializeField] private ItemSlot[] mySlots;
-    [SerializeField] private int ActiveSlots;
+    private Dictionary<Item, List<ItemSlot>> itemTypeToSlotListMap = new Dictionary<Item, List<ItemSlot>>();
     // Start is called before the first frame update
     void Start()
     {
+        foreach (var slot in mySlots)
+        {
+            Item item = slot.GetItemValue();
+            if (item != null)
+            {
+                if (!itemTypeToSlotListMap.ContainsKey(item))
+                    itemTypeToSlotListMap[item] = new List<ItemSlot>();
+
+                itemTypeToSlotListMap[item].Add(slot);
+            }
+        }
         InventoryBase.SetActive(false);
         mySlots = SlotParent?.GetComponentsInChildren<ItemSlot>();
-        ActiveSlots = 0;
     }
     public override void ToggleInventory()
     {
@@ -26,78 +36,63 @@ public class Inventory : InputManager
     }
     public void AcquireItem(Item _item)
     {
-        for (int i = 0; i < mySlots.Length; ++i)
+        foreach (var slot in mySlots)
         {
-            if (mySlots[i].GetItemValue() == null)
+            Item curitem = slot.GetItemValue();
+            if (curitem == null) // ½½·ÔÀÌ ºñ¾îÀÖ´Ù
             {
-                mySlots[i].GetItem(_item);
-                ActiveSlots++;
+                slot.GetItem(_item); // ¾ÆÀÌÅÛ È¹µæ
+                if (!itemTypeToSlotListMap.ContainsKey(_item))
+                {
+                    itemTypeToSlotListMap[_item] = new List<ItemSlot>() { slot };
+                    Debug.Log(_item + "½½·Ô »ý¼º");
+                }
+                else
+                {
+                    itemTypeToSlotListMap[_item].Add(slot);
+                    Debug.Log(_item + "½½·Ô¿¡ Ãß°¡");
+                }
                 return;
             }
         }
-    }
-    public int GetSlotIndex(ItemSlot slot)
-    {
-        return Array.IndexOf(mySlots, slot);
+        
     }
     public ItemSlot FindSlot(bool IsFirst, bool IsItem)
     {
-        int slotNum;
-        for (int i = 0; i < mySlots.Length; ++i)
+        if (IsFirst)
         {
-            if(!IsFirst)
-                slotNum = mySlots.Length - i - 1;
-            else
-                slotNum = i;
-
-            if (IsItem == (mySlots[slotNum].GetItemValue() != null)) // IsItem: ¾ÆÀÌÅÛ Á¸Àç ¿©ºÎ
-            {
-                return mySlots[slotNum];
-            }
+            return mySlots.FirstOrDefault(s => (IsItem == (s.GetItemValue() != null)));
         }
-        return null;
-    }
-    public ItemSlot FindSlotbyItem(Item _item)
-    {
-        int slotNum;
-        for (int i = 0; i < mySlots.Length; ++i)
+        else
         {
-            slotNum = mySlots.Length - i - 1;
-            if (mySlots[slotNum].GetItemValue() == null) continue;
-
-            if (mySlots[slotNum].GetItemValue() == _item)
-            {
-                return mySlots[slotNum];
-            }
+            return mySlots.LastOrDefault(s => (IsItem == (s.GetItemValue() != null)));
         }
-        return null;
     }
     public void DestroyItem(Item _item)
     {
-        FindSlotbyItem(_item)?.DestroyItem();
-        ActiveSlots--;
-        StartCoroutine(SortItems());
-    }
-    IEnumerator SortItems()
-    {
-        ItemSlot firstEmptySlot = FindSlot(true, false);
-        ItemSlot lastNotEmptySlot = FindSlot(false, true);
-        int index = GetSlotIndex(FindSlot(true, false)) + 1;
-
-        while (GetSlotIndex(firstEmptySlot) < GetSlotIndex(lastNotEmptySlot))
+        if (itemTypeToSlotListMap.TryGetValue(_item, out var itemSlotList))
         {
-            if (mySlots[index].GetItemValue() != null)
+            var itemSlot = itemSlotList.FindLast(s => s.GetItemValue() == _item);
+            if (itemSlot != null)
             {
-                Debug.Log("ºó ½½·Ô: " + GetSlotIndex(firstEmptySlot));
-                Debug.Log("¹Ù²ã¾ßÇÒ ½½·Ô: " + index);
-                mySlots[index].SwitchSlot(firstEmptySlot);
+                itemSlot.DestroyItem();
+                itemTypeToSlotListMap[_item].Remove(itemSlot);
             }
-            else index++;
-            
-            firstEmptySlot = FindSlot(true, false);
-            lastNotEmptySlot = FindSlot(false, true);
-            Debug.Log("¸¶Áö¸· ¾ÆÀÌÅÛ ½½·Ô: " + GetSlotIndex(lastNotEmptySlot));
-            yield return null;
+        }
+        SortItems();
+    }
+    public void SortItems()
+    {
+        var firstEmptySlot = FindSlot(true, false);
+        int emptySlotIndex = Array.FindIndex(mySlots, slot => slot.GetItemValue() == null);
+        //int emptySlotIndex = Array.IndexOf(mySlots, firstEmptySlot);
+        for (int i = emptySlotIndex; i < mySlots.Length; i++)
+        {
+            if (mySlots[i].GetItemValue() != null)
+            {
+                mySlots[i].SwitchSlot(firstEmptySlot);
+                firstEmptySlot = mySlots[i];
+            }
         }
     }
 }

@@ -5,11 +5,10 @@ using UnityEngine;
 
 public class PickUpController : ObjectGrabbable
 {
-    public GameObject GetInventory;
     private ItemPickUp myItem;
     private void Start()
     {
-        myInventory = GetInventory;
+        myInventory = GameManagement.Inst.myInventory.gameObject;
     }
     public void CanPickUp()
     {
@@ -17,6 +16,6 @@ public class PickUpController : ObjectGrabbable
         Debug.Log(myItem.item.itemName + " 획득 했습니다.");  // 인벤토리 넣기
         Destroy(gameObject);
         SetItemInfoAppear(false);
-        myInventory?.transform.GetComponent<Inventory>().AcquireItem(myItem.item);
+        myInventory?.GetComponent<Inventory>().AcquireItem(myItem.item);
     }
 }
