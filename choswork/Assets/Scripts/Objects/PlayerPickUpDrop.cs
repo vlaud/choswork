@@ -13,6 +13,7 @@ public class PlayerPickUpDrop : InputManager
     [SerializeField] private float pickUpDistance = 6f;
 
     private ObjectGrabbable objectGrabbable;
+    private Door DoorInteractable;
     private ObjectInteractable showObject;
     private void Awake()
     {
@@ -57,7 +58,7 @@ public class PlayerPickUpDrop : InputManager
             showObject?.SetItemInfoAppear(false);
         }
     }
-    public override void PickUpAndDrop()
+    public override void InteractObj()
     {
         if (objectGrabbable == null)
         {
@@ -70,6 +71,10 @@ public class PlayerPickUpDrop : InputManager
                     objectGrabbable.Grab(objectGrabPointTransform);
                     objectGrabbable.SetItemInfoAppear(false);
                     Debug.Log(objectGrabbable);
+                }
+                else if(hit.transform.TryGetComponent(out DoorInteractable))
+                {
+                    DoorInteractable.InteractDoor();
                 }
             }
         }

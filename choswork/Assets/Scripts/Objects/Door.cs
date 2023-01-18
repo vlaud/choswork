@@ -10,15 +10,14 @@ public class Door : ObjectInteractable
     {
         myInventory = GameManagement.Inst.myInventory.gameObject;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public override void SetText()
     {
         if (actionText == null) return;
         actionText.text = transform.GetComponent<ItemPickUp>()?.item.itemName + ShowMessage + "<color=yellow>" + "(E)" + "</color>";
+    }
+    public void InteractDoor() 
+    {
+        Inventory inv = myInventory.GetComponent<Inventory>();
+        inv.DestroyItem(requiredItem);
     }
 }

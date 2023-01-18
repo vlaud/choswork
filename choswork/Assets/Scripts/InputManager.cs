@@ -4,11 +4,12 @@ public enum CamState
 {
     FPS, UI
 }
-public interface PickUpHandler
+public interface ObjectHandler
 {
     void ThrowObject();
-    void PickUpAndDrop();
+    void InteractObj();
     void GetItem();
+    bool IsInteractKeyPressed();
 }
 public interface PlayerHandler
 {
@@ -28,26 +29,18 @@ public interface UIHandler
 {
     void ToggleInventory();
 }
-public class PlayerAction : MonoBehaviour, PickUpHandler, PlayerHandler, CameraHandler, UIHandler
+public class PlayerAction : MonoBehaviour, ObjectHandler, PlayerHandler, CameraHandler, UIHandler
 {
-    //PickUpHandler
-    public virtual void ThrowObject()
+    //ObjectHandler
+    public virtual void ThrowObject() { }
+    public virtual void InteractObj() { }
+    public virtual void GetItem() { }
+    public virtual bool IsInteractKeyPressed()
     {
-
-    }
-    public virtual void PickUpAndDrop()
-    {
-
-    }
-    public virtual void GetItem()
-    {
-
+        return Input.GetKeyDown(KeyCode.E);
     }
     //PlayerHandler
-    public virtual void PlayerMove()
-    {
-
-    }
+    public virtual void PlayerMove() { }
     public virtual Vector2 GetMoveRaw()
     {
         Vector2 targetDir = Vector2.zero;
@@ -69,23 +62,11 @@ public class PlayerAction : MonoBehaviour, PickUpHandler, PlayerHandler, CameraH
         return myAnim;
     }
     //CameraHandler
-    public virtual void ToggleCam(CamState cam)
-    {
-
-    }
-    public virtual void DebugCamera()
-    {
-
-    }
-    public virtual bool GetIsUI()
-    {
-        return false;
-    }
+    public virtual void ToggleCam(CamState cam) { }
+    public virtual void DebugCamera() { }
+    public virtual bool GetIsUI() { return false; }
     //UIHandler
-    public virtual void ToggleInventory()
-    {
-
-    }
+    public virtual void ToggleInventory() { }
 }
 
 public interface InputManagement
@@ -121,9 +102,9 @@ public class InputManager : PlayerAction, InputManagement
         {
             ThrowObject();
         }
-        if (Input.GetKeyDown(KeyCode.E))
+        if (IsInteractKeyPressed())
         {
-            PickUpAndDrop();
+            InteractObj();
         }
         if (Input.GetKeyUp(KeyCode.E))
         {

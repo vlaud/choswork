@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static UnityEditor.Progress;
 
@@ -17,12 +19,6 @@ public class Inventory : InputManager
         mySlots = SlotParent?.GetComponentsInChildren<ItemSlot>();
         ActiveSlots = 0;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public override void ToggleInventory()
     {
         isInventory = !isInventory;
@@ -32,7 +28,7 @@ public class Inventory : InputManager
     {
         for (int i = 0; i < mySlots.Length; ++i)
         {
-            if (!mySlots[i].IsItem)
+            if (mySlots[i].GetItemValue() == null)
             {
                 mySlots[i].GetItem(_item);
                 ActiveSlots++;
@@ -40,27 +36,34 @@ public class Inventory : InputManager
             }
         }
     }
-    public ItemSlot FindLastSlotNotEmpty()
+    public int GetSlotIndex(ItemSlot slot)
+    {
+        return Array.IndexOf(mySlots, slot);
+    }
+    public ItemSlot FindSlot(bool IsFirst, bool IsItem)
     {
         int slotNum;
         for (int i = 0; i < mySlots.Length; ++i)
         {
-            slotNum = mySlots.Length - i - 1;
+            if(!IsFirst)
+                slotNum = mySlots.Length - i - 1;
+            else
+                slotNum = i;
 
-            if (mySlots[slotNum].IsItem)
+            if (IsItem == (mySlots[slotNum].GetItemValue() != null)) // IsItem: ¾ÆÀÌÅÛ Á¸Àç ¿©ºÎ
             {
                 return mySlots[slotNum];
             }
         }
         return null;
     }
-    public ItemSlot FindItem(Item _item)
+    public ItemSlot FindSlotbyItem(Item _item)
     {
         int slotNum;
         for (int i = 0; i < mySlots.Length; ++i)
         {
             slotNum = mySlots.Length - i - 1;
-            if (!mySlots[slotNum].IsItem) continue;
+            if (mySlots[slotNum].GetItemValue() == null) continue;
 
             if (mySlots[slotNum].GetItemValue() == _item)
             {
@@ -71,7 +74,30 @@ public class Inventory : InputManager
     }
     public void DestroyItem(Item _item)
     {
-        FindItem(_item).DestroyItem();
+        FindSlotbyItem(_item)?.DestroyItem();
         ActiveSlots--;
+        StartCoroutine(SortItems());
+    }
+    IEnumerator SortItems()
+    {
+        ItemSlot firstEmptySlot = FindSlot(true, false);
+        ItemSlot lastNotEmptySlot = FindSlot(false, true);
+        int index = GetSlotIndex(FindSlot(true, false)) + 1;
+
+        while (GetSlotIndex(firstEmptySlot) < GetSlotIndex(lastNotEmptySlot))
+        {
+            if (mySlots[index].GetItemValue() != null)
+            {
+                Debug.Log("ºó ½½·Ô: " + GetSlotIndex(firstEmptySlot));
+                Debug.Log("¹Ù²ã¾ßÇÒ ½½·Ô: " + index);
+                mySlots[index].SwitchSlot(firstEmptySlot);
+            }
+            else index++;
+            
+            firstEmptySlot = FindSlot(true, false);
+            lastNotEmptySlot = FindSlot(false, true);
+            Debug.Log("¸¶Áö¸· ¾ÆÀÌÅÛ ½½·Ô: " + GetSlotIndex(lastNotEmptySlot));
+            yield return null;
+        }
     }
 }
