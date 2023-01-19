@@ -9,18 +9,19 @@ public class ObjectGrabbable : ObjectInteractable
 {
     [SerializeField] private float dropSpeed;
     private Rigidbody objectRigidbody;
+    private Collider objectCollider;
     private Transform objectGrabPointTransform;
     private void Awake()
     {
         objectRigidbody = GetComponent<Rigidbody>();
+        objectCollider = GetComponent<Collider>();
         SetText();
         SetItemInfoAppear(false);
     }
     public void Grab(Transform objectGrabPointTransform)
     {
         this.objectGrabPointTransform = objectGrabPointTransform;
-        objectRigidbody.useGravity = false;
-        objectRigidbody.isKinematic = true;
+        SetObjectPhysics(false);
     }
     public void Drop()
     {
@@ -29,15 +30,19 @@ public class ObjectGrabbable : ObjectInteractable
     public void Throw(Vector3 dir, float strength)
     {
         this.objectGrabPointTransform = null;
-        objectRigidbody.useGravity = true;
-        objectRigidbody.isKinematic = false;
+        SetObjectPhysics(true);
         Vector3 force;
         Debug.Log(dir);
         force = dir * strength;
         //objectRigidbody.AddForce(force);
         objectRigidbody.velocity = force;
     }
-    
+    public void SetObjectPhysics(bool v)
+    {
+        objectRigidbody.useGravity = v;
+        objectRigidbody.isKinematic = !v;
+        objectCollider.isTrigger = !v;
+    }
     private void FixedUpdate()
     {
         if(objectGrabPointTransform != null)
