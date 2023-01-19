@@ -9,7 +9,6 @@ public class RootMotion : MonoBehaviour
     Vector3 deltaPosition = Vector3.zero;
     Quaternion deltaRotation = Quaternion.identity;
     
-    
     private void FixedUpdate()
     {
         if (DontMove) return;

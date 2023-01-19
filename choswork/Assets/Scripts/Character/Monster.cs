@@ -27,7 +27,6 @@ public class Monster : BattleSystem
     public string _standupClipName;
 
     private NavMeshPath myPath;
-    private Rigidbody rb;
     private CapsuleCollider cs;
     private float _origintimetoWake;
     private float _elapsedResetBonesTime;
@@ -118,7 +117,6 @@ public class Monster : BattleSystem
     private void Awake()
     {
         //myHips = myAnim.GetBoneTransform(HumanBodyBones.Hips);
-        rb = GetComponent<Rigidbody>();
         cs = GetComponent<CapsuleCollider>();
         _origintimetoWake = _timetoWakeup;
         //_bones = myRagDolls.myRagDollsTransforms;
@@ -168,7 +166,7 @@ public class Monster : BattleSystem
 
     public void RagDollSet(bool v)
     {
-        rb.isKinematic = v;
+        myRigid.isKinematic = v;
         cs.isTrigger = v;
         myAnim.enabled = !v;
         myRagDolls.RagDollOnOff(v);

@@ -14,7 +14,7 @@ public class Player : BattleSystem
     public Transform KickTransform; // 발차기 소리 위치
     public bool IsWall = false;
 
-    private float animOffset = 0.01f;
+    private float animOffset = 0.04f;
     public enum STATE
     {
         Create, Play, Death
