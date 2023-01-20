@@ -21,10 +21,10 @@ public class IKPlacement : MonoBehaviour
     private float Offset = 0.01f;
     
     public float leftRotOffset;
-    public float leftRotation = 20f;
+    public Vector3 leftRotation = new Vector3(60, 0, 0);
 
     public float rightRotOffset;
-    public float rightRotation = 20f;
+    public Vector3 rightRotation = new Vector3(60, 0, 0);
     // Start is called before the first frame update
     void Start()
     {
@@ -63,7 +63,7 @@ public class IKPlacement : MonoBehaviour
 
                 Quaternion rot = Quaternion.LookRotation(transform.forward, hit.normal);
                 leftRotOffset = Mathf.Clamp(Vector3.Dot(transform.forward, hit.normal), -1f, 1f);
-                Quaternion offset = Quaternion.Euler(new Vector3(leftRotOffset * leftRotation, 0, 0));
+                Quaternion offset = Quaternion.Euler(new Vector3(leftRotOffset * leftRotation.x, leftRotation.y, leftRotation.z));
                 myAnim.SetIKRotation(AvatarIKGoal.LeftFoot, rot * offset);
             }
             // Right Foot
@@ -79,7 +79,7 @@ public class IKPlacement : MonoBehaviour
 
                 Quaternion rot = Quaternion.LookRotation(transform.forward, hit.normal);
                 rightRotOffset = Mathf.Clamp(Vector3.Dot(transform.forward, hit.normal), -1f, 1f);
-                Quaternion offset = Quaternion.Euler(new Vector3(rightRotOffset * rightRotation, 0, 0));
+                Quaternion offset = Quaternion.Euler(new Vector3(rightRotOffset * rightRotation.x, rightRotation.y, rightRotation.z));
                 myAnim.SetIKRotation(AvatarIKGoal.RightFoot, rot * offset);
             }
         }
