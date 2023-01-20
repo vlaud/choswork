@@ -545,7 +545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 494596, guid: acb5b460622c8ee4b825a3e68c33c1b6, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 494596, guid: acb5b460622c8ee4b825a3e68c33c1b6, type: 3}
       propertyPath: m_LocalScale.x
@@ -1229,7 +1229,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &322723665
 GameObject:
@@ -2286,7 +2286,7 @@ Transform:
   - {fileID: 155909559}
   - {fileID: 2010206248}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &558057610
 PrefabInstance:
@@ -3302,7 +3302,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4347,7 +4347,7 @@ Transform:
   - {fileID: 1196819677}
   - {fileID: 2054975042}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &910030835
 CapsuleCollider:
@@ -9879,7 +9879,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 135, z: 0}
 --- !u!1 &1714227847
 GameObject:
@@ -11849,7 +11849,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &2056227235
 GameObject:
@@ -15547,10 +15547,10 @@ MonoBehaviour:
   IKWeight: 1
   curIKWeight: 1
   smoothMoveSpeed: 10
-  leftRotOffset: 0
-  leftRotation: 60
-  rightRotOffset: 0
-  rightRotation: 60
+  leftRotOffset: {x: 0, y: 0, z: 0}
+  leftRotation: {x: 60, y: 0, z: 36}
+  rightRotOffset: {x: 0, y: 0, z: 0}
+  rightRotation: {x: 35, y: 0, z: 36}
 --- !u!95 &5866666021462102428
 Animator:
   serializedVersion: 4
@@ -17900,7 +17900,7 @@ Transform:
   m_Children:
   - {fileID: 8192754210729896182}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &8817898888076859790
 GameObject:

@@ -20,10 +20,10 @@ public class IKPlacement : MonoBehaviour
     public float smoothMoveSpeed = 10.0f;
     private float Offset = 0.01f;
     
-    public float leftRotOffset;
+    public Vector3 leftRotOffset;
     public Vector3 leftRotation = new Vector3(60, 0, 0);
 
-    public float rightRotOffset;
+    public Vector3 rightRotOffset;
     public Vector3 rightRotation = new Vector3(60, 0, 0);
     // Start is called before the first frame update
     void Start()
@@ -62,8 +62,12 @@ public class IKPlacement : MonoBehaviour
                 myAnim.SetIKPosition(AvatarIKGoal.LeftFoot, footPos);
 
                 Quaternion rot = Quaternion.LookRotation(transform.forward, hit.normal);
-                leftRotOffset = Mathf.Clamp(Vector3.Dot(transform.forward, hit.normal), -1f, 1f);
-                Quaternion offset = Quaternion.Euler(new Vector3(leftRotOffset * leftRotation.x, leftRotation.y, leftRotation.z));
+                leftRotOffset.x = Mathf.Clamp(Vector3.Dot(transform.forward, hit.normal), -1f, 1f);
+                leftRotOffset.z = Mathf.Clamp(Vector3.Dot(transform.right, hit.normal), -1f, 1f);
+                Quaternion offset = Quaternion.Euler(new Vector3(
+                    leftRotOffset.x * leftRotation.x, 
+                    leftRotation.y, 
+                    leftRotation.z * leftRotOffset.z));
                 myAnim.SetIKRotation(AvatarIKGoal.LeftFoot, rot * offset);
             }
             // Right Foot
@@ -78,8 +82,12 @@ public class IKPlacement : MonoBehaviour
                 myAnim.SetIKPosition(AvatarIKGoal.RightFoot, footPos);
 
                 Quaternion rot = Quaternion.LookRotation(transform.forward, hit.normal);
-                rightRotOffset = Mathf.Clamp(Vector3.Dot(transform.forward, hit.normal), -1f, 1f);
-                Quaternion offset = Quaternion.Euler(new Vector3(rightRotOffset * rightRotation.x, rightRotation.y, rightRotation.z));
+                rightRotOffset.x = Mathf.Clamp(Vector3.Dot(transform.forward, hit.normal), -1f, 1f);
+                rightRotOffset.z = Mathf.Clamp(Vector3.Dot(transform.right, hit.normal), -1f, 1f);
+                Quaternion offset = Quaternion.Euler(new Vector3(
+                    rightRotOffset.x * rightRotation.x,
+                    rightRotation.y, 
+                    rightRotation.z * rightRotOffset.z));
                 myAnim.SetIKRotation(AvatarIKGoal.RightFoot, rot * offset);
             }
         }
