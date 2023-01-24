@@ -71,7 +71,11 @@ public class MapManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log(transform.childCount);
+            Debug.Log(transform.GetChild(Random.Range(0, transform.childCount)).gameObject);
+        }
     }
 
     void GenerateDungeon()

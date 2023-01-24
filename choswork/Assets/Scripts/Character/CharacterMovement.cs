@@ -269,7 +269,6 @@ public class CharacterMovement : CharacterProperty
             NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, myPath);
             Vector3[] list = myPath.corners;
             Vector3 dir = target.position - transform.position;
-            dir.y = 0.0f;
             float dist = dir.magnitude;
             dir.Normalize();
             int cur = 1;
@@ -284,8 +283,6 @@ public class CharacterMovement : CharacterProperty
                 if (cur < list.Length)
                 {
                     dir = list[cur++] - transform.position;
-                    dir.y = 0.0f;
-                    dist = dir.magnitude;
                 }
             }
             else
@@ -302,7 +299,7 @@ public class CharacterMovement : CharacterProperty
             {
                 // È¸Àü
                 delta = myStat.RotSpeed * Time.deltaTime;
-
+                dir.y = 0.0f;
                 float Angle = Vector3.Angle(dir, transform.forward);
                 float rotDir = 1.0f;
 
