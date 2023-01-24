@@ -65,7 +65,7 @@ public class MapManager : MonoBehaviour
     void Start()
     {
         myPath = new NavMeshPath();
-        MazeGenerator();
+        //MazeGenerator();
     }
 
     // Update is called once per frame
