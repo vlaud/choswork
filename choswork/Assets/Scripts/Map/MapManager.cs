@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -50,8 +51,6 @@ public class MapManager : MonoBehaviour
         }
         transform.localPosition = new Vector3(-mapSize.x / 2.0f + 0.5f, 0, -mapSize.z / 2.0f + 0.5f);
     }
-
-    
     public bool PathCheck()
     {
         NavMesh.CalculatePath(StartPoint.position, EndPoint.position, NavMesh.AllAreas, myPath);
@@ -60,6 +59,7 @@ public class MapManager : MonoBehaviour
     private void Awake()
     {
         Inst = this;
+        MobSpawning();
     }
     // Start is called before the first frame update
     void Start()
@@ -77,7 +77,35 @@ public class MapManager : MonoBehaviour
             Debug.Log(transform.GetChild(Random.Range(0, transform.childCount)).gameObject);
         }
     }
+    void MobSpawning()
+    {
+        int floor = mapSize.x * mapSize.z; // 1층에선 소환 안되게끔
 
+        // 중복 숫자 방지
+        List<int> Numbers = new List<int>();
+        for (int i = floor; i < transform.childCount; ++i)
+        {
+            Numbers.Add(i);
+        }
+        List<int> LottoNumber = new List<int>();
+
+        for (int i = 0; i < 2; ++i)
+        {
+            int n = Random.Range(0, Numbers.Count);
+            LottoNumber.Add(Numbers[n]);
+            Numbers.RemoveAt(n);
+        }
+        //시작 위치
+        StartPoint.transform.SetParent(transform.GetChild(LottoNumber[0]));
+        StartPoint.transform.localPosition = new Vector3(3f, 1, -3);
+        //도착 위치
+        EndPoint.transform.SetParent(transform.GetChild(LottoNumber[1]));
+        EndPoint.transform.localPosition = new Vector3(3f, 1, -3);
+    }
+    void KeySpawning()
+    {
+
+    }
     void GenerateDungeon()
     {
         for (int y = 0; y < mapSize.y; ++y)

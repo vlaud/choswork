@@ -9,7 +9,7 @@ public class GameManagement : MonoBehaviour
     public Inventory myInventory;
     public SpringArms mySpringArms;
     public SoundManager mySound;
-
+    public MapManager myMapManager;
     private void Awake()
     {
         Inst = this;

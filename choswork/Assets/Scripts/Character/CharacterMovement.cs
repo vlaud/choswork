@@ -28,14 +28,12 @@ public class CharacterMovement : CharacterProperty
         Vector3[] list = myPath.corners;
 
         Vector3 dir = pos - transform.position;
-        dir.y = 0.0f;
         float dist = dir.magnitude;
         dir.Normalize();
 
         while (dist > 1.0f) // 도착 판정
         {
             dir = pos - transform.position;
-            dir.y = 0.0f;
             dist = dir.magnitude;
 
             if (cur < list.Length)
@@ -159,7 +157,6 @@ public class CharacterMovement : CharacterProperty
     IEnumerator RootMotionMoving(Vector3 pos, UnityAction done)
     {
         Vector3 dir = pos - transform.position;
-        dir.y = 0.0f;
         float dist = dir.magnitude;
         dir.Normalize();
         //달리기 시작
@@ -170,7 +167,6 @@ public class CharacterMovement : CharacterProperty
             if (!myAnim.GetBool("IsAttacking"))
             {
                 dir = pos - transform.position;
-                dir.y = 0.0f;
                 dist = dir.magnitude;
             }
             yield return null;

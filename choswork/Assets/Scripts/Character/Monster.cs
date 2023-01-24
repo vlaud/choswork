@@ -16,8 +16,6 @@ public class Monster : BattleSystem
     }
     public RagDollPhysics myRagDolls;
     public Transform myHips;
-    public Transform myStart;
-    public Transform myEnd;
     public LayerMask enemyMask = default;
     public bool IsStart = false;
     public float _timetoWakeup = 3.0f;
@@ -57,11 +55,11 @@ public class Monster : BattleSystem
             case STATE.Roaming:
                 if (IsStart)
                 {
-                    RePath(myPath, myEnd.position, () => ChangeState(STATE.Idle));
+                    RePath(myPath, GameManagement.Inst.myMapManager.EndPoint.position, () => ChangeState(STATE.Idle));
                 }
                 else
                 {
-                    RePath(myPath, myStart.position, () => ChangeState(STATE.Idle));
+                    RePath(myPath, GameManagement.Inst.myMapManager.StartPoint.position, () => ChangeState(STATE.Idle));
                 }
                 break;
             case STATE.Angry:
@@ -132,7 +130,7 @@ public class Monster : BattleSystem
         }
         PopulateAnimation(_standupClipName, _standupTransforms);
         RagDollSet(false);
-        transform.position = myStart.position;
+        transform.position = GameManagement.Inst.myMapManager.StartPoint.position;
     }
     // Start is called before the first frame update
     void Start()
