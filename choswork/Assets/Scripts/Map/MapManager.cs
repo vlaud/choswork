@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEditor.Progress;
 
 public class MapManager : MonoBehaviour
 {
@@ -24,11 +25,17 @@ public class MapManager : MonoBehaviour
         get;
         private set;
     }
+    [field: SerializeField] public Transform ItemPoint
+    {
+        get;
+        private set;
+    }
     [SerializeField] Vector3Int mapSize = Vector3Int.zero;
     [SerializeField] int startPos = 0;
     public Vector3 offset;
     List<Cell> board;
     [SerializeField] GameObject map;
+    [SerializeField] Transform item;
     NavMeshPath myPath = null;
     [ContextMenu("¸Ê »ý¼º")]
     void CreateMap()
@@ -60,6 +67,7 @@ public class MapManager : MonoBehaviour
     {
         Inst = this;
         MobSpawning();
+        KeySpawning();
     }
     // Start is called before the first frame update
     void Start()
@@ -104,7 +112,9 @@ public class MapManager : MonoBehaviour
     }
     void KeySpawning()
     {
-
+        item.SetParent(transform.GetChild(Random.Range(1, transform.childCount)));
+        item.transform.localPosition = new Vector3(-3f, 2, -3);
+        ItemPoint.position = item.transform.position;
     }
     void GenerateDungeon()
     {
