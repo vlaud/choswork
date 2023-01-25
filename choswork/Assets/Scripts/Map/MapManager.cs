@@ -109,9 +109,9 @@ public class MapManager : MonoBehaviour
     }
     void KeySpawning()
     {
-        item.SetParent(transform.GetChild(Random.Range(1, transform.childCount)));
-        item.transform.localPosition = new Vector3(-3f, 2, -3);
-        ItemPoint.position = item.transform.position;
+        ItemPoint.SetParent(transform.GetChild(Random.Range(1, transform.childCount)));
+        ItemPoint.transform.localPosition = new Vector3(-3f, 2, -3);
+        item.transform.position = ItemPoint.position;
     }
     void GenerateDungeon()
     {
