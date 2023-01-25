@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEditor.Progress;
 
 public class MapManager : MonoBehaviour
 {
@@ -32,6 +31,7 @@ public class MapManager : MonoBehaviour
     }
     [SerializeField] Vector3Int mapSize = Vector3Int.zero;
     [SerializeField] int startPos = 0;
+    public NavMeshSurface surfaces;
     public Vector3 offset;
     List<Cell> board;
     [SerializeField] GameObject map;
@@ -40,11 +40,8 @@ public class MapManager : MonoBehaviour
     [ContextMenu("甘 积己")]
     void CreateMap()
     {
-        while(transform.childCount > 0)
-        {
-            DestroyImmediate(transform.GetChild(0).gameObject);
-        }
-        for(int y = 0; y < mapSize.y; ++y)
+        DestroyMap();
+        for (int y = 0; y < mapSize.y; ++y)
         {
             for (int z = 0; z < mapSize.z; ++z)
             {
@@ -66,6 +63,7 @@ public class MapManager : MonoBehaviour
     private void Awake()
     {
         Inst = this;
+        MazeGenerator();
         MobSpawning();
         KeySpawning();
     }
@@ -73,7 +71,6 @@ public class MapManager : MonoBehaviour
     void Start()
     {
         myPath = new NavMeshPath();
-        //MazeGenerator();
     }
 
     // Update is called once per frame
@@ -140,10 +137,7 @@ public class MapManager : MonoBehaviour
     [ContextMenu("罚待 甘 积己")]
     void MazeGenerator()
     {
-        while (transform.childCount > 0)
-        {
-            DestroyImmediate(transform.GetChild(0).gameObject);
-        }
+        DestroyMap();
         board = new List<Cell>();
         for (int y = 0; y < mapSize.y; ++y)
         {
@@ -239,6 +233,7 @@ public class MapManager : MonoBehaviour
             }
         }
         GenerateDungeon();
+        surfaces.BuildNavMesh();
     }
     List<int> CheckNeighbors(int cell)
     { 

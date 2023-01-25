@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 1966132420619047554}
   - component: {fileID: 1966132420619047555}
   - component: {fileID: 1966132420619047564}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -436,7 +436,7 @@ GameObject:
   - component: {fileID: 1966132420846648754}
   - component: {fileID: 1966132420846648755}
   - component: {fileID: 1966132420846648764}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RoomWall (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -868,7 +868,7 @@ GameObject:
   - component: {fileID: 1966132421177952270}
   - component: {fileID: 1966132421177952271}
   - component: {fileID: 1966132421177952264}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RoomWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1410,7 +1410,7 @@ GameObject:
   - component: {fileID: 1966132421591342498}
   - component: {fileID: 1966132421591342499}
   - component: {fileID: 1966132421591342508}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2436,7 +2436,7 @@ GameObject:
   - component: {fileID: 1966132422488559411}
   - component: {fileID: 1966132422488559420}
   - component: {fileID: 1966132422488559421}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Quad (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2745,7 +2745,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1678606368103400162}
   - component: {fileID: 4970359129769003478}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: obstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2795,7 +2795,7 @@ GameObject:
   - component: {fileID: 1658478604653876537}
   - component: {fileID: 1875734238919539783}
   - component: {fileID: 2029400144158240012}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: stairwall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2890,7 +2890,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7914830106828899898}
   - component: {fileID: 7070086458975734456}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: obstacle (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2939,7 +2939,7 @@ GameObject:
   - component: {fileID: 3928906387214221749}
   - component: {fileID: 4158594246888176945}
   - component: {fileID: 6030699134761380871}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
