@@ -8,7 +8,7 @@ public enum Wall
 }
 public enum StairsAndDoor
 {
-    RoomWall, RoomDoorWall, Stairs, StairWall
+    RoomWall, RoomDoorWall, Stairs
 }
 public class TileBehaviour : MonoBehaviour
 {
@@ -25,8 +25,12 @@ public class TileBehaviour : MonoBehaviour
         bool up = mapStatus[(int)Wall.up];
         bool down = mapStatus[(int)Wall.down];
         stairsAndDoors[(int)StairsAndDoor.Stairs].SetActive(up);
-        stairsAndDoors[(int)StairsAndDoor.StairWall].SetActive(down);
         stairsAndDoors[(int)StairsAndDoor.RoomWall].SetActive(down || up);
         stairsAndDoors[(int)StairsAndDoor.RoomDoorWall].SetActive(!(down || up));
+    }
+    public void StairPlusOffset()
+    {
+        Vector3 offset = new Vector3(0, -0.17f, 0);
+        stairsAndDoors[(int)StairsAndDoor.Stairs].transform.position += offset;
     }
 }

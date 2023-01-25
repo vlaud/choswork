@@ -115,6 +115,8 @@ public class MapManager : MonoBehaviour
     }
     void GenerateDungeon()
     {
+        List<TileBehaviour> tiles = new List<TileBehaviour>();
+
         for (int y = 0; y < mapSize.y; ++y)
         {
             for (int z = 0; z < mapSize.z; ++z)
@@ -129,9 +131,15 @@ public class MapManager : MonoBehaviour
                     if (obj.TryGetComponent<TileBehaviour>(out var newRoom))
                     {
                         newRoom.UpdateRoom(board[x + z * mapSize.x + y * floor].status);
+                        tiles.Add(newRoom);
                     }
                 }
             }
+        }
+        surfaces.BuildNavMesh();
+        for(int i = 0; i < tiles.Count; ++i)
+        {
+            tiles[i].StairPlusOffset();
         }
     }
     [ContextMenu("·£´ý ¸Ê »ý¼º")]
@@ -233,7 +241,6 @@ public class MapManager : MonoBehaviour
             }
         }
         GenerateDungeon();
-        surfaces.BuildNavMesh();
     }
     List<int> CheckNeighbors(int cell)
     { 
