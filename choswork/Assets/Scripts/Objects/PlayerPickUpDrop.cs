@@ -93,4 +93,8 @@ public class PlayerPickUpDrop : InputManager
             objectGrabbable = null;
         }
     }
+    public ObjectGrabbable GetObjectGrabbable()
+    {
+        return objectGrabbable;
+    }
 }

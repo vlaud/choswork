@@ -64,7 +64,13 @@ MonoBehaviour:
   actionText: {fileID: 0}
   ShowMessage: " \uD68D\uB4DD "
   dropSpeed: 1
-  GetInventory: {fileID: 0}
+  objectMask:
+    serializedVersion: 2
+    m_Bits: 192
+  soundPos: {x: 0, y: 0, z: 0}
+  IsSoundable: 0
+  _changeStateTime: 1
+  myState: 0
 --- !u!54 &3090318388342580585
 Rigidbody:
   m_ObjectHideFlags: 0

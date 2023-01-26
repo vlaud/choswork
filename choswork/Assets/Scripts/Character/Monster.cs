@@ -23,6 +23,8 @@ public class Monster : BattleSystem
     public float _changeStateTime = 3.0f;
     public string _standupName;
     public string _standupClipName;
+    public Vector3 hearingPos;
+    public Transform hearingObj;
 
     private NavMeshPath myPath;
     private CapsuleCollider cs;
@@ -92,8 +94,10 @@ public class Monster : BattleSystem
             case STATE.Create:
                 break;
             case STATE.Idle:
+                HearingSound();
                 break;
             case STATE.Roaming:
+                HearingSound();
                 break;
             case STATE.Angry:
                 break;
@@ -149,6 +153,26 @@ public class Monster : BattleSystem
     {
         yield return new WaitForSeconds(_changeStateTime);
         ChangeState(s);
+    }
+    void HearingSound()
+    {
+        Transform tempTarget = GameObject.Find("Player").GetComponent<Transform>();
+        if ((tempTarget != null && tempTarget.TryGetComponent<PlayerPickUpDrop>(out var target)))
+        {
+            if (target.GetObjectGrabbable() != null)
+            {
+                hearingObj = target.GetObjectGrabbable().transform;
+            }
+            else if (hearingObj != null && hearingObj.TryGetComponent<ObjectGrabbable>(out var grab))
+            {
+                if (grab.IsSoundable)
+                {
+                    hearingPos = grab.soundPos;
+                    Debug.Log("µè´Â À§Ä¡: " + hearingPos);
+                    grab.IsSoundable = false;
+                }
+            }
+        }
     }
     public void GetKick(Vector3 dir, float strength)
     {
