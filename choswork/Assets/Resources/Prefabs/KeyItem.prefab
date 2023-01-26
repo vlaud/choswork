@@ -64,7 +64,11 @@ MonoBehaviour:
   actionText: {fileID: 0}
   ShowMessage: " \uD68D\uB4DD "
   dropSpeed: 1
-  GetInventory: {fileID: 0}
+  IsSoundable: 0
+  objectMask:
+    serializedVersion: 2
+    m_Bits: 0
+  soundPos: {x: 0, y: 0, z: 0}
 --- !u!54 &2598752933757531053
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -92,8 +96,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.2336638, y: 0.0239133, z: 0.0762389}
-  m_Center: {x: 0.115, y: 0, z: 0}
+  m_Size: {x: 0.40873852, y: 0.0239133, z: 0.2741519}
+  m_Center: {x: 0.11880304, y: 0, z: 0.0106125325}
 --- !u!1 &7560628067512763012
 GameObject:
   m_ObjectHideFlags: 0

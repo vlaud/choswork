@@ -4,10 +4,14 @@ using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public class ObjectGrabbable : ObjectInteractable
 {
     [SerializeField] private float dropSpeed;
+    [SerializeField] private bool IsSoundable;
+    [SerializeField] private LayerMask objectMask = default;
+    public Vector3 soundPos;
     private Rigidbody objectRigidbody;
     private Collider objectCollider;
     private Transform objectGrabPointTransform;
@@ -36,6 +40,7 @@ public class ObjectGrabbable : ObjectInteractable
         force = dir * strength;
         //objectRigidbody.AddForce(force);
         objectRigidbody.velocity = force;
+        IsSoundable = true;
     }
     public void SetObjectPhysics(bool v)
     {
@@ -52,5 +57,15 @@ public class ObjectGrabbable : ObjectInteractable
             objectRigidbody.MovePosition(newPos);
         }
         if (objectRigidbody.useGravity) objectRigidbody.AddForce(Physics.gravity * (objectRigidbody.mass * objectRigidbody.mass));
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!IsSoundable) return;
+        if ((objectMask & 1 << collision.gameObject.layer) != 0)
+        {
+            //¿ÀºêÁ§Æ®¿¡ ºÎµúÄ¥ ¶§
+            soundPos = transform.position;
+            IsSoundable = false;
+        }
     }
 }
