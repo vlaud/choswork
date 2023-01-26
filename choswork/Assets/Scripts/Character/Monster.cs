@@ -14,25 +14,45 @@ public class Monster : BattleSystem
 
         public Quaternion Rotation { get; set; }
     }
+    public LayerMask enemyMask = default;
+
+    //mob ragdoll
     public RagDollPhysics myRagDolls;
     public Transform myHips;
-    public LayerMask enemyMask = default;
-    public bool IsStart = false;
     public float _timetoWakeup = 3.0f;
     public float _timeToResetBones;
     public float _changeStateTime = 3.0f;
     public string _standupName;
     public string _standupClipName;
-    public Vector3 hearingPos;
-    public Transform hearingObj;
-
-    private NavMeshPath myPath;
     private CapsuleCollider cs;
     private float _origintimetoWake;
     private float _elapsedResetBonesTime;
     private BoneTransform[] _standupTransforms;
     private BoneTransform[] _ragdollTransforms;
     private Transform[] _bones;
+
+    //mob startPos
+    public bool IsStart = false;
+
+    //ai sight
+    public bool playerIsInLOS = false;
+    public float fovAngle = 160f;
+    public float losRadius = 45f;
+
+    //ai sight and memory
+    private bool aiMemorizesPlayer = false;
+    public float memoryStartTime = 10f;
+    private float increasingMemoryTime;
+
+    //ai hearing
+    public Vector3 hearingPos;
+    public Transform hearingObj;
+    private bool aiHeardPlayer = false;
+    public float noiseTravelDistance = 50f;
+
+    //ai path
+    private NavMeshPath myPath;
+   
 
     public enum STATE
     {
@@ -42,9 +62,10 @@ public class Monster : BattleSystem
 
     void ChangeState(STATE s)
     {
+        var manager = GameManagement.Inst.myMapManager;
         if (myState == s) return;
         myState = s;
-
+        
         switch (myState)
         {
             case STATE.Create:
@@ -52,16 +73,17 @@ public class Monster : BattleSystem
             case STATE.Idle: // 평상시
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
                 IsStart = !IsStart;
-                StartCoroutine(DelayState(STATE.Roaming));
+                manager.MobChangePath(IsStart);
+                StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
                 break;
             case STATE.Roaming:
                 if (IsStart)
                 {
-                    RePath(myPath, GameManagement.Inst.myMapManager.EndPoint.position, () => ChangeState(STATE.Idle));
+                    RePath(myPath, manager.EndPoint.position, () => ChangeState(STATE.Idle));
                 }
                 else
                 {
-                    RePath(myPath, GameManagement.Inst.myMapManager.StartPoint.position, () => ChangeState(STATE.Idle));
+                    RePath(myPath, manager.StartPoint.position, () => ChangeState(STATE.Idle));
                 }
                 break;
             case STATE.Angry:
@@ -149,9 +171,9 @@ public class Monster : BattleSystem
     {
         StateProcess();
     }
-    IEnumerator DelayState(STATE s)
+    IEnumerator DelayState(STATE s, float time)
     {
-        yield return new WaitForSeconds(_changeStateTime);
+        yield return new WaitForSeconds(time);
         ChangeState(s);
     }
     void HearingSound()

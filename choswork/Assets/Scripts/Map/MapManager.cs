@@ -19,16 +19,19 @@ public class MapManager : MonoBehaviour
         get;
         private set;
     }
+    public int StartNum;
     [field:SerializeField] public Transform EndPoint
     {
         get;
         private set;
     }
+    public int EndNum;
     [field: SerializeField] public Transform ItemPoint
     {
         get;
         private set;
     }
+    public int ItemNum;
     [SerializeField] Vector3Int mapSize = Vector3Int.zero;
     [SerializeField] int startPos = 0;
     public NavMeshSurface surfaces;
@@ -101,11 +104,46 @@ public class MapManager : MonoBehaviour
             Numbers.RemoveAt(n);
         }
         //시작 위치
-        StartPoint.transform.SetParent(transform.GetChild(LottoNumber[0]));
+        StartNum = LottoNumber[0];
+        StartPoint.transform.SetParent(transform.GetChild(StartNum));
         StartPoint.transform.localPosition = new Vector3(3f, 1, -3);
         //도착 위치
-        EndPoint.transform.SetParent(transform.GetChild(LottoNumber[1]));
+        EndNum = LottoNumber[1];
+        EndPoint.transform.SetParent(transform.GetChild(EndNum));
         EndPoint.transform.localPosition = new Vector3(3f, 1, -3);
+    }
+    public void MobChangePath(bool isStart)
+    {
+        int floor = mapSize.x * mapSize.z; // 1층에선 소환 안되게끔
+
+        // 중복 숫자 방지
+        List<int> Numbers = new List<int>();
+        for (int i = floor; i < transform.childCount; ++i)
+        {
+            Numbers.Add(i);
+        }
+        Numbers.Remove(StartNum);
+        Numbers.Remove(EndNum);
+        Debug.Log(Numbers.Count);
+        List<int> LottoNumber = new List<int>();
+        for (int i = 0; i < 2; ++i)
+        {
+            int n = Random.Range(0, Numbers.Count);
+            LottoNumber.Add(Numbers[n]);
+            Numbers.RemoveAt(n);
+        }
+        if (isStart)
+        {
+            EndNum = LottoNumber[1];
+            EndPoint.transform.SetParent(transform.GetChild(LottoNumber[1]));
+            EndPoint.transform.localPosition = new Vector3(3f, 1, -3);
+        }
+        else
+        {
+            StartNum = LottoNumber[0];
+            StartPoint.transform.SetParent(transform.GetChild(LottoNumber[0]));
+            StartPoint.transform.localPosition = new Vector3(3f, 1, -3);
+        }
     }
     void KeySpawning()
     {
