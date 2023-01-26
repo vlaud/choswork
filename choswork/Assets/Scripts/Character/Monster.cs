@@ -64,7 +64,7 @@ public class Monster : BattleSystem
 
     void ChangeState(STATE s)
     {
-        var manager = GameManagement.Inst.myMapManager;
+        var manager = GameManagement.Inst;
         if (myState == s) return;
         myState = s;
         
@@ -80,24 +80,24 @@ public class Monster : BattleSystem
                 myAnim.SetBool("IsRunning", false);
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
                 IsStart = !IsStart;
-                manager.MobChangePath(IsStart);
+                manager.myMapManager.MobChangePath(IsStart);
                 StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
                 break;
             case STATE.Roaming:
                 if (IsStart)
                 {
-                    RePath(myPath, manager.EndPoint.position, () => ChangeState(STATE.Idle));
+                    RePath(myPath, manager.myMapManager.EndPoint.position, () => ChangeState(STATE.Idle));
                 }
                 else
                 {
-                    RePath(myPath, manager.StartPoint.position, () => ChangeState(STATE.Idle));
+                    RePath(myPath, manager.myMapManager.StartPoint.position, () => ChangeState(STATE.Idle));
                 }
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
                 if (myTarget == null)
                 {
-                    myTarget = GameObject.Find("Player").GetComponent<Transform>();
+                    myTarget = manager.myPlayer.transform;
                 }
                 AttackTarget(myPath, myTarget);
                 break;
@@ -124,7 +124,6 @@ public class Monster : BattleSystem
     }
     void StateProcess()
     {
-        var manager = GameManagement.Inst.myMapManager;
         HearingTr.position = hearingPos;
         switch (myState)
         {
@@ -198,24 +197,27 @@ public class Monster : BattleSystem
         yield return new WaitForSeconds(time);
         ChangeState(s);
     }
+    // SoundDetection
     void SetSoundPos()
     {
         if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1))
         {
-            Debug.Log("hearingPos.y: " + hearingPos.y);
+            Debug.Log("hearingObj.position.y: " + hearingPos.y);
             Debug.Log("hit.position.y: " + hit.position.y);
-            if (hearingPos.y > hit.position.y)
+            if (hearingObj.position.y > hit.position.y)
             {
                 hearingPos = hit.position;
+                Debug.Log("use hit");
             }
             else
             {
-                Vector3 offset = hit.position + Vector3.down * 5f;
-                if (Physics.Raycast(offset, Vector3.down, out RaycastHit thit,
-                    20f, LayerMask.NameToLayer("Ground")))
+                Debug.Log("NO hit");
+                if (Physics.Raycast(hearingObj.position, Vector3.down, out RaycastHit thit,
+                    20f, 1 << LayerMask.NameToLayer("Ground")))
                 {
-                    float dist = Vector3.Distance(offset, thit.point);
-                    Debug.DrawRay(offset, Vector3.down * dist, Color.red);
+                    Debug.Log("thit.point.y: " + thit.point.y);
+                    float dist = Vector3.Distance(hearingObj.position, thit.point);
+                    Debug.DrawRay(hearingObj.position, Vector3.down * dist, Color.red);
                     Debug.Log("thit: " + thit.point);
                     hearingPos = thit.point;
                 }
@@ -241,11 +243,12 @@ public class Monster : BattleSystem
     }
     void HearingSound()
     {
-        if(aiHeardPlayer)
+        var manager = GameManagement.Inst;
+        if (aiHeardPlayer)
         {
             ChangeState(STATE.Search);
         }
-        Transform tempTarget = GameObject.Find("Player").GetComponent<Transform>();
+        Transform tempTarget = manager.myPlayer.transform;
         if ((tempTarget != null && tempTarget.TryGetComponent<PlayerPickUpDrop>(out var target)))
         {
             if (target.GetObjectGrabbable() != null)
@@ -264,6 +267,7 @@ public class Monster : BattleSystem
             }
         }
     }
+    //GetKickandRagDoll
     public void GetKick(Vector3 dir, float strength)
     {
         if (myState == STATE.RagDoll) return;
