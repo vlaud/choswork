@@ -104,6 +104,10 @@ public class Monster : BattleSystem
                 StopAllCoroutines();
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
+                if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1))
+                {
+                    hearingPos = hit.position;
+                }
                 RePath(myPath, hearingPos, () => ChangeState(STATE.Idle), "IsChasing");
                 break;
             case STATE.Battle:
@@ -141,6 +145,7 @@ public class Monster : BattleSystem
                 }    
                 break;
             case STATE.Search:
+                HearingSound();
                 break;
             case STATE.Battle:
                 break;
@@ -201,6 +206,11 @@ public class Monster : BattleSystem
         if(noiseTravelDistance >= dist)
         {
             Debug.Log("몹이 소리를 들었다.");
+            if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, NavMesh.AllAreas))
+            {
+                hearingPos = hit.position;
+            }
+            RePath(myPath, hearingPos, () => ChangeState(STATE.Idle), "IsChasing");
             aiHeardPlayer = true;
         }
         else

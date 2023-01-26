@@ -238,7 +238,6 @@ public class CharacterMovement : CharacterProperty
                     myAnim.SetTrigger("Attack");
                 }
             }
-
             // È¸Àü
             delta = myStat.RotSpeed * Time.deltaTime;
 
