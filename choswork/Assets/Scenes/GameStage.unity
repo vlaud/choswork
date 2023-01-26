@@ -10707,17 +10707,24 @@ MonoBehaviour:
     ap: 1
     attackRange: 1.5
     attackDelay: 1
-  myRagDolls: {fileID: 450554896}
-  myHips: {fileID: 5465940246961711986}
   enemyMask:
     serializedVersion: 2
     m_Bits: 8
-  IsStart: 0
+  myRagDolls: {fileID: 450554896}
+  myHips: {fileID: 5465940246961711986}
   _timetoWakeup: 3
   _timeToResetBones: 0.5
   _changeStateTime: 3
   _standupName: Stand Up
   _standupClipName: Stand Up
+  IsStart: 0
+  playerIsInLOS: 0
+  fovAngle: 160
+  losRadius: 45
+  memoryStartTime: 10
+  hearingPos: {x: 0, y: 0, z: 0}
+  hearingObj: {fileID: 0}
+  noiseTravelDistance: 10
   myState: 0
 --- !u!4 &1905050036
 Transform:
@@ -37072,7 +37079,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <StartPoint>k__BackingField: {fileID: 685049426}
+  StartNum: 0
   <EndPoint>k__BackingField: {fileID: 624279258}
+  EndNum: 0
   <ItemPoint>k__BackingField: {fileID: 1170773548}
   mapSize: {x: 3, y: 2, z: 2}
   startPos: 0

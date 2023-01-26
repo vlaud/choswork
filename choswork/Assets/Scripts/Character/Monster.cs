@@ -48,7 +48,7 @@ public class Monster : BattleSystem
     public Vector3 hearingPos;
     public Transform hearingObj;
     private bool aiHeardPlayer = false;
-    public float noiseTravelDistance = 50f;
+    public float noiseTravelDistance = 10f;
 
     //ai path
     private NavMeshPath myPath;
@@ -176,6 +176,19 @@ public class Monster : BattleSystem
         yield return new WaitForSeconds(time);
         ChangeState(s);
     }
+    void CheckSoundDist()
+    {
+        float dist = Vector3.Distance(hearingPos, transform.position);
+        if(noiseTravelDistance >= dist)
+        {
+            Debug.Log("몹이 소리를 들었다.");
+        }
+        else
+        {
+            Debug.Log("못 들었다.");
+        }
+        Debug.Log("거리: " + dist);
+    }
     void HearingSound()
     {
         Transform tempTarget = GameObject.Find("Player").GetComponent<Transform>();
@@ -190,6 +203,7 @@ public class Monster : BattleSystem
                 if (grab.IsSoundable)
                 {
                     hearingPos = grab.soundPos;
+                    CheckSoundDist();
                     Debug.Log("듣는 위치: " + hearingPos);
                     grab.IsSoundable = false;
                 }

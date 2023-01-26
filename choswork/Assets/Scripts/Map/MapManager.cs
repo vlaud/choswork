@@ -31,7 +31,6 @@ public class MapManager : MonoBehaviour
         get;
         private set;
     }
-    public int ItemNum;
     [SerializeField] Vector3Int mapSize = Vector3Int.zero;
     [SerializeField] int startPos = 0;
     public NavMeshSurface surfaces;
@@ -124,7 +123,6 @@ public class MapManager : MonoBehaviour
         }
         Numbers.Remove(StartNum);
         Numbers.Remove(EndNum);
-        Debug.Log(Numbers.Count);
         List<int> LottoNumber = new List<int>();
         for (int i = 0; i < 2; ++i)
         {
