@@ -46,6 +46,7 @@ public class Monster : BattleSystem
     private float increasingMemoryTime;
 
     //ai hearing
+    public Transform HearingTr;
     public Vector3 hearingPos;
     public Transform hearingObj;
     private bool aiHeardPlayer = false;
@@ -104,11 +105,7 @@ public class Monster : BattleSystem
                 StopAllCoroutines();
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
-                if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1))
-                {
-                    hearingPos = hit.position;
-                }
-                RePath(myPath, hearingPos, () => ChangeState(STATE.Idle), "IsChasing");
+                SetSoundPos();
                 break;
             case STATE.Battle:
                 break;
@@ -128,6 +125,7 @@ public class Monster : BattleSystem
     void StateProcess()
     {
         var manager = GameManagement.Inst.myMapManager;
+        HearingTr.position = hearingPos;
         switch (myState)
         {
             case STATE.Create:
@@ -200,17 +198,38 @@ public class Monster : BattleSystem
         yield return new WaitForSeconds(time);
         ChangeState(s);
     }
+    void SetSoundPos()
+    {
+        if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1))
+        {
+            Debug.Log("hearingPos.y: " + hearingPos.y);
+            Debug.Log("hit.position.y: " + hit.position.y);
+            if (hearingPos.y > hit.position.y)
+            {
+                hearingPos = hit.position;
+            }
+            else
+            {
+                Vector3 offset = hit.position + Vector3.down * 5f;
+                if (Physics.Raycast(offset, Vector3.down, out RaycastHit thit,
+                    20f, LayerMask.NameToLayer("Ground")))
+                {
+                    float dist = Vector3.Distance(offset, thit.point);
+                    Debug.DrawRay(offset, Vector3.down * dist, Color.red);
+                    Debug.Log("thit: " + thit.point);
+                    hearingPos = thit.point;
+                }
+            }
+        }
+        RePath(myPath, hearingPos, () => ChangeState(STATE.Idle), "IsChasing");
+    }
     void CheckSoundDist()
     {
         float dist = Vector3.Distance(hearingPos, transform.position);
         if(noiseTravelDistance >= dist)
         {
             Debug.Log("몹이 소리를 들었다.");
-            if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, NavMesh.AllAreas))
-            {
-                hearingPos = hit.position;
-            }
-            RePath(myPath, hearingPos, () => ChangeState(STATE.Idle), "IsChasing");
+            SetSoundPos();
             aiHeardPlayer = true;
         }
         else
