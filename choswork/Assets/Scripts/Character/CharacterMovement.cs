@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 using static UnityEditor.PlayerSettings;
+using static UnityEngine.GraphicsBuffer;
 //public delegate void MyAction();
 
 public class CharacterMovement : CharacterProperty
@@ -258,6 +259,7 @@ public class CharacterMovement : CharacterProperty
     {
         float playTime = 0.0f;
         float delta = 0.0f;
+        if (!myAnim.GetBool("IsAngry")) yield return null;
         while (target != null)
         {
             if (!myAnim.GetBool("IsAttacking")) playTime += Time.deltaTime;
@@ -308,5 +310,23 @@ public class CharacterMovement : CharacterProperty
             yield return null;
         }
         myAnim.SetBool("IsRunning", false);
+    }
+    protected float CalcPathLength(NavMeshPath myPath, Vector3 _targetPos)
+    {
+        NavMesh.CalculatePath(transform.position, _targetPos, NavMesh.AllAreas, myPath);
+
+        Vector3[] _wayPoint = new Vector3[myPath.corners.Length + 2];
+
+        _wayPoint[0] = transform.position;
+        _wayPoint[myPath.corners.Length + 1] = _targetPos;
+
+        float _pathLength = 0;  // 경로 길이를 더함
+        for (int i = 0; i < myPath.corners.Length; i++)
+        {
+            _wayPoint[i + 1] = myPath.corners[i];
+            _pathLength += Vector3.Distance(_wayPoint[i], _wayPoint[i + 1]);
+        }
+
+        return _pathLength;
     }
 }

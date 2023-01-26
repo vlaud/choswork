@@ -14,6 +14,11 @@ public class MapManager : MonoBehaviour
     }
     public static MapManager Inst = null;
     // 디폴트 프로퍼티
+    [field: SerializeField] public Transform PlayerStart
+    {
+        get;
+        private set;
+    }
     [field:SerializeField] public Transform StartPoint
     {
         get;
@@ -68,6 +73,7 @@ public class MapManager : MonoBehaviour
         MazeGenerator();
         MobSpawning();
         KeySpawning();
+        PlayerSpawn();
     }
     // Start is called before the first frame update
     void Start()
@@ -83,6 +89,13 @@ public class MapManager : MonoBehaviour
             Debug.Log(transform.childCount);
             Debug.Log(transform.GetChild(Random.Range(0, transform.childCount)).gameObject);
         }
+    }
+    void PlayerSpawn()
+    {
+        int floor = mapSize.x * mapSize.z; // 아래층에서만 소환
+
+        PlayerStart.SetParent(transform.GetChild(0));
+        PlayerStart.localPosition = new Vector3(3f, 1, 3f);
     }
     void MobSpawning()
     {
@@ -104,12 +117,12 @@ public class MapManager : MonoBehaviour
         }
         //시작 위치
         StartNum = LottoNumber[0];
-        StartPoint.transform.SetParent(transform.GetChild(StartNum));
-        StartPoint.transform.localPosition = new Vector3(3f, 1, -3);
+        StartPoint.SetParent(transform.GetChild(StartNum));
+        StartPoint.localPosition = new Vector3(3f, 1, -3f);
         //도착 위치
         EndNum = LottoNumber[1];
-        EndPoint.transform.SetParent(transform.GetChild(EndNum));
-        EndPoint.transform.localPosition = new Vector3(3f, 1, -3);
+        EndPoint.SetParent(transform.GetChild(EndNum));
+        EndPoint.localPosition = new Vector3(3f, 1, -3f);
     }
     public void MobChangePath(bool isStart)
     {

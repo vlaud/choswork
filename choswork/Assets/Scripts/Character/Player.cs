@@ -25,6 +25,7 @@ public class Player : BattleSystem
     {
         myMoveSpeed = myStat.MoveSpeed;
         KickPoint.SetActive(false);
+        transform.position = GameManagement.Inst.myMapManager.PlayerStart.position;
     }
 
     // Update is called once per frame

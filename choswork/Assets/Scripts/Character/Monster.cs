@@ -38,6 +38,7 @@ public class Monster : BattleSystem
     public bool playerIsInLOS = false;
     public float fovAngle = 160f;
     public float losRadius = 45f;
+    public float lostDist = 10f;
 
     //ai sight and memory
     private bool aiMemorizesPlayer = false;
@@ -71,6 +72,8 @@ public class Monster : BattleSystem
             case STATE.Create:
                 break;
             case STATE.Idle: // 평상시
+                myAnim.SetBool("IsAngry", false);
+                myAnim.SetBool("IsRunning", false);
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
                 IsStart = !IsStart;
                 manager.MobChangePath(IsStart);
@@ -111,6 +114,7 @@ public class Monster : BattleSystem
     }
     void StateProcess()
     {
+        var manager = GameManagement.Inst.myMapManager;
         switch (myState)
         {
             case STATE.Create:
@@ -122,6 +126,10 @@ public class Monster : BattleSystem
                 HearingSound();
                 break;
             case STATE.Angry:
+                if(CalcPathLength(myPath, myTarget.position) > lostDist)
+                {
+                    ChangeState(STATE.Idle);
+                }    
                 break;
             case STATE.Battle:
                 break;
