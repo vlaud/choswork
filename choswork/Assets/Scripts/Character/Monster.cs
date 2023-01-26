@@ -57,7 +57,7 @@ public class Monster : BattleSystem
 
     public enum STATE
     {
-        Create, Idle, Roaming, Angry, Battle, RagDoll, StandUp, ResetBones, Death
+        Create, Idle, Roaming, Angry, Search, Battle, RagDoll, StandUp, ResetBones, Death
     }
     public STATE myState = STATE.Create;
 
@@ -72,7 +72,10 @@ public class Monster : BattleSystem
             case STATE.Create:
                 break;
             case STATE.Idle: // 평상시
+                StopAllCoroutines();
+                aiHeardPlayer = false;
                 myAnim.SetBool("IsAngry", false);
+                myAnim.SetBool("IsChasing", false);
                 myAnim.SetBool("IsRunning", false);
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
                 IsStart = !IsStart;
@@ -96,6 +99,12 @@ public class Monster : BattleSystem
                     myTarget = GameObject.Find("Player").GetComponent<Transform>();
                 }
                 AttackTarget(myPath, myTarget);
+                break;
+            case STATE.Search:
+                StopAllCoroutines();
+                myAnim.SetBool("IsMoving", false);
+                myAnim.SetTrigger("Search");
+                RePath(myPath, hearingPos, () => ChangeState(STATE.Idle), "IsChasing");
                 break;
             case STATE.Battle:
                 break;
@@ -130,6 +139,8 @@ public class Monster : BattleSystem
                 {
                     ChangeState(STATE.Idle);
                 }    
+                break;
+            case STATE.Search:
                 break;
             case STATE.Battle:
                 break;
@@ -190,15 +201,21 @@ public class Monster : BattleSystem
         if(noiseTravelDistance >= dist)
         {
             Debug.Log("몹이 소리를 들었다.");
+            aiHeardPlayer = true;
         }
         else
         {
             Debug.Log("못 들었다.");
+            aiHeardPlayer = false;
         }
         Debug.Log("거리: " + dist);
     }
     void HearingSound()
     {
+        if(aiHeardPlayer)
+        {
+            ChangeState(STATE.Search);
+        }
         Transform tempTarget = GameObject.Find("Player").GetComponent<Transform>();
         if ((tempTarget != null && tempTarget.TryGetComponent<PlayerPickUpDrop>(out var target)))
         {
