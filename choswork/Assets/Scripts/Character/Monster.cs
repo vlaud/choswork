@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -15,6 +16,7 @@ public class Monster : BattleSystem
         public Quaternion Rotation { get; set; }
     }
     public LayerMask enemyMask = default;
+    public LayerMask obstructionMask = default;
 
     //mob ragdoll
     public RagDollPhysics myRagDolls;
@@ -35,27 +37,22 @@ public class Monster : BattleSystem
     public bool IsStart = false;
 
     //ai sight
-    public bool playerIsInLOS = false;
+    public bool canSeePlayer = false;
+    [Range(0, 360)]
     public float fovAngle = 160f;
-    public float losRadius = 45f;
+    public float losRadius = 5f;
     public float lostDist = 10f;
 
-    //ai sight and memory
-    private bool aiMemorizesPlayer = false;
-    public float memoryStartTime = 10f;
-    private float increasingMemoryTime;
-
     //ai hearing
-    public Transform HearingTr;
+    public Transform HearingTr; // 실제 추적 위치
     public Vector3 hearingPos;
-    public Transform hearingObj;
+    public Transform hearingObj; // 물건 위치
     private bool aiHeardPlayer = false;
     public float noiseTravelDistance = 10f;
 
     //ai path
     private NavMeshPath myPath;
    
-
     public enum STATE
     {
         Create, Idle, Roaming, Angry, Search, Battle, RagDoll, StandUp, ResetBones, Death
@@ -83,10 +80,12 @@ public class Monster : BattleSystem
                 {
                     FindTarget(manager.myMapManager.StartPoint, STATE.Idle);
                 }
+                //StartCoroutine(FOVRoutine());
                 StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
                 break;
             case STATE.Roaming:
                 RePath(myPath, myTarget.position, () => LostTarget());
+                //StartCoroutine(FOVRoutine());
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
@@ -96,6 +95,7 @@ public class Monster : BattleSystem
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
                 RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
+                //StartCoroutine(FOVRoutine());
                 break;
             case STATE.Battle:
                 break;
@@ -120,18 +120,22 @@ public class Monster : BattleSystem
                 break;
             case STATE.Idle:
                 HearingSound();
+                FieldOfViewCheck();
                 break;
             case STATE.Roaming:
                 HearingSound();
+                FieldOfViewCheck();
                 break;
             case STATE.Angry:
-                if(CalcPathLength(myPath, myTarget.position) > lostDist)
+                myAnim.SetBool("IsAngry", true);
+                if (CalcPathLength(myPath, myTarget.position) > lostDist)
                 {
                     LostTarget();
                 }    
                 break;
             case STATE.Search:
                 HearingSound();
+                FieldOfViewCheck();
                 break;
             case STATE.Battle:
                 break;
@@ -150,10 +154,8 @@ public class Monster : BattleSystem
     }
     private void Awake()
     {
-        //myHips = myAnim.GetBoneTransform(HumanBodyBones.Hips);
         cs = GetComponent<CapsuleCollider>();
         _origintimetoWake = _timetoWakeup;
-        //_bones = myRagDolls.myRagDollsTransforms;
         _bones = myHips.GetComponentsInChildren<Transform>();
         _standupTransforms = new BoneTransform[_bones.Length];
         _ragdollTransforms = new BoneTransform[_bones.Length];
@@ -162,7 +164,6 @@ public class Monster : BattleSystem
         {
             _standupTransforms[boneIndex] = new BoneTransform();
             _ragdollTransforms[boneIndex] = new BoneTransform();
-            //Debug.Log(_bones[boneIndex]);
         }
         PopulateAnimation(_standupClipName, _standupTransforms);
         RagDollSet(false);
@@ -172,7 +173,6 @@ public class Monster : BattleSystem
     void Start()
     {
         myPath = new NavMeshPath();
-        //RePath(myPath, "IsMoving", myEnd.position);
         ChangeState(STATE.Idle);
     }
 
@@ -186,6 +186,61 @@ public class Monster : BattleSystem
         yield return new WaitForSeconds(time);
         ChangeState(s);
     }
+    // SightDetection
+    IEnumerator FOVRoutine()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(0.2f);
+            FieldOfViewCheck();
+        }
+    }
+
+    private void FieldOfViewCheck()
+    {
+        Collider[] rangeChecks = Physics.OverlapSphere(transform.position, losRadius, enemyMask);
+        Transform target;
+        if (rangeChecks.Length != 0)
+        {
+            target = rangeChecks[0].transform;
+            Vector3 directionToTarget = (target.position - transform.position).normalized;
+            
+            if (Vector3.Angle(transform.forward, directionToTarget) < fovAngle * 0.5f)
+            {
+                float distanceToTarget = Vector3.Distance(transform.position, target.position);
+
+                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
+                {
+                    canSeePlayer = true;
+                    myAnim.SetTrigger("Detect");
+                    FindTarget(target, STATE.Angry);
+                    Debug.Log("플레이어 발견!");
+                }
+                else
+                    canSeePlayer = false;
+            }
+            else
+                canSeePlayer = false;
+        }
+        else if (canSeePlayer)
+        {
+            canSeePlayer = false;
+        }
+        /*
+        float dist = lostDist;
+        Transform target = null;
+        foreach (Collider col in rangeChecks)
+        {
+            float tempDist = Vector3.Distance(col.transform.position, transform.position);
+            if (dist > tempDist)
+            {
+                dist = tempDist;
+                target = col.GetComponent<Transform>();
+            }
+        }
+        */
+    }
+
     // SoundDetection
     void SetSoundPos()
     {
@@ -260,7 +315,6 @@ public class Monster : BattleSystem
         force = dir * strength;
         force.y = strength;
         myRagDolls.myRagDoll.spineRigidBody.AddForce(force);
-        myAnim.SetBool("IsAngry", true);
     }
 
     public void RagDollSet(bool v)
@@ -400,5 +454,9 @@ public class Monster : BattleSystem
         {
             LostTarget();
         }
+    }
+    public Transform GetMyTarget()
+    {
+        return myTarget;
     }
 }
