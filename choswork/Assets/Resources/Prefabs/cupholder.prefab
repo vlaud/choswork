@@ -173,6 +173,18 @@ PrefabInstance:
       propertyPath: actionText
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1395411601178005252, guid: 94bae8a22b708754eb8ce5cb95ced942, type: 3}
+      propertyPath: hearSound.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: HearingSound
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395411601178005252, guid: 94bae8a22b708754eb8ce5cb95ced942, type: 3}
+      propertyPath: hearSound.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Monster, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395411601178005252, guid: 94bae8a22b708754eb8ce5cb95ced942, type: 3}
+      propertyPath: hearSound.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 8396885627544036145, guid: 94bae8a22b708754eb8ce5cb95ced942, type: 3}
       propertyPath: m_Name
       value: Cup
@@ -238,6 +250,18 @@ PrefabInstance:
     - target: {fileID: 1395411601178005252, guid: 94bae8a22b708754eb8ce5cb95ced942, type: 3}
       propertyPath: actionText
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395411601178005252, guid: 94bae8a22b708754eb8ce5cb95ced942, type: 3}
+      propertyPath: hearSound.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: HearingSound
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395411601178005252, guid: 94bae8a22b708754eb8ce5cb95ced942, type: 3}
+      propertyPath: hearSound.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Monster, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395411601178005252, guid: 94bae8a22b708754eb8ce5cb95ced942, type: 3}
+      propertyPath: hearSound.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8396885627544036145, guid: 94bae8a22b708754eb8ce5cb95ced942, type: 3}
       propertyPath: m_Name

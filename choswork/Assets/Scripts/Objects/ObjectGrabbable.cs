@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
@@ -13,6 +14,7 @@ public class ObjectGrabbable : ObjectInteractable
     public Vector3 soundPos;
     public bool IsSoundable;
     public float _changeStateTime = 0.5f;
+    public UnityEvent hearSound;
     private Rigidbody objectRigidbody;
     private Collider objectCollider;
     private Transform objectGrabPointTransform;
@@ -34,12 +36,14 @@ public class ObjectGrabbable : ObjectInteractable
                 IsSoundable = false;
                 break;
             case STATE.Grab:
+                hearSound?.Invoke();
                 break;
             case STATE.Throw:
                 break;
             case STATE.WallHit:
                 soundPos = transform.position;
                 IsSoundable = true;
+                hearSound?.Invoke();
                 Debug.Log("물건 위치: " + soundPos);
                 StartCoroutine(DelayState(STATE.Idle));
                 break;

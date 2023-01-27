@@ -119,11 +119,9 @@ public class Monster : BattleSystem
             case STATE.Create:
                 break;
             case STATE.Idle:
-                HearingSound();
                 FieldOfViewCheck();
                 break;
             case STATE.Roaming:
-                HearingSound();
                 FieldOfViewCheck();
                 break;
             case STATE.Angry:
@@ -134,7 +132,6 @@ public class Monster : BattleSystem
                 }    
                 break;
             case STATE.Search:
-                HearingSound();
                 FieldOfViewCheck();
                 break;
             case STATE.Battle:
@@ -280,19 +277,18 @@ public class Monster : BattleSystem
             aiHeardPlayer = false;
         }
     }
-    void HearingSound()
+    public void HearingSound()
     {
+        if (myState == STATE.Death || myState == STATE.Angry) return;
         var manager = GameManagement.Inst;
-        if (aiHeardPlayer)
-        {
-            ChangeState(STATE.Search);
-        }
+        
         Transform tempTarget = manager.myPlayer.transform;
         if ((tempTarget != null && tempTarget.TryGetComponent<PlayerPickUpDrop>(out var target)))
         {
             if (target.GetObjectGrabbable() != null)
             {
                 hearingObj = target.GetObjectGrabbable().transform;
+                Debug.Log("hearingObj: " + hearingObj);
             }
             else if (hearingObj != null && hearingObj.TryGetComponent<ObjectGrabbable>(out var grab))
             {
@@ -303,6 +299,10 @@ public class Monster : BattleSystem
                     grab.IsSoundable = false;
                 }
             }
+        }
+        if (aiHeardPlayer)
+        {
+            ChangeState(STATE.Search);
         }
     }
     //GetKickandRagDoll
