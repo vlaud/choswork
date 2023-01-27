@@ -269,6 +269,8 @@ public class Monster : BattleSystem
         if(noiseTravelDistance >= dist)
         {
             Debug.Log("몹이 소리를 들었다.");
+            Debug.Log("듣는 위치: " + hearingPos);
+            Debug.Log("거리: " + dist);
             RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
             aiHeardPlayer = true;
         }
@@ -277,7 +279,6 @@ public class Monster : BattleSystem
             Debug.Log("못 들었다.");
             aiHeardPlayer = false;
         }
-        Debug.Log("거리: " + dist);
     }
     void HearingSound()
     {
@@ -299,7 +300,6 @@ public class Monster : BattleSystem
                 {
                     hearingPos = grab.soundPos;
                     CheckSoundDist();
-                    Debug.Log("듣는 위치: " + hearingPos);
                     grab.IsSoundable = false;
                 }
             }
