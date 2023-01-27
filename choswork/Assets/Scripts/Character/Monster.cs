@@ -73,39 +73,29 @@ public class Monster : BattleSystem
             case STATE.Create:
                 break;
             case STATE.Idle: // 평상시
-                StopAllCoroutines();
-                aiHeardPlayer = false;
-                myAnim.SetBool("IsAngry", false);
-                myAnim.SetBool("IsChasing", false);
-                myAnim.SetBool("IsRunning", false);
-                myAnim.SetBool("IsMoving", false); // 움직임 비활성화
                 IsStart = !IsStart;
                 manager.myMapManager.MobChangePath(IsStart);
-                StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
-                break;
-            case STATE.Roaming:
                 if (IsStart)
                 {
-                    RePath(myPath, manager.myMapManager.EndPoint.position, () => ChangeState(STATE.Idle));
+                    FindTarget(manager.myMapManager.EndPoint, STATE.Idle);
                 }
                 else
                 {
-                    RePath(myPath, manager.myMapManager.StartPoint.position, () => ChangeState(STATE.Idle));
+                    FindTarget(manager.myMapManager.StartPoint, STATE.Idle);
                 }
+                StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
+                break;
+            case STATE.Roaming:
+                RePath(myPath, myTarget.position, () => LostTarget());
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
-                if (myTarget == null)
-                {
-                    myTarget = manager.myPlayer.transform;
-                }
                 AttackTarget(myPath, myTarget);
                 break;
             case STATE.Search:
-                StopAllCoroutines();
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
-                SetSoundPos();
+                RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
                 break;
             case STATE.Battle:
                 break;
@@ -124,7 +114,6 @@ public class Monster : BattleSystem
     }
     void StateProcess()
     {
-        HearingTr.position = hearingPos;
         switch (myState)
         {
             case STATE.Create:
@@ -138,7 +127,7 @@ public class Monster : BattleSystem
             case STATE.Angry:
                 if(CalcPathLength(myPath, myTarget.position) > lostDist)
                 {
-                    ChangeState(STATE.Idle);
+                    LostTarget();
                 }    
                 break;
             case STATE.Search:
@@ -202,36 +191,30 @@ public class Monster : BattleSystem
     {
         if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1))
         {
-            Debug.Log("hearingObj.position.y: " + hearingPos.y);
-            Debug.Log("hit.position.y: " + hit.position.y);
             if (hearingObj.position.y > hit.position.y)
             {
                 hearingPos = hit.position;
-                Debug.Log("use hit");
             }
             else
             {
-                Debug.Log("NO hit");
                 if (Physics.Raycast(hearingObj.position, Vector3.down, out RaycastHit thit,
                     20f, 1 << LayerMask.NameToLayer("Ground")))
                 {
-                    Debug.Log("thit.point.y: " + thit.point.y);
-                    float dist = Vector3.Distance(hearingObj.position, thit.point);
-                    Debug.DrawRay(hearingObj.position, Vector3.down * dist, Color.red);
-                    Debug.Log("thit: " + thit.point);
                     hearingPos = thit.point;
                 }
             }
         }
-        RePath(myPath, hearingPos, () => ChangeState(STATE.Idle), "IsChasing");
+        HearingTr.position = hearingPos;
+        myTarget = HearingTr;
     }
     void CheckSoundDist()
     {
+        SetSoundPos();
         float dist = Vector3.Distance(hearingPos, transform.position);
         if(noiseTravelDistance >= dist)
         {
             Debug.Log("몹이 소리를 들었다.");
-            SetSoundPos();
+            RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
             aiHeardPlayer = true;
         }
         else
@@ -335,7 +318,8 @@ public class Monster : BattleSystem
     {
         if (!myAnim.GetCurrentAnimatorStateInfo(0).IsName(_standupName))
         {
-            ChangeState(STATE.Angry);
+            var manager = GameManagement.Inst;
+            FindTarget(manager.myPlayer.transform, STATE.Angry);
         }
     }
     void ResetBonesBehaviour()
@@ -389,5 +373,32 @@ public class Monster : BattleSystem
     public void AttackCheck(bool v)
     {
         //myAnim.GetComponent<RootMotion>().DontRot = v;
+    }
+    public void FindTarget(Transform target, STATE state)
+    {
+        if (myState == STATE.Death) return;
+        myTarget = target;
+        StopAllCoroutines();
+        ChangeState(state);
+    }
+
+    public void LostTarget()
+    {
+        if (myState == STATE.Death) return;
+        myTarget = null;
+        StopAllCoroutines();
+        aiHeardPlayer = false;
+        myAnim.SetBool("IsAngry", false);
+        myAnim.SetBool("IsChasing", false);
+        myAnim.SetBool("IsRunning", false);
+        myAnim.SetBool("IsMoving", false); // 움직임 비활성화
+        ChangeState(STATE.Idle);
+    }
+    public override void DeadMessage(Transform tr)
+    {
+        if (tr == myTarget)
+        {
+            LostTarget();
+        }
     }
 }
