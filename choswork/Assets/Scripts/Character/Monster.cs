@@ -386,10 +386,6 @@ public class Monster : BattleSystem
         transform.position = positionBeforeSampling;
         transform.rotation = rotationBeforeSampling;
     }
-    public void Attack()
-    {
-
-    }
     public void AttackCheck(bool v)
     {
         //myAnim.GetComponent<RootMotion>().DontRot = v;

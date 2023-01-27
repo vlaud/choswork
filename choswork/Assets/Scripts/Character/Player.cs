@@ -13,7 +13,7 @@ public class Player : BattleSystem
     public GameObject KickPoint; // 실제 발차기 효과 위치
     public Transform KickTransform; // 발차기 소리 위치
     public bool IsWall = false;
-
+    public HPBar myHPBar;
     private float animOffset = 0.04f;
     public enum STATE
     {
@@ -26,6 +26,7 @@ public class Player : BattleSystem
         myMoveSpeed = myStat.MoveSpeed;
         KickPoint.SetActive(false);
         transform.position = GameManagement.Inst.myMapManager.PlayerStart.position;
+        myStat.changeHP = (float v) => myHPBar.GetValue = v;
     }
 
     // Update is called once per frame
@@ -91,5 +92,14 @@ public class Player : BattleSystem
     public override Animator ReturnAnim()
     {
         return myAnim;
+    }
+    public override void OnDamage(float dmg)
+    {
+        myStat.HP -= dmg;
+        if (Mathf.Approximately(myStat.HP, 0.0f))
+        {
+            //ChangeState(STATE.Death);
+        }
+        //myAnim.SetTrigger("Damage");
     }
 }
