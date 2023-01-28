@@ -44,8 +44,8 @@ public class Player : BattleSystem
         {
             targetDir.x = GetMoveRaw().x;
             targetDir.y = GetMoveRaw().y;
-            x = Mathf.Lerp(myAnim.GetFloat("x"), targetDir.x, Time.deltaTime * smoothMoveSpeed);
-            z = Mathf.Lerp(myAnim.GetFloat("z"), targetDir.y, Time.deltaTime * smoothMoveSpeed);
+            x = Mathf.Lerp(myAnim.GetFloat("x"), targetDir.x, Time.unscaledDeltaTime * smoothMoveSpeed);
+            z = Mathf.Lerp(myAnim.GetFloat("z"), targetDir.y, Time.unscaledDeltaTime * smoothMoveSpeed);
 
             myMoveSpeed = (Input.GetKey(KeyCode.LeftShift) && !IsWall) ? 1.5f : myStat.MoveSpeed; // 벽 충돌시엔 질주 off
 
