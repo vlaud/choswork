@@ -26,6 +26,6 @@ public class GameManagement : MonoBehaviour
     public void DoSlowmotion()
     {
         Time.timeScale = GameTimeScale;
-        GameFixedTimeScale = GameTimeScale * 0.02f;
+        GameFixedTimeScale = Time.fixedDeltaTime = Time.timeScale * 0.02f;
     }
 }
