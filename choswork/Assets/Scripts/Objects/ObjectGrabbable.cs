@@ -99,7 +99,8 @@ public class ObjectGrabbable : ObjectInteractable
         Vector3 force;
         force = dir * strength;
         //objectRigidbody.AddForce(force);
-        objectRigidbody.velocity = force;
+        //objectRigidbody.velocity = force;
+        objectRigidbody.velocity += force * Time.fixedDeltaTime / (Time.timeScale * objectRigidbody.mass);
         ChangeState(STATE.Throw);
     }
     public void SetObjectPhysics(bool v)

@@ -11,8 +11,10 @@ public class GameManagement : MonoBehaviour
     public SpringArms mySpringArms;
     public SoundManager mySound;
     public MapManager myMapManager;
-    [Range(0f, 1f)]
+    [Range(0.0001f, 1f)]
     public float GameTimeScale = 1f;
+    [Range(0f, 0.02f)]
+    public float GameFixedTimeScale = 0.02f;
     private void Awake()
     {
         Inst = this;
@@ -24,6 +26,6 @@ public class GameManagement : MonoBehaviour
     public void DoSlowmotion()
     {
         Time.timeScale = GameTimeScale;
-        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+        GameFixedTimeScale = GameTimeScale * 0.02f;
     }
 }

@@ -279,7 +279,8 @@ public class Monster : BattleSystem
     }
     public void HearingSound()
     {
-        if (myState == STATE.Death || myState == STATE.Angry) return;
+        if (myState == STATE.Death || myState == STATE.Angry || myState == STATE.RagDoll ||
+            myState == STATE.ResetBones || myState == STATE.StandUp) return;
         var manager = GameManagement.Inst;
         
         Transform tempTarget = manager.myPlayer.transform;
@@ -314,7 +315,7 @@ public class Monster : BattleSystem
         ChangeState(STATE.RagDoll);
         force = dir * strength;
         force.y = strength;
-        myRagDolls.myRagDoll.spineRigidBody.AddForce(force);
+        myRagDolls.myRagDoll.spineRigidBody.velocity += force * Time.fixedDeltaTime / (Time.timeScale * myRagDolls.myRagDoll.spineRigidBody.mass);
     }
 
     public void RagDollSet(bool v)
