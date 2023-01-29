@@ -17,7 +17,7 @@ public class Monster : BattleSystem
     }
     public LayerMask enemyMask = default;
     public LayerMask obstructionMask = default;
-
+    public Transform mobTarget;
     //mob ragdoll
     public RagDollPhysics myRagDolls;
     public Transform myHips;
@@ -114,6 +114,7 @@ public class Monster : BattleSystem
     }
     void StateProcess()
     {
+        mobTarget = myTarget;
         switch (myState)
         {
             case STATE.Create:
@@ -257,7 +258,6 @@ public class Monster : BattleSystem
             }
         }
         HearingTr.position = hearingPos;
-        myTarget = HearingTr;
     }
     void CheckSoundDist()
     {
@@ -270,6 +270,7 @@ public class Monster : BattleSystem
             Debug.Log("°Å¸®: " + dist);
             RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
             aiHeardPlayer = true;
+            myTarget = HearingTr;
         }
         else
         {

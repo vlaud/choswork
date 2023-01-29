@@ -11,7 +11,7 @@ public class GameManagement : MonoBehaviour
     public SpringArms mySpringArms;
     public SoundManager mySound;
     public MapManager myMapManager;
-    [Range(0.0001f, 1f)]
+    [Range(0.01f, 1f)]
     public float GameTimeScale = 1f;
     [Range(0f, 0.02f)]
     public float GameFixedTimeScale = 0.02f;
@@ -25,6 +25,7 @@ public class GameManagement : MonoBehaviour
     }
     public void DoSlowmotion()
     {
+        GameTimeScale = Mathf.Clamp(GameTimeScale, 0.01f, 1f);
         Time.timeScale = GameTimeScale;
         GameFixedTimeScale = Time.fixedDeltaTime = Time.timeScale * 0.02f;
     }
