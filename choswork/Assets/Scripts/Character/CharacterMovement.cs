@@ -16,13 +16,13 @@ public class CharacterMovement : CharacterProperty
     //Coroutine CoroutineLerp = null;
     Coroutine attackCo = null;
     Coroutine CoRoot = null;
-    public void RePath(NavMeshPath myPath, Vector3 pos, UnityAction done = null)
+    public void RePath(NavMeshPath myPath, Vector3 pos, UnityAction done = null, string anim = "IsMoving")
     {
         StopAllCoroutines();
         //Debug.Log("목표지점: " + pos);
-        StartCoroutine(MovingByPath(myPath, pos, done));
+        StartCoroutine(MovingByPath(myPath, pos, anim, done));
     }
-    IEnumerator MovingByPath(NavMeshPath myPath, Vector3 pos, UnityAction done)
+    IEnumerator MovingByPath(NavMeshPath myPath, Vector3 pos, string anim, UnityAction done)
     {
         int cur = 1;
         NavMesh.CalculatePath(transform.position, pos, NavMesh.AllAreas, myPath);
@@ -46,7 +46,7 @@ public class CharacterMovement : CharacterProperty
                     Debug.DrawLine(list[i], list[i + 1], Color.red);
                 }
                 //Debug.Log("현재 코너: " + cur + "번째: " + list[cur] + "총 코너: " + list.Length);
-                MoveToPosition(list[cur], () => cur++);
+                MoveToPosition(list[cur], anim, () => cur++);
             }
             yield return null;
         }
@@ -66,7 +66,7 @@ public class CharacterMovement : CharacterProperty
         }
         CoroutineAngle = StartCoroutine(RotatingToPosition(pos));
     }
-    protected void MoveToPosition(Vector3 pos, UnityAction done = null, bool Rot = true)
+    protected void MoveToPosition(Vector3 pos, string anim, UnityAction done = null, bool Rot = true)
     {
         if(attackCo != null)
         {
@@ -78,7 +78,7 @@ public class CharacterMovement : CharacterProperty
             StopCoroutine(CoRoot);
             CoRoot = null;
         }
-        CoRoot = StartCoroutine(RootMotionMoving(pos, done));
+        CoRoot = StartCoroutine(RootMotionMoving(pos, done, anim));
 
         if (Rot)
         {
@@ -155,15 +155,15 @@ public class CharacterMovement : CharacterProperty
         done?.Invoke();
     }
     // 루트모션 움직임
-    IEnumerator RootMotionMoving(Vector3 pos, UnityAction done)
+    IEnumerator RootMotionMoving(Vector3 pos, UnityAction done, string anim)
     {
         Vector3 dir = pos - transform.position;
         float dist = dir.magnitude;
         dir.Normalize();
         //달리기 시작
-        myAnim.SetBool("IsMoving", true);
+        myAnim.SetBool(anim, true);
 
-        while (dist > 0.0f)
+        while (dist > Mathf.Epsilon)
         {
             if (!myAnim.GetBool("IsAttacking"))
             {
@@ -173,7 +173,8 @@ public class CharacterMovement : CharacterProperty
             yield return null;
         }
         //달리기 끝
-        myAnim.SetBool("IsMoving", false);
+        myAnim.SetBool(anim, false);
+        Debug.Log("anim: " + anim);
         done?.Invoke();
     }
     // 안씀
@@ -237,7 +238,6 @@ public class CharacterMovement : CharacterProperty
                     myAnim.SetTrigger("Attack");
                 }
             }
-
             // 회전
             delta = myStat.RotSpeed * Time.deltaTime;
 
@@ -259,7 +259,6 @@ public class CharacterMovement : CharacterProperty
     {
         float playTime = 0.0f;
         float delta = 0.0f;
-        if (!myAnim.GetBool("IsAngry")) yield return null;
         while (target != null)
         {
             if (!myAnim.GetBool("IsAttacking")) playTime += Time.deltaTime;

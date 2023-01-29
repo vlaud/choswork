@@ -13,6 +13,8 @@ public class ObjectGrabbable : ObjectInteractable
     public Vector3 soundPos;
     public bool IsSoundable;
     public float _changeStateTime = 0.5f;
+    public delegate void HearingSound();
+    public HearingSound hear;
     private Rigidbody objectRigidbody;
     private Collider objectCollider;
     private Transform objectGrabPointTransform;
@@ -34,12 +36,14 @@ public class ObjectGrabbable : ObjectInteractable
                 IsSoundable = false;
                 break;
             case STATE.Grab:
+                hear.Invoke();
                 break;
             case STATE.Throw:
                 break;
             case STATE.WallHit:
                 soundPos = transform.position;
                 IsSoundable = true;
+                hear.Invoke();
                 Debug.Log("물건 위치: " + soundPos);
                 StartCoroutine(DelayState(STATE.Idle));
                 break;
@@ -74,6 +78,10 @@ public class ObjectGrabbable : ObjectInteractable
         SetItemInfoAppear(false);
         ChangeState(STATE.Idle);
     }
+    private void Start()
+    {
+        hear = GameManagement.Inst.myMonster.HearingSound;
+    }
     public void Grab(Transform objectGrabPointTransform)
     {
         this.objectGrabPointTransform = objectGrabPointTransform;
@@ -91,7 +99,8 @@ public class ObjectGrabbable : ObjectInteractable
         Vector3 force;
         force = dir * strength;
         //objectRigidbody.AddForce(force);
-        objectRigidbody.velocity = force;
+        //objectRigidbody.velocity = force;
+        objectRigidbody.velocity += force * Time.fixedDeltaTime / (Time.timeScale * objectRigidbody.mass);
         ChangeState(STATE.Throw);
     }
     public void SetObjectPhysics(bool v)

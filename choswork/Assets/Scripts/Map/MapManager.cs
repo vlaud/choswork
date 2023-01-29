@@ -95,7 +95,7 @@ public class MapManager : MonoBehaviour
         int floor = mapSize.x * mapSize.z; // 아래층에서만 소환
 
         PlayerStart.SetParent(transform.GetChild(0));
-        PlayerStart.localPosition = new Vector3(3f, 1, 3f);
+        PlayerStart.localPosition = new Vector3(3f, 0f, 3f);
     }
     void MobSpawning()
     {

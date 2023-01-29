@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -15,7 +16,8 @@ public class Monster : BattleSystem
         public Quaternion Rotation { get; set; }
     }
     public LayerMask enemyMask = default;
-
+    public LayerMask obstructionMask = default;
+    public Transform mobTarget;
     //mob ragdoll
     public RagDollPhysics myRagDolls;
     public Transform myHips;
@@ -35,35 +37,31 @@ public class Monster : BattleSystem
     public bool IsStart = false;
 
     //ai sight
-    public bool playerIsInLOS = false;
+    public bool canSeePlayer = false;
+    [Range(0, 360)]
     public float fovAngle = 160f;
-    public float losRadius = 45f;
+    public float losRadius = 5f;
     public float lostDist = 10f;
 
-    //ai sight and memory
-    private bool aiMemorizesPlayer = false;
-    public float memoryStartTime = 10f;
-    private float increasingMemoryTime;
-
     //ai hearing
+    public Transform HearingTr; // 실제 추적 위치
     public Vector3 hearingPos;
-    public Transform hearingObj;
+    public Transform hearingObj; // 물건 위치
     private bool aiHeardPlayer = false;
     public float noiseTravelDistance = 10f;
 
     //ai path
     private NavMeshPath myPath;
    
-
     public enum STATE
     {
-        Create, Idle, Roaming, Angry, Battle, RagDoll, StandUp, ResetBones, Death
+        Create, Idle, Roaming, Angry, Search, Battle, RagDoll, StandUp, ResetBones, Death
     }
     public STATE myState = STATE.Create;
 
     void ChangeState(STATE s)
     {
-        var manager = GameManagement.Inst.myMapManager;
+        var manager = GameManagement.Inst;
         if (myState == s) return;
         myState = s;
         
@@ -72,30 +70,32 @@ public class Monster : BattleSystem
             case STATE.Create:
                 break;
             case STATE.Idle: // 평상시
-                myAnim.SetBool("IsAngry", false);
-                myAnim.SetBool("IsRunning", false);
-                myAnim.SetBool("IsMoving", false); // 움직임 비활성화
                 IsStart = !IsStart;
-                manager.MobChangePath(IsStart);
-                StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
-                break;
-            case STATE.Roaming:
+                manager.myMapManager.MobChangePath(IsStart);
                 if (IsStart)
                 {
-                    RePath(myPath, manager.EndPoint.position, () => ChangeState(STATE.Idle));
+                    FindTarget(manager.myMapManager.EndPoint, STATE.Idle);
                 }
                 else
                 {
-                    RePath(myPath, manager.StartPoint.position, () => ChangeState(STATE.Idle));
+                    FindTarget(manager.myMapManager.StartPoint, STATE.Idle);
                 }
+                //StartCoroutine(FOVRoutine());
+                StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
+                break;
+            case STATE.Roaming:
+                RePath(myPath, myTarget.position, () => LostTarget());
+                //StartCoroutine(FOVRoutine());
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
-                if (myTarget == null)
-                {
-                    myTarget = GameObject.Find("Player").GetComponent<Transform>();
-                }
                 AttackTarget(myPath, myTarget);
+                break;
+            case STATE.Search:
+                myAnim.SetBool("IsMoving", false);
+                myAnim.SetTrigger("Search");
+                RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
+                //StartCoroutine(FOVRoutine());
                 break;
             case STATE.Battle:
                 break;
@@ -114,22 +114,26 @@ public class Monster : BattleSystem
     }
     void StateProcess()
     {
-        var manager = GameManagement.Inst.myMapManager;
+        mobTarget = myTarget;
         switch (myState)
         {
             case STATE.Create:
                 break;
             case STATE.Idle:
-                HearingSound();
+                FieldOfViewCheck();
                 break;
             case STATE.Roaming:
-                HearingSound();
+                FieldOfViewCheck();
                 break;
             case STATE.Angry:
-                if(CalcPathLength(myPath, myTarget.position) > lostDist)
+                myAnim.SetBool("IsAngry", true);
+                if (CalcPathLength(myPath, myTarget.position) > lostDist)
                 {
-                    ChangeState(STATE.Idle);
+                    LostTarget();
                 }    
+                break;
+            case STATE.Search:
+                FieldOfViewCheck();
                 break;
             case STATE.Battle:
                 break;
@@ -148,10 +152,8 @@ public class Monster : BattleSystem
     }
     private void Awake()
     {
-        //myHips = myAnim.GetBoneTransform(HumanBodyBones.Hips);
         cs = GetComponent<CapsuleCollider>();
         _origintimetoWake = _timetoWakeup;
-        //_bones = myRagDolls.myRagDollsTransforms;
         _bones = myHips.GetComponentsInChildren<Transform>();
         _standupTransforms = new BoneTransform[_bones.Length];
         _ragdollTransforms = new BoneTransform[_bones.Length];
@@ -160,7 +162,6 @@ public class Monster : BattleSystem
         {
             _standupTransforms[boneIndex] = new BoneTransform();
             _ragdollTransforms[boneIndex] = new BoneTransform();
-            //Debug.Log(_bones[boneIndex]);
         }
         PopulateAnimation(_standupClipName, _standupTransforms);
         RagDollSet(false);
@@ -170,7 +171,6 @@ public class Monster : BattleSystem
     void Start()
     {
         myPath = new NavMeshPath();
-        //RePath(myPath, "IsMoving", myEnd.position);
         ChangeState(STATE.Idle);
     }
 
@@ -184,27 +184,113 @@ public class Monster : BattleSystem
         yield return new WaitForSeconds(time);
         ChangeState(s);
     }
+    // SightDetection
+    IEnumerator FOVRoutine()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(0.2f);
+            FieldOfViewCheck();
+        }
+    }
+
+    private void FieldOfViewCheck()
+    {
+        Collider[] rangeChecks = Physics.OverlapSphere(transform.position, losRadius, enemyMask);
+        Transform target;
+        if (rangeChecks.Length != 0)
+        {
+            target = rangeChecks[0].transform;
+            Vector3 directionToTarget = (target.position - transform.position).normalized;
+            
+            if (Vector3.Angle(transform.forward, directionToTarget) < fovAngle * 0.5f)
+            {
+                float distanceToTarget = Vector3.Distance(transform.position, target.position);
+
+                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
+                {
+                    canSeePlayer = true;
+                    myAnim.SetTrigger("Detect");
+                    FindTarget(target, STATE.Angry);
+                    Debug.Log("플레이어 발견!");
+                }
+                else
+                    canSeePlayer = false;
+            }
+            else
+                canSeePlayer = false;
+        }
+        else if (canSeePlayer)
+        {
+            canSeePlayer = false;
+        }
+        /*
+        float dist = lostDist;
+        Transform target = null;
+        foreach (Collider col in rangeChecks)
+        {
+            float tempDist = Vector3.Distance(col.transform.position, transform.position);
+            if (dist > tempDist)
+            {
+                dist = tempDist;
+                target = col.GetComponent<Transform>();
+            }
+        }
+        */
+    }
+
+    // SoundDetection
+    void SetSoundPos()
+    {
+        if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1))
+        {
+            if (hearingObj.position.y > hit.position.y)
+            {
+                hearingPos = hit.position;
+            }
+            else
+            {
+                if (Physics.Raycast(hearingObj.position, Vector3.down, out RaycastHit thit,
+                    20f, 1 << LayerMask.NameToLayer("Ground")))
+                {
+                    hearingPos = thit.point;
+                }
+            }
+        }
+        HearingTr.position = hearingPos;
+    }
     void CheckSoundDist()
     {
+        SetSoundPos();
         float dist = Vector3.Distance(hearingPos, transform.position);
         if(noiseTravelDistance >= dist)
         {
             Debug.Log("몹이 소리를 들었다.");
+            Debug.Log("듣는 위치: " + hearingPos);
+            Debug.Log("거리: " + dist);
+            RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
+            aiHeardPlayer = true;
+            myTarget = HearingTr;
         }
         else
         {
             Debug.Log("못 들었다.");
+            aiHeardPlayer = false;
         }
-        Debug.Log("거리: " + dist);
     }
-    void HearingSound()
+    public void HearingSound()
     {
-        Transform tempTarget = GameObject.Find("Player").GetComponent<Transform>();
+        if (myState == STATE.Death || myState == STATE.Angry || myState == STATE.RagDoll ||
+            myState == STATE.ResetBones || myState == STATE.StandUp) return;
+        var manager = GameManagement.Inst;
+        
+        Transform tempTarget = manager.myPlayer.transform;
         if ((tempTarget != null && tempTarget.TryGetComponent<PlayerPickUpDrop>(out var target)))
         {
             if (target.GetObjectGrabbable() != null)
             {
                 hearingObj = target.GetObjectGrabbable().transform;
+                Debug.Log("hearingObj: " + hearingObj);
             }
             else if (hearingObj != null && hearingObj.TryGetComponent<ObjectGrabbable>(out var grab))
             {
@@ -212,12 +298,16 @@ public class Monster : BattleSystem
                 {
                     hearingPos = grab.soundPos;
                     CheckSoundDist();
-                    Debug.Log("듣는 위치: " + hearingPos);
                     grab.IsSoundable = false;
                 }
             }
         }
+        if (aiHeardPlayer)
+        {
+            ChangeState(STATE.Search);
+        }
     }
+    //GetKickandRagDoll
     public void GetKick(Vector3 dir, float strength)
     {
         if (myState == STATE.RagDoll) return;
@@ -226,8 +316,7 @@ public class Monster : BattleSystem
         ChangeState(STATE.RagDoll);
         force = dir * strength;
         force.y = strength;
-        myRagDolls.myRagDoll.spineRigidBody.AddForce(force);
-        myAnim.SetBool("IsAngry", true);
+        myRagDolls.myRagDoll.spineRigidBody.velocity += force * Time.fixedDeltaTime / (Time.timeScale * myRagDolls.myRagDoll.spineRigidBody.mass);
     }
 
     public void RagDollSet(bool v)
@@ -285,7 +374,8 @@ public class Monster : BattleSystem
     {
         if (!myAnim.GetCurrentAnimatorStateInfo(0).IsName(_standupName))
         {
-            ChangeState(STATE.Angry);
+            var manager = GameManagement.Inst;
+            FindTarget(manager.myPlayer.transform, STATE.Angry);
         }
     }
     void ResetBonesBehaviour()
@@ -336,12 +426,39 @@ public class Monster : BattleSystem
         transform.position = positionBeforeSampling;
         transform.rotation = rotationBeforeSampling;
     }
-    public void Attack()
-    {
-
-    }
     public void AttackCheck(bool v)
     {
         //myAnim.GetComponent<RootMotion>().DontRot = v;
+    }
+    public void FindTarget(Transform target, STATE state)
+    {
+        if (myState == STATE.Death) return;
+        myTarget = target;
+        StopAllCoroutines();
+        ChangeState(state);
+    }
+
+    public void LostTarget()
+    {
+        if (myState == STATE.Death) return;
+        myTarget = null;
+        StopAllCoroutines();
+        aiHeardPlayer = false;
+        myAnim.SetBool("IsAngry", false);
+        myAnim.SetBool("IsChasing", false);
+        myAnim.SetBool("IsRunning", false);
+        myAnim.SetBool("IsMoving", false); // 움직임 비활성화
+        ChangeState(STATE.Idle);
+    }
+    public override void DeadMessage(Transform tr)
+    {
+        if (tr == myTarget)
+        {
+            LostTarget();
+        }
+    }
+    public Transform GetMyTarget()
+    {
+        return myTarget;
     }
 }

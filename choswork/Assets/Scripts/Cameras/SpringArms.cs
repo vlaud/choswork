@@ -155,7 +155,7 @@ public class SpringArms : CameraProperty
         Angle = Mathf.Abs(fpsXr);
         while (Angle > 0.0f)
         {
-            float delta = myRotSpeed * Time.deltaTime;
+            float delta = myRotSpeed * Time.unscaledDeltaTime;
 
             if (delta > Angle)
             {
@@ -179,7 +179,7 @@ public class SpringArms : CameraProperty
 
         while (dist > 0.0f)
         {
-            float delta = LookupSpeed * Time.deltaTime;
+            float delta = LookupSpeed * Time.unscaledDeltaTime;
             if (delta > dist)
             {
                 delta = dist;
@@ -205,7 +205,7 @@ public class SpringArms : CameraProperty
         }
         while (Angle > 0.0f)
         {
-            float delta = myRotSpeed * Time.deltaTime;
+            float delta = myRotSpeed * Time.unscaledDeltaTime;
 
             if (delta > Angle)
             {
@@ -231,13 +231,12 @@ public class SpringArms : CameraProperty
         }
         if (Angle > 0.0f)
         {
-            float delta = myRotSpeed * Time.deltaTime;
+            float delta = myRotSpeed * Time.unscaledDeltaTime;
 
             if (delta > Angle)
             {
                 delta = Angle;
             }
-
             Angle -= delta;
             myRoot.Rotate(Vector3.up * delta * rotDir, Space.World);
         }
@@ -376,12 +375,12 @@ public class SpringArms : CameraProperty
         {
             if (Input.GetAxis("Mouse ScrollWheel") > 0)
             {
-                camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.deltaTime * ZoomSpeed);
+                camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.unscaledDeltaTime * ZoomSpeed);
             }
         }
         else
         {
-            camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.deltaTime * ZoomSpeed);
+            camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.unscaledDeltaTime * ZoomSpeed);
         }
         myTPSCam.myCam.transform.localPosition = camPos;
     }
