@@ -18,11 +18,12 @@ public class TitleCam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector3 mousePos = Input.mousePosition;
         //if (Input.GetMouseButton(1))
         {
-            desireScreenPos.x += Input.GetAxisRaw("Mouse X") * LookSpeed;
+            desireScreenPos.x = mousePos.x;
             desireScreenPos.x = Mathf.Clamp(desireScreenPos.x, -_limit, _limit);
-            desireScreenPos.y += Input.GetAxisRaw("Mouse Y") * LookSpeed;
+            desireScreenPos.y = mousePos.y;
             desireScreenPos.y = Mathf.Clamp(desireScreenPos.y, -_limit * 0.5f, _limit * 0.5f);
 
             camPos = Vector2.Lerp(camPos, desireScreenPos, Time.deltaTime * LookSpeed);
