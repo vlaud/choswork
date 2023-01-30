@@ -9,7 +9,7 @@ public class RootMotion : MonoBehaviour
     Vector3 deltaPosition = Vector3.zero;
     Quaternion deltaRotation = Quaternion.identity;
     
-    private void Update()
+    private void FixedUpdate()
     {
         if (DontMove) return;
         myPlayer.Translate(deltaPosition, Space.World);

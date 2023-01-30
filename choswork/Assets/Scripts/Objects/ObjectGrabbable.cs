@@ -18,6 +18,7 @@ public class ObjectGrabbable : ObjectInteractable
     private Rigidbody objectRigidbody;
     private Collider objectCollider;
     private Transform objectGrabPointTransform;
+    private bool _isGhost;
     public enum STATE
     {
         Create, Idle, Grab, Throw, WallHit
@@ -92,8 +93,9 @@ public class ObjectGrabbable : ObjectInteractable
     {
         Throw(Vector3.down, dropSpeed);
     }
-    public void Throw(Vector3 dir, float strength)
+    public void Throw(Vector3 dir, float strength, bool isGhost = false)
     {
+        _isGhost = isGhost;
         this.objectGrabPointTransform = null;
         SetObjectPhysics(true);
         Vector3 force;
@@ -121,6 +123,7 @@ public class ObjectGrabbable : ObjectInteractable
     }
     private void OnCollisionEnter(Collision collision)
     {
+        if (_isGhost) return;
         if (myState != STATE.Throw) return;
         if ((objectMask & 1 << collision.gameObject.layer) != 0)
         {

@@ -15,12 +15,20 @@ public class GameManagement : MonoBehaviour
     public float GameTimeScale = 1f;
     [Range(0f, 0.02f)]
     public float GameFixedTimeScale = 0.02f;
+    private float timer;
     private void Awake()
     {
         Inst = this;
+        Physics.autoSimulation = false;
     }
     private void Update()
     {
+        timer += Time.deltaTime;
+        while (timer >= Time.fixedDeltaTime)
+        {
+            timer -= Time.fixedDeltaTime;
+            Physics.Simulate(Time.fixedDeltaTime);
+        }
         DoSlowmotion();
     }
     public void DoSlowmotion()

@@ -11,7 +11,7 @@ public class PlayerPickUpDrop : InputManager
     [SerializeField] private CameraSet? curCamset;
     [SerializeField] private float Strength = 20.0f;
     [SerializeField] private float pickUpDistance = 6f;
-
+    [SerializeField] private Projection _projection;
     private ObjectGrabbable objectGrabbable;
     private Door DoorInteractable;
     private ObjectInteractable showObject;
@@ -34,6 +34,13 @@ public class PlayerPickUpDrop : InputManager
         HandleObjectPickupAndThrow();
         ShowItemUI();
         Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * pickUpDistance, Color.blue);
+
+        if (objectGrabbable != null)
+        {
+            _projection.SimulateTrajectory(objectGrabbable, objectGrabPointTransform.position,
+           objectGrabPointTransform.forward, Strength);
+        }
+        else transform.GetComponent<LineRenderer>().positionCount = 0;
     }
     public override void GetItem()
     {
