@@ -39,7 +39,7 @@ public class Player : BattleSystem
         myAnim.speed = myMoveSpeed;
 
         float x, z;
-        if (myCameras.myCameraState == SpringArms.ViewState.UI) targetDir = Vector2.zero; //UI 상태에선 못움직이게
+        if (myCameras?.myCameraState == SpringArms.ViewState.UI) targetDir = Vector2.zero; //UI 상태에선 못움직이게
         else
         {
             targetDir.x = GetMoveRaw().x;
