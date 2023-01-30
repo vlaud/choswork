@@ -25,6 +25,7 @@ public class AnimEvent : MonoBehaviour
     public bool noSoundandEffect = false;
     public void LeftFootEvent()
     {
+        if (noSoundandEffect) return;
         foreach (KeyCode key in StudyCommandPattern.Inst.Keylist.Keys) // 이동키를 눌러야만 발소리 나오게 설정
         {
             if (myPlayer.myCameras.myCameraState == SpringArms.ViewState.UI) return; // UI상태에선 리턴
@@ -33,8 +34,6 @@ public class AnimEvent : MonoBehaviour
                 SoundManager.Inst.PlayOneShot(myFootSound, leftFootSound);
             }
         }
-        
-        if (noSoundandEffect) return;
         if (orgDustEff == null) return;
         Instantiate(orgDustEff, leftFoot.position, Quaternion.identity); // 나중에 발바닥 이펙트 추가
         
@@ -42,6 +41,7 @@ public class AnimEvent : MonoBehaviour
 
     public void RightFootEvent()
     {
+        if (noSoundandEffect) return;
         foreach (KeyCode key in StudyCommandPattern.Inst.Keylist.Keys)
         {
             if (myPlayer.myCameras.myCameraState == SpringArms.ViewState.UI) return;
@@ -50,8 +50,6 @@ public class AnimEvent : MonoBehaviour
                 SoundManager.Inst.PlayOneShot(myFootSound, rightFootSound);
             }
         }
-        
-        if (noSoundandEffect) return;
         if (orgDustEff == null) return;
         Instantiate(orgDustEff, rightFoot.position, Quaternion.identity);
     }
@@ -66,6 +64,7 @@ public class AnimEvent : MonoBehaviour
     }
     public void PlayKickSound()
     {
+        if (noSoundandEffect) return;
         float rad = myPlayer.KickPoint.GetComponent<SphereCollider>().radius;
             
         Collider[] list = Physics.OverlapSphere(myPlayer.KickTransform.position, rad, KickBlock);
