@@ -82,6 +82,5 @@ public class PlayerBulletTime : MonoBehaviour
         }
         SceneManager.MoveGameObjectToScene(ghostPlayer.gameObject, _simulationScene);
         if (!ghostPlayer.gameObject.isStatic) _spawnedObjects.Add(_player.transform, ghostPlayer.transform);
-        ghostPlayer.PlayerMove();
     }
 }
