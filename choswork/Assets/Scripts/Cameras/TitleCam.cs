@@ -19,13 +19,14 @@ public class TitleCam : MonoBehaviour
     void Update()
     {
         Vector3 mousePos = Input.mousePosition;
+        float width = Screen.width * 0.5f;
+        float height = Screen.height * 0.5f;
         //if (Input.GetMouseButton(1))
         {
-            desireScreenPos.x = mousePos.x;
+            desireScreenPos.x = _limit * ((mousePos.x - width) / width);
             desireScreenPos.x = Mathf.Clamp(desireScreenPos.x, -_limit, _limit);
-            desireScreenPos.y = mousePos.y;
-            desireScreenPos.y = Mathf.Clamp(desireScreenPos.y, -_limit * 0.5f, _limit * 0.5f);
-
+            desireScreenPos.y = _limit * ((mousePos.y - height) / height);
+            desireScreenPos.y = Mathf.Clamp(desireScreenPos.y, -_limit, _limit);
             camPos = Vector2.Lerp(camPos, desireScreenPos, Time.deltaTime * LookSpeed);
         }
         titleCam.myCam.transform.localPosition = camPos;

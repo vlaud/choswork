@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1273174, g: 0.13414761, b: 0.12107885, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4515,7 +4515,7 @@ MonoBehaviour:
     myCam: {fileID: 314254257}
     curRot: {x: 0, y: 0, z: 0}
   LookSpeed: 0.5
-  _limit: 1
+  _limit: 0.5
   camPos: {x: 0, y: 0}
   desireScreenPos: {x: 0, y: 0}
 --- !u!1 &1430492246
