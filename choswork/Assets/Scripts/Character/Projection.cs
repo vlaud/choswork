@@ -58,8 +58,8 @@ public class Projection : MonoBehaviour
             }
             SceneManager.MoveGameObjectToScene(_ghostobj.gameObject, _simulationScene);
         }
-        _ghostobj.transform.position = pos;
-        _ghostobj.transform.rotation = Quaternion.identity;
+        if (!_ghostobj.activeSelf) _ghostobj.SetActive(true);
+
         _ghostobj.GetComponent<ObjectGrabbable>().Throw(dir, strength, true);
         
         _line.positionCount = Mathf.CeilToInt(_maxPhysicsFrameIterations / _timeOffset) + 1;
@@ -71,6 +71,9 @@ public class Projection : MonoBehaviour
             _physicsScene.Simulate(Time.fixedDeltaTime);
             _line.SetPosition(i, _ghostobj.transform.position);
         }
+        _ghostobj.SetActive(false);
+        _ghostobj.transform.position = pos;
+        _ghostobj.transform.rotation = Quaternion.identity;
         //Destroy(ghostObj.gameObject); 
     }
 }
