@@ -11475,7 +11475,7 @@ GameObject:
   - component: {fileID: 4590779889770199521}
   - component: {fileID: 4590449634608337931}
   - component: {fileID: 4571322265735088751}
-  - component: {fileID: 4590601615033358677}
+  - component: {fileID: 4590779889770199522}
   m_Layer: 5
   m_Name: MainMenuCanvas
   m_TagString: Untagged
@@ -13176,8 +13176,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -13590,8 +13590,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: back_options_panels
         m_Mode: 1
         m_Arguments:
@@ -13705,8 +13705,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -13798,8 +13798,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -14084,8 +14084,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: openOptions_Controls
         m_Mode: 1
         m_Arguments:
@@ -14170,8 +14170,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: back_options
         m_Mode: 1
         m_Arguments:
@@ -14256,8 +14256,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: back_options_panels
         m_Mode: 1
         m_Arguments:
@@ -14358,8 +14358,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -14485,8 +14485,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -14541,8 +14541,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: openOptions_Gfx
         m_Mode: 1
         m_Arguments:
@@ -14600,8 +14600,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -14659,8 +14659,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -14849,8 +14849,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -15306,8 +15306,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -15378,26 +15378,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4590601615033358677
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4477929342308375417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f045d3c92e8b24847a4266b681e631e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newGameSceneName: GameStage
-  quickSaveSlotID: 5
-  MainOptionsPanel: {fileID: 4477126751097145591}
-  StartGameOptionsPanel: {fileID: 4477923738885147327}
-  GamePanel: {fileID: 4478669919552603351}
-  ControlsPanel: {fileID: 4477758797282025255}
-  GfxPanel: {fileID: 4477797426206418341}
-  LoadGamePanel: {fileID: 4478541477159661647}
 --- !u!114 &4590603939632299631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15611,8 +15591,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -15667,8 +15647,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: back_options
         m_Mode: 1
         m_Arguments:
@@ -15837,8 +15817,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -16070,8 +16050,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: openContinue_Load
         m_Mode: 1
         m_Arguments:
@@ -16193,8 +16173,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -16222,8 +16202,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -16467,6 +16447,27 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
+--- !u!114 &4590779889770199522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4477929342308375417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48a9049418bb5eb40905f34352f66ef1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newGameSceneName: GameStage
+  quickSaveSlotID: 6
+  MainOptionsPanel: {fileID: 4477126751097145591}
+  StartGameOptionsPanel: {fileID: 4477923738885147327}
+  GamePanel: {fileID: 4478669919552603351}
+  ControlsPanel: {fileID: 4477758797282025255}
+  GfxPanel: {fileID: 4477797426206418341}
+  LoadGamePanel: {fileID: 4478541477159661647}
+  Fader: {fileID: 4478274297032803781}
 --- !u!114 &4590805333565766513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16604,8 +16605,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -16663,8 +16664,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -16719,8 +16720,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: openOptions_Game
         m_Mode: 1
         m_Arguments:
@@ -16880,8 +16881,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -17031,8 +17032,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -17248,8 +17249,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -17277,8 +17278,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -17490,8 +17491,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -17613,8 +17614,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -17766,8 +17767,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -17795,8 +17796,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -17944,8 +17945,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -18000,8 +18001,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: back_options_panels
         m_Mode: 1
         m_Arguments:
@@ -18029,8 +18030,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -18363,8 +18364,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: back_options_panels
         m_Mode: 1
         m_Arguments:
@@ -18392,8 +18393,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -18600,7 +18601,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: 
           m_MethodName: playHoverClip
           m_Mode: 1
@@ -18690,8 +18691,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: openOptions
         m_Mode: 1
         m_Arguments:
@@ -18873,8 +18874,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: newGame
         m_Mode: 1
         m_Arguments:
@@ -19075,8 +19076,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: openStartGameOptions
         m_Mode: 1
         m_Arguments:
@@ -19235,8 +19236,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -19332,8 +19333,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -19361,8 +19362,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4590601615033358677}
-          m_TargetAssemblyTypeName: 
+        - m_Target: {fileID: 4590779889770199522}
+          m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
           m_MethodName: playHoverClip
           m_Mode: 1
           m_Arguments:
@@ -19631,8 +19632,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4590601615033358677}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
         m_MethodName: Quit
         m_Mode: 1
         m_Arguments:

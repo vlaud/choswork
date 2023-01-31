@@ -1,16 +1,16 @@
-ï»¿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenuController : MonoBehaviour {
-
+public class Mainmenu : MonoBehaviour
+{
     Animator anim;
 
     public string newGameSceneName;
     public int quickSaveSlotID;
 
-    [Header("Options Panel")]
+    [Header("¿É¼Ç ¼³Á¤")]
     public GameObject MainOptionsPanel;
     public GameObject StartGameOptionsPanel;
     public GameObject GamePanel;
@@ -19,12 +19,14 @@ public class MainMenuController : MonoBehaviour {
     public GameObject LoadGamePanel;
     public GameObject Fader;
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         anim = GetComponent<Animator>();
 
         //new key
         PlayerPrefs.SetInt("quickSaveSlot", quickSaveSlotID);
     }
+
 
     #region Open Different panels
 
@@ -42,7 +44,7 @@ public class MainMenuController : MonoBehaviour {
 
         //enable BLUR
         //Camera.main.GetComponent<Animator>().Play("BlurOn");
-       
+
     }
 
     public void openStartGameOptions()
@@ -59,7 +61,7 @@ public class MainMenuController : MonoBehaviour {
 
         //enable BLUR
         //Camera.main.GetComponent<Animator>().Play("BlurOn");
-        
+
     }
 
     public void openOptions_Game()
@@ -142,7 +144,7 @@ public class MainMenuController : MonoBehaviour {
         anim.Play("buttonTweenAnims_off");
 
         //disable BLUR
-       // Camera.main.GetComponent<Animator>().Play("BlurOff");
+        // Camera.main.GetComponent<Animator>().Play("BlurOff");
 
         //play click sfx
         playClickSound();
@@ -152,7 +154,7 @@ public class MainMenuController : MonoBehaviour {
     {
         //simply play anim for CLOSING main options panel
         anim.Play("OptTweenAnim_off");
-        
+
         //play click sfx
         playClickSound();
 
@@ -167,10 +169,11 @@ public class MainMenuController : MonoBehaviour {
     #region Sounds
     public void playHoverClip()
     {
-       
+
     }
 
-    void playClickSound() {
+    void playClickSound()
+    {
 
     }
 
