@@ -43,7 +43,7 @@ public class Projection : MonoBehaviour
     [SerializeField] private LineRenderer _line;
     [Range(1, 100)]
     [SerializeField] private int _maxPhysicsFrameIterations;
-    [Range(1f, 10f)]
+    [Range(0.1f, 2f)]
     [SerializeField] private float _timeOffset;
     public void SimulateTrajectory(ObjectGrabbable objGrab, Vector3 pos, Vector3 dir, float strength)
     {
@@ -62,11 +62,13 @@ public class Projection : MonoBehaviour
         _ghostobj.transform.rotation = Quaternion.identity;
         _ghostobj.GetComponent<ObjectGrabbable>().Throw(dir, strength, true);
         
-        _line.positionCount = _maxPhysicsFrameIterations;
-
-        for(int i = 0; i < _maxPhysicsFrameIterations; ++i)
+        _line.positionCount = Mathf.CeilToInt(_maxPhysicsFrameIterations / _timeOffset) + 1;
+        int i = 0;
+        _line.SetPosition(i, _ghostobj.transform.position);
+        for (float time = 0; time < _maxPhysicsFrameIterations; time += _timeOffset)
         {
-            _physicsScene.Simulate(Time.fixedDeltaTime * _timeOffset);
+            i++;
+            _physicsScene.Simulate(Time.fixedDeltaTime);
             _line.SetPosition(i, _ghostobj.transform.position);
         }
         //Destroy(ghostObj.gameObject); 
