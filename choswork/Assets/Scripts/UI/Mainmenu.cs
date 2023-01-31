@@ -26,6 +26,7 @@ public class Mainmenu : MonoBehaviour
         //new key
         PlayerPrefs.SetInt("quickSaveSlot", quickSaveSlotID);
     }
+    #region Scene Change
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -38,8 +39,20 @@ public class Mainmenu : MonoBehaviour
         if (scene.name == "GameStage")
         {
             transform.GetComponent<Canvas>().worldCamera = GameObject.Find("FP Camera").GetComponent<Camera>();
+            DisableUI();
         }
     }
+    void DisableUI()
+    {
+        MainOptionsPanel.SetActive(false);
+        StartGameOptionsPanel.SetActive(false);
+        GamePanel.SetActive(false);
+        ControlsPanel.SetActive(false);
+        GfxPanel.SetActive(false); ;
+        LoadGamePanel.SetActive(false);
+        Fader.SetActive(false);
+    }
+    #endregion
 
     #region Open Different panels
 
