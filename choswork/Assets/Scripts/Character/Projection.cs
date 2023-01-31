@@ -45,35 +45,46 @@ public class Projection : MonoBehaviour
     [SerializeField] private int _maxPhysicsFrameIterations;
     [Range(0.1f, 2f)]
     [SerializeField] private float _timeOffset;
+    public float pingFloat;
+    [Range(1f, 10f)]
+    [SerializeField] private float _maxPing;
     public void SimulateTrajectory(ObjectGrabbable objGrab, Vector3 pos, Vector3 dir, float strength)
     {
         if(_ghostobj == null)
         {
             _ghostobj = Instantiate(objGrab.gameObject, pos, Quaternion.identity);
 
-            var Renders = _ghostobj.GetComponentsInChildren<Renderer>();
-            foreach (var r in Renders)
-            {
-                r.enabled = false;
-            }
+            //var Renders = _ghostobj.GetComponentsInChildren<Renderer>();
+            //foreach (var r in Renders)
+            //{
+            //    r.enabled = false;
+            //}
             SceneManager.MoveGameObjectToScene(_ghostobj.gameObject, _simulationScene);
         }
+
+        pingFloat++;
+        Debug.Log(pingFloat);
         if (!_ghostobj.activeSelf) _ghostobj.SetActive(true);
 
         _ghostobj.GetComponent<ObjectGrabbable>().Throw(dir, strength, true);
-        
-        _line.positionCount = Mathf.CeilToInt(_maxPhysicsFrameIterations / _timeOffset) + 1;
-        int i = 0;
-        _line.SetPosition(i, _ghostobj.transform.position);
-        for (float time = 0; time < _maxPhysicsFrameIterations; time += _timeOffset)
+
+        if (pingFloat >= _maxPing)
         {
-            i++;
-            _physicsScene.Simulate(Time.fixedDeltaTime);
+            _line.positionCount = Mathf.CeilToInt(_maxPhysicsFrameIterations / _timeOffset) + 1;
+            int i = 0;
             _line.SetPosition(i, _ghostobj.transform.position);
+            for (float time = 0; time < _maxPhysicsFrameIterations; time += _timeOffset)
+            {
+                i++;
+                _physicsScene.Simulate(Time.fixedDeltaTime);
+                _line.SetPosition(i, _ghostobj.transform.position);
+            }
+            //Destroy(ghostObj.gameObject); 
+            pingFloat = 0f;
         }
         _ghostobj.SetActive(false);
         _ghostobj.transform.position = pos;
         _ghostobj.transform.rotation = Quaternion.identity;
-        //Destroy(ghostObj.gameObject); 
+        
     }
 }
