@@ -26,7 +26,20 @@ public class Mainmenu : MonoBehaviour
         //new key
         PlayerPrefs.SetInt("quickSaveSlot", quickSaveSlotID);
     }
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        print("Scene has loaded");
+    }
 
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        print("Scene on scene");
+        if (scene.name == "GameStage")
+        {
+            transform.GetComponent<Canvas>().worldCamera = GameObject.Find("FP Camera").GetComponent<Camera>();
+        }
+    }
 
     #region Open Different panels
 
@@ -129,7 +142,11 @@ public class Mainmenu : MonoBehaviour
     public void newGame()
     {
         if (!string.IsNullOrEmpty(newGameSceneName))
+        {
+            GameObject obj = GameObject.Find("SceneLoader");
+            transform.SetParent(obj.transform);
             SceneLoader.Inst.ChangeScene(newGameSceneName);
+        }
         else
             Debug.Log("Please write a scene name in the 'newGameSceneName' field of the Main Menu Script and don't forget to " +
                 "add that scene in the Build Settings!");
