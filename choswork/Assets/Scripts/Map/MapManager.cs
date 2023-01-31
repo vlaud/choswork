@@ -82,16 +82,6 @@ public class MapManager : MonoBehaviour
     {
         myPath = new NavMeshPath();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log(transform.childCount);
-            Debug.Log(transform.GetChild(Random.Range(0, transform.childCount)).gameObject);
-        }
-    }
     void DoorSpawn()
     {
         doorObj.SetParent(transform.GetChild(Random.Range(1, mapSize.x)));
