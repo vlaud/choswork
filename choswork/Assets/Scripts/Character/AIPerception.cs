@@ -25,6 +25,9 @@ public class AIPerception : MonoBehaviour
     public LayerMask enemyMask = default;
     public LayerMask obstructionMask = default;
     public Transform myTarget;
+    private GameManagement myGamemanager;
+    private Monster myMonster;
+
     void ChangeState(State s)
     {
         if (myState == s) return;
@@ -54,24 +57,22 @@ public class AIPerception : MonoBehaviour
     }
     IEnumerator FOVRoutine()
     {
-        var monster = GameManagement.Inst.myMonster;
         while (myState == State.Search)
         {
             if(IsSearchable())
                 FieldOfViewCheck();
-            else if (monster.GetMyState() == Monster.STATE.Angry)
+            else if (myMonster.GetMyState() == Monster.STATE.Angry)
                 ChangeState(State.Chase);
             yield return null;
         }
     }
     IEnumerator CheckDist()
     {
-        var monster = GameManagement.Inst.myMonster;
         while (myState == State.Chase)
         {
-            if(monster.GetMyState() == Monster.STATE.Angry)
+            if(myMonster.GetMyState() == Monster.STATE.Angry)
             {
-                if (CalcPathLength(monster.GetMyPath(), monster.GetMyTarget().position) > lostDist)
+                if (CalcPathLength(myMonster.GetMyPath(), myMonster.GetMyTarget().position) > lostDist)
                 {
                     LostTarget?.Invoke();
                     myTarget = null;
@@ -98,10 +99,7 @@ public class AIPerception : MonoBehaviour
                 {
                     canSeePlayer = true;
                     myTarget = target;
-                    if (transform.TryGetComponent<Monster>(out var monster))
-                    {
-                        monster.ReturnAnim().SetTrigger("Detect");
-                    }
+                    myMonster.ReturnAnim().SetTrigger("Detect");
                     foundPlayer?.Invoke(myTarget, Monster.STATE.Angry);
                     Debug.Log("플레이어 발견!");
                     ChangeState(State.Chase);
@@ -150,16 +148,17 @@ public class AIPerception : MonoBehaviour
     }
     public bool IsSearchable()
     {
-        var monster = GameManagement.Inst.myMonster;
-        return (monster.GetMyState() == Monster.STATE.Idle ||
-            monster.GetMyState() == Monster.STATE.Roaming ||
-            monster.GetMyState() == Monster.STATE.Search);
+        return (myMonster.GetMyState() == Monster.STATE.Idle ||
+            myMonster.GetMyState() == Monster.STATE.Roaming ||
+            myMonster.GetMyState() == Monster.STATE.Search);
     }
     // Start is called before the first frame update
     void Start()
     {
-        foundPlayer = GameManagement.Inst.myMonster.FindTarget;
-        LostTarget = GameManagement.Inst.myMonster.LostTarget;
+        myGamemanager = GameManagement.Inst;
+        myMonster = myGamemanager.myMonster;
+        foundPlayer = myMonster.FindTarget;
+        LostTarget = myMonster.LostTarget;
         ChangeState(State.Search);
     }
 

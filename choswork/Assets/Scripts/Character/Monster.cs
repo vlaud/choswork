@@ -15,6 +15,8 @@ public class Monster : BattleSystem
 
         public Quaternion Rotation { get; set; }
     }
+    private GameManagement myGamemanager;
+
     public LayerMask enemyMask = default;
     public LayerMask obstructionMask = default;
     public Transform mobTarget;
@@ -54,7 +56,6 @@ public class Monster : BattleSystem
 
     void ChangeState(STATE s)
     {
-        var manager = GameManagement.Inst;
         if (myState == s) return;
         myState = s;
         
@@ -64,14 +65,14 @@ public class Monster : BattleSystem
                 break;
             case STATE.Idle: // Æò»ó½Ã
                 IsStart = !IsStart;
-                manager.myMapManager.MobChangePath(IsStart);
+                myGamemanager.myMapManager.MobChangePath(IsStart);
                 if (IsStart)
                 {
-                    FindTarget(manager.myMapManager.EndPoint, STATE.Idle);
+                    FindTarget(myGamemanager.myMapManager.EndPoint, STATE.Idle);
                 }
                 else
                 {
-                    FindTarget(manager.myMapManager.StartPoint, STATE.Idle);
+                    FindTarget(myGamemanager.myMapManager.StartPoint, STATE.Idle);
                 }
                 StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
                 break;
@@ -131,6 +132,7 @@ public class Monster : BattleSystem
     }
     private void Awake()
     {
+        myGamemanager = GameManagement.Inst;
         cs = GetComponent<CapsuleCollider>();
         _origintimetoWake = _timetoWakeup;
         _bones = myHips.GetComponentsInChildren<Transform>();
@@ -206,9 +208,8 @@ public class Monster : BattleSystem
     {
         if (myState == STATE.Death || myState == STATE.Angry || myState == STATE.RagDoll ||
             myState == STATE.ResetBones || myState == STATE.StandUp) return;
-        var manager = GameManagement.Inst;
         
-        Transform tempTarget = manager.myPlayer.transform;
+        Transform tempTarget = myGamemanager.myPlayer.transform;
         if ((tempTarget != null && tempTarget.TryGetComponent<PlayerPickUpDrop>(out var target)))
         {
             if (target.GetObjectGrabbable() != null)
