@@ -54,11 +54,11 @@ public class Projection : MonoBehaviour
         {
             _ghostobj = Instantiate(objGrab.gameObject, pos, Quaternion.identity);
 
-            //var Renders = _ghostobj.GetComponentsInChildren<Renderer>();
-            //foreach (var r in Renders)
-            //{
-            //    r.enabled = false;
-            //}
+            var Renders = _ghostobj.GetComponentsInChildren<Renderer>();
+            foreach (var r in Renders)
+            {
+                r.enabled = false;
+            }
             SceneManager.MoveGameObjectToScene(_ghostobj.gameObject, _simulationScene);
         }
 
@@ -80,11 +80,10 @@ public class Projection : MonoBehaviour
                 _line.SetPosition(i, _ghostobj.transform.position);
             }
             //Destroy(ghostObj.gameObject); 
+            _ghostobj.SetActive(false);
+            _ghostobj.transform.position = pos;
+            _ghostobj.transform.rotation = Quaternion.identity;
             pingNum = 0;
         }
-        _ghostobj.SetActive(false);
-        _ghostobj.transform.position = pos;
-        _ghostobj.transform.rotation = Quaternion.identity;
-        
     }
 }
