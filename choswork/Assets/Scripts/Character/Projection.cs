@@ -45,9 +45,9 @@ public class Projection : MonoBehaviour
     [SerializeField] private int _maxPhysicsFrameIterations;
     [Range(0.1f, 2f)]
     [SerializeField] private float _timeOffset;
-    public float pingFloat;
-    [Range(1f, 10f)]
-    [SerializeField] private float _maxPing;
+    public int pingNum;
+    [Range(1, 10)]
+    [SerializeField] private int _maxPing;
     public void SimulateTrajectory(ObjectGrabbable objGrab, Vector3 pos, Vector3 dir, float strength)
     {
         if(_ghostobj == null)
@@ -62,13 +62,13 @@ public class Projection : MonoBehaviour
             SceneManager.MoveGameObjectToScene(_ghostobj.gameObject, _simulationScene);
         }
 
-        pingFloat++;
-        Debug.Log(pingFloat);
+        pingNum++;
+        Debug.Log(pingNum);
         if (!_ghostobj.activeSelf) _ghostobj.SetActive(true);
 
         _ghostobj.GetComponent<ObjectGrabbable>().Throw(dir, strength, true);
 
-        if (pingFloat >= _maxPing)
+        if (pingNum >= _maxPing)
         {
             _line.positionCount = Mathf.CeilToInt(_maxPhysicsFrameIterations / _timeOffset) + 1;
             int i = 0;
@@ -80,7 +80,7 @@ public class Projection : MonoBehaviour
                 _line.SetPosition(i, _ghostobj.transform.position);
             }
             //Destroy(ghostObj.gameObject); 
-            pingFloat = 0f;
+            pingNum = 0;
         }
         _ghostobj.SetActive(false);
         _ghostobj.transform.position = pos;
