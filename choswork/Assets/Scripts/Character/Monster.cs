@@ -359,7 +359,7 @@ public class Monster : BattleSystem
     }
     public void FindTarget(Transform target, STATE state)
     {
-        if (NotSearchable()) return;
+        if (myState == STATE.Death) return;
         myTarget = target;
         StopAllCoroutines();
         ChangeState(state);
@@ -367,7 +367,7 @@ public class Monster : BattleSystem
 
     public void LostTarget()
     {
-        if (NotSearchable()) return;
+        if (myState == STATE.Death) return;
         myTarget = null;
         StopAllCoroutines();
         aiHeardPlayer = false;
@@ -396,13 +396,8 @@ public class Monster : BattleSystem
     {
         return myAnim;
     }
-    public bool IsSearchable()
+    public STATE GetMyState()
     {
-        return (myState == STATE.Idle || myState == STATE.Roaming || myState == STATE.Search);
-    }
-    public bool NotSearchable()
-    {
-        return (myState == STATE.RagDoll || myState == STATE.StandUp || 
-            myState == STATE.ResetBones || myState == STATE.Death);
+        return myState;
     }
 }

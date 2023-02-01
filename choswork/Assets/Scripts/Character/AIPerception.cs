@@ -10,7 +10,7 @@ public class AIPerception : MonoBehaviour
 {
     public enum State
     {
-        Create, Search, Chase, Stun
+        Create, Search, Chase
     }
     public State myState = State.Create;
 
@@ -33,13 +33,12 @@ public class AIPerception : MonoBehaviour
         switch (myState)
         {
             case State.Search:
+                StopAllCoroutines();
                 StartCoroutine(FOVRoutine());
                 break;
             case State.Chase:
+                StopAllCoroutines();
                 StartCoroutine(CheckDist());
-                break;
-            case State.Stun:
-                StartCoroutine(CheckSearch());
                 break;
         }
     }
@@ -51,40 +50,31 @@ public class AIPerception : MonoBehaviour
                 break;
             case State.Chase:
                 break;
-            case State.Stun:
-                break;
-        }
-    }
-    IEnumerator CheckSearch()
-    {
-        var monster = GameManagement.Inst.myMonster;
-        while (myState == State.Stun)
-        {
-            if (monster.IsSearchable())
-            {
-                ChangeState(State.Search);
-            }
-            yield return null;
         }
     }
     IEnumerator FOVRoutine()
     {
         while (myState == State.Search)
         {
-            FieldOfViewCheck();
+            if(IsSearchable())
+                FieldOfViewCheck();
             yield return null;
         }
     }
     IEnumerator CheckDist()
     {
         var monster = GameManagement.Inst.myMonster;
+
         while (myState == State.Chase)
         {
-            if(CalcPathLength(monster.GetMyPath(), monster.GetMyTarget().position) > lostDist)
+            if(monster.GetMyState() == Monster.STATE.Angry)
             {
-                LostTarget?.Invoke();
-                myTarget = null;
-                ChangeState(State.Stun);
+                if (CalcPathLength(monster.GetMyPath(), monster.GetMyTarget().position) > lostDist)
+                {
+                    LostTarget?.Invoke();
+                    myTarget = null;
+                    ChangeState(State.Search);
+                }
             }
             yield return null;
         }
@@ -155,6 +145,13 @@ public class AIPerception : MonoBehaviour
         }
 
         return _pathLength;
+    }
+    public bool IsSearchable()
+    {
+        var monster = GameManagement.Inst.myMonster;
+        return (monster.GetMyState() == Monster.STATE.Idle ||
+            monster.GetMyState() == Monster.STATE.Roaming ||
+            monster.GetMyState() == Monster.STATE.Search);
     }
     // Start is called before the first frame update
     void Start()

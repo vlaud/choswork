@@ -55,7 +55,6 @@ public class Projection : MonoBehaviour
     IEnumerator SimulateTrajectory(ObjectGrabbable objGrab, Vector3 pos, Vector3 dir, float strength)
     {
         IsSimulation = true;
-        Debug.Log("simul");
         while (IsSimulation)
         {
             if (_ghostobj == null)
