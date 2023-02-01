@@ -40,12 +40,17 @@ public class Mainmenu : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         print("Scene on scene");
+       
         if (scene.name == "GameStage")
         {
             transform.GetComponent<Canvas>().worldCamera = GameObject.Find("FP Camera").GetComponent<Camera>();
             newGameSceneName = "testScene";
             faderAnim.SetTrigger("FadeIn");
             DisableUI();
+        }
+        if (scene.name == "testScene")
+        {
+            faderAnim.SetTrigger("FadeIn");
         }
     }
     void DisableUI()
