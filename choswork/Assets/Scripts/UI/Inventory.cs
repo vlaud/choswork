@@ -5,12 +5,13 @@ using System.Linq;
 using UnityEngine;
 using static UnityEditor.Progress;
 
-public class Inventory : InputManager
+public class Inventory : InputManager, ItemEvent
 {
     [SerializeField] private GameObject InventoryBase;
     [SerializeField] private GameObject SlotParent;
     [SerializeField] private bool isInventory = false;
     [SerializeField] private ItemSlot[] mySlots;
+    [SerializeField] private Transform myTargetObj;
     private Dictionary<Item, List<ItemSlot>> itemTypeToSlotListMap = new Dictionary<Item, List<ItemSlot>>();
     // Start is called before the first frame update
     void Start()
@@ -76,9 +77,11 @@ public class Inventory : InputManager
             if (itemSlot != null)
             {
                 itemSlot.DestroyItem();
+                myTargetObj?.GetComponent<ItemEvent>()?.SetItemEvent();
                 itemTypeToSlotListMap[_item].Remove(itemSlot);
             }
         }
+        else Debug.Log("아이템이 없습니다.");
         SortItems();
     }
     public void SortItems()
@@ -94,5 +97,13 @@ public class Inventory : InputManager
                 firstEmptySlot = mySlots[i];
             }
         }
+    }
+    public void SetItemEvent()
+    {
+
+    }
+    public void SetItemTargetObj(Transform target)
+    {
+        myTargetObj = target;
     }
 }
