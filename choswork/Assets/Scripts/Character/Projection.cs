@@ -45,8 +45,6 @@ public class Projection : MonoBehaviour
     [SerializeField] private int _maxPhysicsFrameIterations;
     [Range(0.1f, 2f)]
     [SerializeField] private float _timeOffset;
-    [Range(1f, 10f)]
-    public float pingNum;
     public bool IsSimulation = false;
 
     public void SetSimulation(ObjectGrabbable objGrab, Vector3 pos, Vector3 dir, float strength)
@@ -80,7 +78,6 @@ public class Projection : MonoBehaviour
                 dir = pp.GetobjectGrabPointForward();
             }
             _ghostobj.GetComponent<ObjectGrabbable>().Throw(dir, strength, true);
-            yield return new WaitForSeconds(pingNum);
             _line.positionCount = Mathf.CeilToInt(_maxPhysicsFrameIterations / _timeOffset) + 1;
             int i = 0;
             _line.SetPosition(i, _ghostobj.transform.position);
@@ -94,7 +91,7 @@ public class Projection : MonoBehaviour
             
             _ghostobj.SetActive(false);
             //IsSimulation = false;
+            yield return null;
         }
-        yield return null;
     }
 }
