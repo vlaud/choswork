@@ -54,17 +54,19 @@ public class AIPerception : MonoBehaviour
     }
     IEnumerator FOVRoutine()
     {
+        var monster = GameManagement.Inst.myMonster;
         while (myState == State.Search)
         {
             if(IsSearchable())
                 FieldOfViewCheck();
+            else if (monster.GetMyState() == Monster.STATE.Angry)
+                ChangeState(State.Chase);
             yield return null;
         }
     }
     IEnumerator CheckDist()
     {
         var monster = GameManagement.Inst.myMonster;
-
         while (myState == State.Chase)
         {
             if(monster.GetMyState() == Monster.STATE.Angry)
