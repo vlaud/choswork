@@ -80,12 +80,12 @@ public class Monster : BattleSystem
                 {
                     FindTarget(manager.myMapManager.StartPoint, STATE.Idle);
                 }
-                //StartCoroutine(FOVRoutine());
+                StartCoroutine(FOVRoutine());
                 StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
                 break;
             case STATE.Roaming:
                 RePath(myPath, myTarget.position, () => LostTarget());
-                //StartCoroutine(FOVRoutine());
+                StartCoroutine(FOVRoutine());
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
@@ -95,7 +95,7 @@ public class Monster : BattleSystem
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
                 RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
-                //StartCoroutine(FOVRoutine());
+                StartCoroutine(FOVRoutine());
                 break;
             case STATE.Battle:
                 break;
@@ -120,10 +120,10 @@ public class Monster : BattleSystem
             case STATE.Create:
                 break;
             case STATE.Idle:
-                FieldOfViewCheck();
+                //FieldOfViewCheck();
                 break;
             case STATE.Roaming:
-                FieldOfViewCheck();
+                //FieldOfViewCheck();
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsAngry", true);
@@ -133,7 +133,7 @@ public class Monster : BattleSystem
                 }    
                 break;
             case STATE.Search:
-                FieldOfViewCheck();
+                //FieldOfViewCheck();
                 break;
             case STATE.Battle:
                 break;
@@ -187,7 +187,7 @@ public class Monster : BattleSystem
     // SightDetection
     IEnumerator FOVRoutine()
     {
-        while(true)
+        while(myState == STATE.Idle || myState == STATE.Roaming || myState == STATE.Search)
         {
             yield return new WaitForSeconds(0.2f);
             FieldOfViewCheck();
@@ -202,7 +202,7 @@ public class Monster : BattleSystem
         {
             target = rangeChecks[0].transform;
             Vector3 directionToTarget = (target.position - transform.position).normalized;
-            
+
             if (Vector3.Angle(transform.forward, directionToTarget) < fovAngle * 0.5f)
             {
                 float distanceToTarget = Vector3.Distance(transform.position, target.position);

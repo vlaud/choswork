@@ -45,31 +45,42 @@ public class Projection : MonoBehaviour
     [SerializeField] private int _maxPhysicsFrameIterations;
     [Range(0.1f, 2f)]
     [SerializeField] private float _timeOffset;
-    public int pingNum;
-    [Range(1, 10)]
-    [SerializeField] private int _maxPing;
-    public void SimulateTrajectory(ObjectGrabbable objGrab, Vector3 pos, Vector3 dir, float strength)
+    [Range(1f, 10f)]
+    public float pingNum;
+    public bool IsSimulation = false;
+
+    public void SetSimulation(ObjectGrabbable objGrab, Vector3 pos, Vector3 dir, float strength)
     {
-        if(_ghostobj == null)
+        if (IsSimulation) return;
+        StartCoroutine(SimulateTrajectory(objGrab, pos, dir, strength));
+    }
+    IEnumerator SimulateTrajectory(ObjectGrabbable objGrab, Vector3 pos, Vector3 dir, float strength)
+    {
+        IsSimulation = true;
+        Debug.Log("simul");
+        while (IsSimulation)
         {
-            _ghostobj = Instantiate(objGrab.gameObject, pos, Quaternion.identity);
-
-            var Renders = _ghostobj.GetComponentsInChildren<Renderer>();
-            foreach (var r in Renders)
+            if (_ghostobj == null)
             {
-                r.enabled = false;
+                _ghostobj = Instantiate(objGrab.gameObject, pos, Quaternion.identity);
+
+                var Renders = _ghostobj.GetComponentsInChildren<Renderer>();
+                foreach (var r in Renders)
+                {
+                    r.enabled = false;
+                }
+                SceneManager.MoveGameObjectToScene(_ghostobj.gameObject, _simulationScene);
             }
-            SceneManager.MoveGameObjectToScene(_ghostobj.gameObject, _simulationScene);
-        }
 
-        pingNum++;
-        Debug.Log(pingNum);
-        if (!_ghostobj.activeSelf) _ghostobj.SetActive(true);
-
-        _ghostobj.GetComponent<ObjectGrabbable>().Throw(dir, strength, true);
-
-        if (pingNum >= _maxPing)
-        {
+            if (!_ghostobj.activeSelf) _ghostobj.SetActive(true);
+            _ghostobj.transform.position = objGrab.transform.position;
+            _ghostobj.transform.rotation = Quaternion.identity;
+            if (transform.TryGetComponent<PlayerPickUpDrop>(out var pp))
+            {
+                dir = pp.GetobjectGrabPointForward();
+            }
+            _ghostobj.GetComponent<ObjectGrabbable>().Throw(dir, strength, true);
+            yield return new WaitForSeconds(pingNum);
             _line.positionCount = Mathf.CeilToInt(_maxPhysicsFrameIterations / _timeOffset) + 1;
             int i = 0;
             _line.SetPosition(i, _ghostobj.transform.position);
@@ -79,11 +90,11 @@ public class Projection : MonoBehaviour
                 _physicsScene.Simulate(Time.fixedDeltaTime);
                 _line.SetPosition(i, _ghostobj.transform.position);
             }
-            //Destroy(ghostObj.gameObject); 
+            //Destroy(ghostObj.gameObject);
+            
             _ghostobj.SetActive(false);
-            _ghostobj.transform.position = pos;
-            _ghostobj.transform.rotation = Quaternion.identity;
-            pingNum = 0;
+            //IsSimulation = false;
         }
+        yield return null;
     }
 }
