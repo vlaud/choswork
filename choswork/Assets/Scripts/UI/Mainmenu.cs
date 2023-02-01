@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class Mainmenu : MonoBehaviour
 {
     Animator anim;
+    Animator faderAnim;
 
     public string newGameSceneName;
     public int quickSaveSlotID;
@@ -22,7 +23,7 @@ public class Mainmenu : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-
+        faderAnim = Fader.GetComponent<Animator>();
         //new key
         PlayerPrefs.SetInt("quickSaveSlot", quickSaveSlotID);
     }
@@ -32,13 +33,17 @@ public class Mainmenu : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
         print("Scene has loaded");
     }
-
+    public void FadeToLevel()
+    {
+        faderAnim.SetTrigger("FadeOut");
+    }
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         print("Scene on scene");
         if (scene.name == "GameStage")
         {
             transform.GetComponent<Canvas>().worldCamera = GameObject.Find("FP Camera").GetComponent<Camera>();
+            faderAnim.SetTrigger("FadeIn");
             DisableUI();
         }
     }
@@ -50,7 +55,7 @@ public class Mainmenu : MonoBehaviour
         ControlsPanel.SetActive(false);
         GfxPanel.SetActive(false); ;
         LoadGamePanel.SetActive(false);
-        Fader.SetActive(false);
+        //Fader.SetActive(false);
     }
     #endregion
 

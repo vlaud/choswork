@@ -11725,6 +11725,7 @@ GameObject:
   - component: {fileID: 4591381608134260245}
   - component: {fileID: 4571517929520970551}
   - component: {fileID: 4412868032353735221}
+  - component: {fileID: 4591381608134260246}
   m_Layer: 5
   m_Name: Fader
   m_TagString: Untagged
@@ -18333,6 +18334,33 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4591381608134260246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4478274297032803781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9b158f4ae2bd8a4c9bcfa8f68f0327c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LoadScene:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4590779889770199522}
+        m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
+        m_MethodName: newGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4591392755801329445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18919,7 +18947,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4590779889770199522}
         m_TargetAssemblyTypeName: Mainmenu, Assembly-CSharp
-        m_MethodName: newGame
+        m_MethodName: FadeToLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
