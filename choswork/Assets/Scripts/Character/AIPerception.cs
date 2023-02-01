@@ -10,7 +10,7 @@ public class AIPerception : MonoBehaviour
 {
     public enum State
     {
-        Create, Search, Chase
+        Create, Search, Chase, Stun
     }
     public State myState = State.Create;
 
@@ -38,6 +38,9 @@ public class AIPerception : MonoBehaviour
             case State.Chase:
                 StartCoroutine(CheckDist());
                 break;
+            case State.Stun:
+                StartCoroutine(CheckSearch());
+                break;
         }
     }
     void StateProcess()
@@ -48,6 +51,20 @@ public class AIPerception : MonoBehaviour
                 break;
             case State.Chase:
                 break;
+            case State.Stun:
+                break;
+        }
+    }
+    IEnumerator CheckSearch()
+    {
+        var monster = GameManagement.Inst.myMonster;
+        while (myState == State.Stun)
+        {
+            if (monster.IsSearchable())
+            {
+                ChangeState(State.Search);
+            }
+            yield return null;
         }
     }
     IEnumerator FOVRoutine()
@@ -67,7 +84,7 @@ public class AIPerception : MonoBehaviour
             {
                 LostTarget?.Invoke();
                 myTarget = null;
-                ChangeState(State.Search);
+                ChangeState(State.Stun);
             }
             yield return null;
         }
@@ -94,8 +111,6 @@ public class AIPerception : MonoBehaviour
                         monster.ReturnAnim().SetTrigger("Detect");
                     }
                     foundPlayer?.Invoke(myTarget, Monster.STATE.Angry);
-                    //myAnim.SetTrigger("Detect");
-                    //FindTarget(target, STATE.Angry);
                     Debug.Log("플레이어 발견!");
                     ChangeState(State.Chase);
                 }

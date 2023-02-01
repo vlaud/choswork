@@ -48,7 +48,7 @@ public class Monster : BattleSystem
    
     public enum STATE
     {
-        Create, Idle, Roaming, Angry, Search, Battle, RagDoll, StandUp, ResetBones, Death
+        Create, Idle, Roaming, Search, Angry, RagDoll, StandUp, ResetBones, Death
     }
     public STATE myState = STATE.Create;
 
@@ -87,8 +87,6 @@ public class Monster : BattleSystem
                 myAnim.SetTrigger("Search");
                 RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
                 break;
-            case STATE.Battle:
-                break;
             case STATE.RagDoll:
                 StopAllCoroutines();
                 RagDollSet(true);
@@ -110,18 +108,13 @@ public class Monster : BattleSystem
             case STATE.Create:
                 break;
             case STATE.Idle:
-                //FieldOfViewCheck();
                 break;
             case STATE.Roaming:
-                //FieldOfViewCheck();
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsAngry", true);
                 break;
             case STATE.Search:
-                //FieldOfViewCheck();
-                break;
-            case STATE.Battle:
                 break;
             case STATE.RagDoll:
                 RagdollBehaviour();
@@ -366,7 +359,7 @@ public class Monster : BattleSystem
     }
     public void FindTarget(Transform target, STATE state)
     {
-        if (myState == STATE.Death) return;
+        if (NotSearchable()) return;
         myTarget = target;
         StopAllCoroutines();
         ChangeState(state);
@@ -374,7 +367,7 @@ public class Monster : BattleSystem
 
     public void LostTarget()
     {
-        if (myState == STATE.Death) return;
+        if (NotSearchable()) return;
         myTarget = null;
         StopAllCoroutines();
         aiHeardPlayer = false;
@@ -402,5 +395,14 @@ public class Monster : BattleSystem
     public override Animator ReturnAnim()
     {
         return myAnim;
+    }
+    public bool IsSearchable()
+    {
+        return (myState == STATE.Idle || myState == STATE.Roaming || myState == STATE.Search);
+    }
+    public bool NotSearchable()
+    {
+        return (myState == STATE.RagDoll || myState == STATE.StandUp || 
+            myState == STATE.ResetBones || myState == STATE.Death);
     }
 }
