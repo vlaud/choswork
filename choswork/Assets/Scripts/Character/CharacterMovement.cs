@@ -310,22 +310,4 @@ public class CharacterMovement : CharacterProperty
         }
         myAnim.SetBool("IsRunning", false);
     }
-    protected float CalcPathLength(NavMeshPath myPath, Vector3 _targetPos)
-    {
-        NavMesh.CalculatePath(transform.position, _targetPos, NavMesh.AllAreas, myPath);
-
-        Vector3[] _wayPoint = new Vector3[myPath.corners.Length + 2];
-
-        _wayPoint[0] = transform.position;
-        _wayPoint[myPath.corners.Length + 1] = _targetPos;
-
-        float _pathLength = 0;  // 경로 길이를 더함
-        for (int i = 0; i < myPath.corners.Length; i++)
-        {
-            _wayPoint[i + 1] = myPath.corners[i];
-            _pathLength += Vector3.Distance(_wayPoint[i], _wayPoint[i + 1]);
-        }
-
-        return _pathLength;
-    }
 }
