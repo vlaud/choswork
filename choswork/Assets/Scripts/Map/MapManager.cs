@@ -43,6 +43,7 @@ public class MapManager : MonoBehaviour
     List<Cell> board;
     [SerializeField] GameObject map;
     [SerializeField] Transform item;
+    [SerializeField] Transform doorObj;
     NavMeshPath myPath = null;
     [ContextMenu("¸Ê »ý¼º")]
     void CreateMap()
@@ -73,6 +74,7 @@ public class MapManager : MonoBehaviour
         MazeGenerator();
         MobSpawning();
         KeySpawning();
+        DoorSpawn();
         PlayerSpawn();
     }
     // Start is called before the first frame update
@@ -80,15 +82,10 @@ public class MapManager : MonoBehaviour
     {
         myPath = new NavMeshPath();
     }
-
-    // Update is called once per frame
-    void Update()
+    void DoorSpawn()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log(transform.childCount);
-            Debug.Log(transform.GetChild(Random.Range(0, transform.childCount)).gameObject);
-        }
+        doorObj.SetParent(transform.GetChild(Random.Range(1, mapSize.x)));
+        doorObj.localPosition = new Vector3(-1f, -0.6f, -2.6f);
     }
     void PlayerSpawn()
     {

@@ -61,6 +61,8 @@ public class PlayerBulletTime : MonoBehaviour
         ghostPlayer.GetComponent<PlayerBulletTime>().enabled = false;
         ghostPlayer.GetComponent<Projection>().enabled = false;
         ghostPlayer.GetComponent<PlayerPickUpDrop>().enabled = false;
+        ghostPlayer.myHPBar = null;
+        ghostPlayer.myCameras.GhostSet(true);
         var AnimEvent = ghostPlayer.GetComponentsInChildren<AnimEvent>();
         foreach (var r in Renders)
         {
@@ -80,6 +82,5 @@ public class PlayerBulletTime : MonoBehaviour
         }
         SceneManager.MoveGameObjectToScene(ghostPlayer.gameObject, _simulationScene);
         if (!ghostPlayer.gameObject.isStatic) _spawnedObjects.Add(_player.transform, ghostPlayer.transform);
-        ghostPlayer.PlayerMove();
     }
 }

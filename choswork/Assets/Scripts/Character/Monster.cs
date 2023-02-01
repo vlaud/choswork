@@ -239,7 +239,7 @@ public class Monster : BattleSystem
         */
     }
 
-    // SoundDetection
+    #region Mob Detect Sound
     void SetSoundPos()
     {
         if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1))
@@ -268,9 +268,9 @@ public class Monster : BattleSystem
             Debug.Log("몹이 소리를 들었다.");
             Debug.Log("듣는 위치: " + hearingPos);
             Debug.Log("거리: " + dist);
-            RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
             aiHeardPlayer = true;
             myTarget = HearingTr;
+            RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
         }
         else
         {
@@ -307,7 +307,9 @@ public class Monster : BattleSystem
             ChangeState(STATE.Search);
         }
     }
-    //GetKickandRagDoll
+    #endregion
+
+    #region GetKickandRagDoll
     public void GetKick(Vector3 dir, float strength)
     {
         if (myState == STATE.RagDoll) return;
@@ -426,6 +428,7 @@ public class Monster : BattleSystem
         transform.position = positionBeforeSampling;
         transform.rotation = rotationBeforeSampling;
     }
+    #endregion
     public void AttackCheck(bool v)
     {
         //myAnim.GetComponent<RootMotion>().DontRot = v;

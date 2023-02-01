@@ -18,6 +18,7 @@ public class SpringArms : CameraProperty
     public Player myPlayer;
     public bool UIkeyAvailable = true;
     public bool isFPSCamRotinTPS = false;
+    private bool isGhost = false;
 
     void ChangeState(ViewState s)
     {
@@ -29,6 +30,7 @@ public class SpringArms : CameraProperty
             case ViewState.Create:
                 break;
             case ViewState.FPS:
+                if (isGhost) myInventory = null;
                 SelectCamera(myFPSCam);
                 myTPSCam = CopyPaste(myTPSCam, myFPSCam); // 3인칭에서 1인칭 전환시 3인칭 값을 1인칭 값으로
                 break;
@@ -417,5 +419,9 @@ public class SpringArms : CameraProperty
         myFPSCam.myCam.SetActive(false);
         myTPSCam.myCam.SetActive(false);
         myUICam.myCam.SetActive(false);
+    }
+    public void GhostSet(bool vGhost = false)
+    {
+        isGhost = vGhost;
     }
 }

@@ -121,7 +121,7 @@ public class InputManager : PlayerAction, InputManagement
         if (Input.GetKeyDown(KeyCode.I) && GetIsUI())
         {
             ToggleCam(CamState.UI);
-            myInventory.GetComponent<InputManager>()?.ToggleInventory();
+            myInventory?.GetComponent<InputManager>()?.ToggleInventory();
         }
         if (Input.GetKeyDown(KeyCode.T))
         {

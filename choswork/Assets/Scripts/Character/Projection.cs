@@ -7,6 +7,7 @@ public class Projection : MonoBehaviour
     private Scene _simulationScene;
     private PhysicsScene _physicsScene;
     [SerializeField] private Transform _map;
+    [SerializeField] private GameObject _ghostobj;
     private Dictionary<Transform, Transform> _spawnedObjects = new Dictionary<Transform, Transform>();
     // Start is called before the first frame update
     void Start()
@@ -40,27 +41,50 @@ public class Projection : MonoBehaviour
         }
     }
     [SerializeField] private LineRenderer _line;
+    [Range(1, 100)]
     [SerializeField] private int _maxPhysicsFrameIterations;
+    [Range(0.1f, 2f)]
+    [SerializeField] private float _timeOffset;
+    public float pingFloat;
+    [Range(1f, 10f)]
+    [SerializeField] private float _maxPing;
     public void SimulateTrajectory(ObjectGrabbable objGrab, Vector3 pos, Vector3 dir, float strength)
     {
-        var ghostObj = Instantiate(objGrab, pos, Quaternion.identity);
-        var Renders = ghostObj.GetComponentsInChildren<Renderer>();
-        foreach (var r in Renders)
+        if(_ghostobj == null)
         {
-            r.enabled = false;
-        }
-        SceneManager.MoveGameObjectToScene(ghostObj.gameObject, _simulationScene);
+            _ghostobj = Instantiate(objGrab.gameObject, pos, Quaternion.identity);
 
-        ghostObj.Throw(dir, strength, true);
-
-        _line.positionCount = _maxPhysicsFrameIterations;
-
-        for(int i = 0; i < _maxPhysicsFrameIterations; ++i)
-        {
-            _physicsScene.Simulate(Time.fixedDeltaTime);
-            _line.SetPosition(i, ghostObj.transform.position);
+            //var Renders = _ghostobj.GetComponentsInChildren<Renderer>();
+            //foreach (var r in Renders)
+            //{
+            //    r.enabled = false;
+            //}
+            SceneManager.MoveGameObjectToScene(_ghostobj.gameObject, _simulationScene);
         }
 
-        Destroy(ghostObj.gameObject);
+        pingFloat++;
+        Debug.Log(pingFloat);
+        if (!_ghostobj.activeSelf) _ghostobj.SetActive(true);
+
+        _ghostobj.GetComponent<ObjectGrabbable>().Throw(dir, strength, true);
+
+        if (pingFloat >= _maxPing)
+        {
+            _line.positionCount = Mathf.CeilToInt(_maxPhysicsFrameIterations / _timeOffset) + 1;
+            int i = 0;
+            _line.SetPosition(i, _ghostobj.transform.position);
+            for (float time = 0; time < _maxPhysicsFrameIterations; time += _timeOffset)
+            {
+                i++;
+                _physicsScene.Simulate(Time.fixedDeltaTime);
+                _line.SetPosition(i, _ghostobj.transform.position);
+            }
+            //Destroy(ghostObj.gameObject); 
+            pingFloat = 0f;
+        }
+        _ghostobj.SetActive(false);
+        _ghostobj.transform.position = pos;
+        _ghostobj.transform.rotation = Quaternion.identity;
+        
     }
 }

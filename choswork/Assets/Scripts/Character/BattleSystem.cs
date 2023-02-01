@@ -30,7 +30,6 @@ public class BattleSystem : CharacterMovement, IBattle
         if (Vector3.Distance(myTarget.position, transform.position) <= myStat.AttackRange + 0.5f)
         {
             myTarget.GetComponent<IBattle>()?.OnDamage(myStat.AP);
-
         }
     }
     public virtual void OnDamage(float dmg)
