@@ -37,10 +37,14 @@ public class PlayerPickUpDrop : InputManager
 
         if (objectGrabbable != null)
         {
-            _projection.SimulateTrajectory(objectGrabbable, objectGrabPointTransform.position,
+            _projection.SetSimulation(objectGrabbable, objectGrabPointTransform.position,
            objectGrabPointTransform.forward, Strength);
         }
-        else transform.GetComponent<LineRenderer>().positionCount = 0;
+        else
+        {
+            _projection.IsSimulation = false;
+            transform.GetComponent<LineRenderer>().positionCount = 0;
+        }
     }
     public override void GetItem()
     {
@@ -103,5 +107,9 @@ public class PlayerPickUpDrop : InputManager
     public ObjectGrabbable GetObjectGrabbable()
     {
         return objectGrabbable;
+    }
+    public Vector3 GetobjectGrabPointForward()
+    {
+        return objectGrabPointTransform.forward;
     }
 }

@@ -1,12 +1,12 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Monster))]
+[CustomEditor(typeof(AIPerception))]
 public class FieldOfViewEditor : Editor
 {
     private void OnSceneGUI()
     {
-        Monster fov = (Monster)target;
+        AIPerception fov = (AIPerception)target;
         Handles.color = Color.white;
         Handles.DrawWireArc(fov.transform.position, Vector3.up, Vector3.forward, 360f, fov.losRadius);
 
@@ -20,7 +20,7 @@ public class FieldOfViewEditor : Editor
         if(fov.canSeePlayer)
         {
             Handles.color = Color.green;
-            Handles.DrawLine(fov.transform.position, fov.GetMyTarget().position);
+            Handles.DrawLine(fov.transform.position, fov.myTarget.position);
         }
     }
     private Vector3 DirectionFromAngle(float eulerY, float angleInDegrees)

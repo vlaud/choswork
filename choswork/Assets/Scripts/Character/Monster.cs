@@ -15,6 +15,8 @@ public class Monster : BattleSystem
 
         public Quaternion Rotation { get; set; }
     }
+    private GameManagement myGamemanager;
+
     public LayerMask enemyMask = default;
     public LayerMask obstructionMask = default;
     public Transform mobTarget;
@@ -36,13 +38,6 @@ public class Monster : BattleSystem
     //mob startPos
     public bool IsStart = false;
 
-    //ai sight
-    public bool canSeePlayer = false;
-    [Range(0, 360)]
-    public float fovAngle = 160f;
-    public float losRadius = 5f;
-    public float lostDist = 10f;
-
     //ai hearing
     public Transform HearingTr; // 실제 추적 위치
     public Vector3 hearingPos;
@@ -55,13 +50,12 @@ public class Monster : BattleSystem
    
     public enum STATE
     {
-        Create, Idle, Roaming, Angry, Search, Battle, RagDoll, StandUp, ResetBones, Death
+        Create, Idle, Roaming, Search, Angry, RagDoll, StandUp, ResetBones, Death
     }
     public STATE myState = STATE.Create;
 
     void ChangeState(STATE s)
     {
-        var manager = GameManagement.Inst;
         if (myState == s) return;
         myState = s;
         
@@ -71,21 +65,19 @@ public class Monster : BattleSystem
                 break;
             case STATE.Idle: // 평상시
                 IsStart = !IsStart;
-                manager.myMapManager.MobChangePath(IsStart);
+                myGamemanager.myMapManager.MobChangePath(IsStart);
                 if (IsStart)
                 {
-                    FindTarget(manager.myMapManager.EndPoint, STATE.Idle);
+                    FindTarget(myGamemanager.myMapManager.EndPoint, STATE.Idle);
                 }
                 else
                 {
-                    FindTarget(manager.myMapManager.StartPoint, STATE.Idle);
+                    FindTarget(myGamemanager.myMapManager.StartPoint, STATE.Idle);
                 }
-                //StartCoroutine(FOVRoutine());
                 StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
                 break;
             case STATE.Roaming:
                 RePath(myPath, myTarget.position, () => LostTarget());
-                //StartCoroutine(FOVRoutine());
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
@@ -95,9 +87,6 @@ public class Monster : BattleSystem
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
                 RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
-                //StartCoroutine(FOVRoutine());
-                break;
-            case STATE.Battle:
                 break;
             case STATE.RagDoll:
                 StopAllCoroutines();
@@ -120,22 +109,13 @@ public class Monster : BattleSystem
             case STATE.Create:
                 break;
             case STATE.Idle:
-                FieldOfViewCheck();
                 break;
             case STATE.Roaming:
-                FieldOfViewCheck();
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsAngry", true);
-                if (CalcPathLength(myPath, myTarget.position) > lostDist)
-                {
-                    LostTarget();
-                }    
                 break;
             case STATE.Search:
-                FieldOfViewCheck();
-                break;
-            case STATE.Battle:
                 break;
             case STATE.RagDoll:
                 RagdollBehaviour();
@@ -152,6 +132,7 @@ public class Monster : BattleSystem
     }
     private void Awake()
     {
+        myGamemanager = GameManagement.Inst;
         cs = GetComponent<CapsuleCollider>();
         _origintimetoWake = _timetoWakeup;
         _bones = myHips.GetComponentsInChildren<Transform>();
@@ -184,61 +165,6 @@ public class Monster : BattleSystem
         yield return new WaitForSeconds(time);
         ChangeState(s);
     }
-    // SightDetection
-    IEnumerator FOVRoutine()
-    {
-        while(true)
-        {
-            yield return new WaitForSeconds(0.2f);
-            FieldOfViewCheck();
-        }
-    }
-
-    private void FieldOfViewCheck()
-    {
-        Collider[] rangeChecks = Physics.OverlapSphere(transform.position, losRadius, enemyMask);
-        Transform target;
-        if (rangeChecks.Length != 0)
-        {
-            target = rangeChecks[0].transform;
-            Vector3 directionToTarget = (target.position - transform.position).normalized;
-            
-            if (Vector3.Angle(transform.forward, directionToTarget) < fovAngle * 0.5f)
-            {
-                float distanceToTarget = Vector3.Distance(transform.position, target.position);
-
-                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
-                {
-                    canSeePlayer = true;
-                    myAnim.SetTrigger("Detect");
-                    FindTarget(target, STATE.Angry);
-                    Debug.Log("플레이어 발견!");
-                }
-                else
-                    canSeePlayer = false;
-            }
-            else
-                canSeePlayer = false;
-        }
-        else if (canSeePlayer)
-        {
-            canSeePlayer = false;
-        }
-        /*
-        float dist = lostDist;
-        Transform target = null;
-        foreach (Collider col in rangeChecks)
-        {
-            float tempDist = Vector3.Distance(col.transform.position, transform.position);
-            if (dist > tempDist)
-            {
-                dist = tempDist;
-                target = col.GetComponent<Transform>();
-            }
-        }
-        */
-    }
-
     #region Mob Detect Sound
     void SetSoundPos()
     {
@@ -282,9 +208,8 @@ public class Monster : BattleSystem
     {
         if (myState == STATE.Death || myState == STATE.Angry || myState == STATE.RagDoll ||
             myState == STATE.ResetBones || myState == STATE.StandUp) return;
-        var manager = GameManagement.Inst;
         
-        Transform tempTarget = manager.myPlayer.transform;
+        Transform tempTarget = myGamemanager.myPlayer.transform;
         if ((tempTarget != null && tempTarget.TryGetComponent<PlayerPickUpDrop>(out var target)))
         {
             if (target.GetObjectGrabbable() != null)
@@ -463,5 +388,17 @@ public class Monster : BattleSystem
     public Transform GetMyTarget()
     {
         return myTarget;
+    }
+    public NavMeshPath GetMyPath()
+    {
+        return myPath;
+    }
+    public override Animator ReturnAnim()
+    {
+        return myAnim;
+    }
+    public STATE GetMyState()
+    {
+        return myState;
     }
 }

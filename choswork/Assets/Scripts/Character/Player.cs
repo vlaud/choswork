@@ -15,6 +15,7 @@ public class Player : BattleSystem
     public bool IsWall = false;
     public HPBar myHPBar;
     private float animOffset = 0.04f;
+    private GameManagement myGamemanager;
     public enum STATE
     {
         Create, Play, Death
@@ -23,9 +24,10 @@ public class Player : BattleSystem
     // Start is called before the first frame update
     void Start()
     {
+        myGamemanager = GameManagement.Inst;
         myMoveSpeed = myStat.MoveSpeed;
         KickPoint.SetActive(false);
-        transform.position = GameManagement.Inst.myMapManager.PlayerStart.position;
+        transform.position = myGamemanager.myMapManager.PlayerStart.position;
         myStat.changeHP = (float v) => myHPBar.GetValue = v;
     }
 
