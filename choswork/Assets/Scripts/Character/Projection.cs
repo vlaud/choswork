@@ -59,7 +59,7 @@ public class Projection : MonoBehaviour
         {
             if (_ghostobj == null)
             {
-                _ghostobj = Instantiate(objGrab.gameObject, pos, Quaternion.identity);
+                _ghostobj = Instantiate(Resources.Load("Prefabs/Cup"), pos, Quaternion.identity) as GameObject;
 
                 var Renders = _ghostobj.GetComponentsInChildren<Renderer>();
                 foreach (var r in Renders)

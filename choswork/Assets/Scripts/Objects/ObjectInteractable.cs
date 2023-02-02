@@ -9,7 +9,7 @@ public class ObjectInteractable : InputManager
    
     public void SetItemInfoAppear(bool v) //오브젝트와 아이템 집기 UI 보이기
     {
-        actionText.gameObject.SetActive(v);
+        actionText?.gameObject.SetActive(v);
     }
     public virtual void SetText()
     {

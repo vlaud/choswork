@@ -18,7 +18,8 @@ public class AnimEvent : MonoBehaviour
     public AudioClip rightFootSound;// 오른발소리 
     public AudioClip kickSound;// 발차기 소리
     public AudioClip kickWallSound;// 닿는 발차기 소리
-    public AudioSource myFootSound; // 발소리 오디오
+    public AudioClip monsterScreamSound;// 닿는 발차기 소리
+    public AudioSource mySoundSpeaker; // 발소리 오디오
     public LayerMask KickBlock; // 발차기 닿는 레이어
     public GameObject orgDustEff;
     public Player myPlayer;
@@ -31,7 +32,7 @@ public class AnimEvent : MonoBehaviour
             if (myPlayer.myCameras.myCameraState == SpringArms.ViewState.UI) return; // UI상태에선 리턴
             if (Input.GetKey(key))
             {
-                SoundManager.Inst.PlayOneShot(myFootSound, leftFootSound);
+                SoundManager.Inst.PlayOneShot(mySoundSpeaker, leftFootSound);
             }
         }
         if (orgDustEff == null) return;
@@ -47,7 +48,7 @@ public class AnimEvent : MonoBehaviour
             if (myPlayer.myCameras.myCameraState == SpringArms.ViewState.UI) return;
             if (Input.GetKey(key))
             {
-                SoundManager.Inst.PlayOneShot(myFootSound, rightFootSound);
+                SoundManager.Inst.PlayOneShot(mySoundSpeaker, rightFootSound);
             }
         }
         if (orgDustEff == null) return;
@@ -71,10 +72,10 @@ public class AnimEvent : MonoBehaviour
         // 발차기 소리 위치(KickTransform)에서 실행
         foreach (Collider col in list)
         {
-            if(col != null) SoundManager.Inst.PlayOneShot(myFootSound, kickWallSound);
-            else SoundManager.Inst.PlayOneShot(myFootSound, kickSound);
+            if(col != null) SoundManager.Inst.PlayOneShot(mySoundSpeaker, kickWallSound);
+            else SoundManager.Inst.PlayOneShot(mySoundSpeaker, kickSound);
         }
-        SoundManager.Inst.PlayOneShot(myFootSound, kickSound);
+        SoundManager.Inst.PlayOneShot(mySoundSpeaker, kickSound);
     }
     public void KickCheckStart()
     {
@@ -95,5 +96,10 @@ public class AnimEvent : MonoBehaviour
     public void ComboCheckEnd()
     {
         ComboCheck?.Invoke(false);
+    }
+    public void PlayScream()
+    {
+        if (noSoundandEffect) return;
+        SoundManager.Inst.PlayOneShot(mySoundSpeaker, monsterScreamSound);
     }
 }

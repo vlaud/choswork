@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6529411772445855119}
-  m_Layer: 11
+  m_Layer: 7
   m_Name: cupholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -281,7 +281,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8396885627544036158, guid: 94bae8a22b708754eb8ce5cb95ced942, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.221
       objectReference: {fileID: 0}
     - target: {fileID: 8396885627544036158, guid: 94bae8a22b708754eb8ce5cb95ced942, type: 3}
       propertyPath: m_LocalRotation.w
