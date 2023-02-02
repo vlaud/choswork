@@ -8,6 +8,7 @@ public class PlayerPickUpDrop : InputManager
     [SerializeField] private Transform objectGrabPointTransform;
     [SerializeField] private Player myPlayer;
     [SerializeField] private LayerMask pickUpLayerMask;
+    [SerializeField] private LayerMask obstructionMask;
     [SerializeField] private CameraSet? curCamset;
     [SerializeField] private float Strength = 20.0f;
     [SerializeField] private float pickUpDistance = 6f;
@@ -33,8 +34,7 @@ public class PlayerPickUpDrop : InputManager
         // Handle object pickup and throw
         HandleObjectPickupAndThrow();
         ShowItemUI();
-        Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * pickUpDistance, Color.blue);
-
+        
         if (objectGrabbable != null)
         {
             _projection.SetSimulation(objectGrabbable, objectGrabPointTransform.position,
@@ -55,8 +55,15 @@ public class PlayerPickUpDrop : InputManager
     void ShowItemUI()
     {
         if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
-            out RaycastHit hit, pickUpDistance, pickUpLayerMask))
+            out RaycastHit hit, pickUpDistance, obstructionMask | pickUpLayerMask))
         {
+            float dist = Vector3.Distance(hit.point, playerCameraTransform.position);
+            Debug.DrawRay(playerCameraTransform.position, playerCameraTransform.forward * dist, Color.blue);
+            if ((obstructionMask & 1 << hit.transform.gameObject.layer) != 0)
+            {
+                showObject?.SetItemInfoAppear(false);
+                return;
+            }
             if (objectGrabbable == null)
             {
                 showObject = hit.transform.GetComponent<ObjectInteractable>();
@@ -75,8 +82,10 @@ public class PlayerPickUpDrop : InputManager
         {
             // ¹°Ã¼ X
             if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
-            out RaycastHit hit, pickUpDistance, pickUpLayerMask))
+            out RaycastHit hit, pickUpDistance, pickUpLayerMask | obstructionMask))
             {
+                if((obstructionMask & 1 << hit.transform.gameObject.layer) != 0) return;
+                
                 if (hit.transform.TryGetComponent(out objectGrabbable))
                 {
                     objectGrabbable.Grab(objectGrabPointTransform);
