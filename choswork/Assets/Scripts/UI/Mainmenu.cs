@@ -43,7 +43,6 @@ public class Mainmenu : MonoBehaviour
        
         if (scene.name == "GameStage")
         {
-            transform.GetComponent<Canvas>().worldCamera = GameObject.Find("FP Camera").GetComponent<Camera>();
             newGameSceneName = "testScene";
             faderAnim.SetTrigger("FadeIn");
             DisableUI();
@@ -168,7 +167,7 @@ public class Mainmenu : MonoBehaviour
         if (!string.IsNullOrEmpty(newGameSceneName))
         {
             GameObject obj = GameObject.Find("SceneLoader");
-            transform.SetParent(obj.transform);
+            transform.parent.SetParent(obj.transform);
             SceneLoader.Inst.ChangeScene(newGameSceneName);
         }
         else
