@@ -18,8 +18,7 @@ public class Monster : BattleSystem
     private GameManagement myGamemanager;
 
     public LayerMask enemyMask = default;
-    public LayerMask obstructionMask = default;
-    public Transform mobTarget;
+    public Transform mobTarget; // for checking myTarget
     //mob ragdoll
     public RagDollPhysics myRagDolls;
     public Transform myHips;
@@ -400,5 +399,22 @@ public class Monster : BattleSystem
     public STATE GetMyState()
     {
         return myState;
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if((enemyMask & 1 << collision.gameObject.layer) != 0)
+        {
+            if (IsSearchable())
+            {
+                myAnim.SetTrigger("Detect");
+                FindTarget(collision.transform, STATE.Angry);
+            }
+        }
+    }
+    public bool IsSearchable()
+    {
+        return (myState == STATE.Idle ||
+            myState == STATE.Roaming ||
+            myState == STATE.Search);
     }
 }

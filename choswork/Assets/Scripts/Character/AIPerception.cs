@@ -59,7 +59,7 @@ public class AIPerception : MonoBehaviour
     {
         while (myState == State.Search)
         {
-            if(IsSearchable())
+            if(myMonster.IsSearchable())
                 FieldOfViewCheck();
             else if (myMonster.GetMyState() == Monster.STATE.Angry)
                 ChangeState(State.Chase);
@@ -145,12 +145,6 @@ public class AIPerception : MonoBehaviour
         }
 
         return _pathLength;
-    }
-    public bool IsSearchable()
-    {
-        return (myMonster.GetMyState() == Monster.STATE.Idle ||
-            myMonster.GetMyState() == Monster.STATE.Roaming ||
-            myMonster.GetMyState() == Monster.STATE.Search);
     }
     // Start is called before the first frame update
     void Start()
