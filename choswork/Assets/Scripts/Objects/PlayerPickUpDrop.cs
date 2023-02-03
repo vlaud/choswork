@@ -14,7 +14,7 @@ public class PlayerPickUpDrop : InputManager
     [SerializeField] private float pickUpDistance = 6f;
     [SerializeField] private Projection _projection;
     private ObjectGrabbable objectGrabbable;
-    private Door DoorInteractable;
+    private ObjectNotGrabbable Interactable;
     private ObjectInteractable showObject;
     private void Awake()
     {
@@ -92,9 +92,9 @@ public class PlayerPickUpDrop : InputManager
                     objectGrabbable.SetItemInfoAppear(false);
                     Debug.Log(objectGrabbable);
                 }
-                else if(hit.transform.TryGetComponent(out DoorInteractable))
+                else if(hit.transform.TryGetComponent(out Interactable))
                 {
-                    DoorInteractable.InteractDoor();
+                    Interactable.Interact();
                 }
             }
         }

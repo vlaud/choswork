@@ -99,25 +99,14 @@ public class MapManager : MonoBehaviour
         int floor = mapSize.x * mapSize.z; // 1층에선 소환 안되게끔
 
         // 중복 숫자 방지
-        List<int> Numbers = new List<int>();
-        for (int i = floor; i < transform.childCount; ++i)
-        {
-            Numbers.Add(i);
-        }
-        List<int> LottoNumber = new List<int>();
-
-        for (int i = 0; i < 2; ++i)
-        {
-            int n = Random.Range(0, Numbers.Count);
-            LottoNumber.Add(Numbers[n]);
-            Numbers.RemoveAt(n);
-        }
+        List<int> spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, false);
+        
         //시작 위치
-        StartNum = LottoNumber[0];
+        StartNum = spawnNums[0];
         StartPoint.SetParent(transform.GetChild(StartNum));
         StartPoint.localPosition = new Vector3(3f, 1, -3f);
         //도착 위치
-        EndNum = LottoNumber[1];
+        EndNum = spawnNums[1];
         EndPoint.SetParent(transform.GetChild(EndNum));
         EndPoint.localPosition = new Vector3(3f, 1, -3f);
     }
@@ -126,30 +115,19 @@ public class MapManager : MonoBehaviour
         int floor = mapSize.x * mapSize.z; // 1층에선 소환 안되게끔
 
         // 중복 숫자 방지
-        List<int> Numbers = new List<int>();
-        for (int i = floor; i < transform.childCount; ++i)
-        {
-            Numbers.Add(i);
-        }
-        Numbers.Remove(StartNum);
-        Numbers.Remove(EndNum);
-        List<int> LottoNumber = new List<int>();
-        for (int i = 0; i < 2; ++i)
-        {
-            int n = Random.Range(0, Numbers.Count);
-            LottoNumber.Add(Numbers[n]);
-            Numbers.RemoveAt(n);
-        }
+        int[] remove = { StartNum, EndNum };
+        List<int> spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, true, remove);
+        
         if (isStart)
         {
-            EndNum = LottoNumber[1];
-            EndPoint.transform.SetParent(transform.GetChild(LottoNumber[1]));
+            EndNum = spawnNums[1];
+            EndPoint.transform.SetParent(transform.GetChild(spawnNums[1]));
             EndPoint.transform.localPosition = new Vector3(3f, 1, -3);
         }
         else
         {
-            StartNum = LottoNumber[0];
-            StartPoint.transform.SetParent(transform.GetChild(LottoNumber[0]));
+            StartNum = spawnNums[0];
+            StartPoint.transform.SetParent(transform.GetChild(spawnNums[0]));
             StartPoint.transform.localPosition = new Vector3(3f, 1, -3);
         }
     }

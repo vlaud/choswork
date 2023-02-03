@@ -19,6 +19,8 @@ public class Mainmenu : MonoBehaviour
     public GameObject GfxPanel;
     public GameObject LoadGamePanel;
     public GameObject Fader;
+    [Header("BGM ¼³Á¤")]
+    public AudioClip titleBGM;
     // Use this for initialization
     void Start()
     {
@@ -40,7 +42,10 @@ public class Mainmenu : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         print("Scene on scene");
-       
+        if (scene.name == "Title")
+        {
+            SoundManager.Inst.PlayBGM(titleBGM);
+        }
         if (scene.name == "GameStage")
         {
             newGameSceneName = "testScene";

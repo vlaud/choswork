@@ -410,6 +410,13 @@ public class Monster : BattleSystem
                 FindTarget(collision.transform, STATE.Angry);
             }
         }
+        if (collision.gameObject.layer == LayerMask.NameToLayer("NotGrabbableObj"))
+        {
+            if(collision.gameObject.TryGetComponent<ObjectNotGrabbable>(out var obj))
+            {
+                obj.InteractwithMob();
+            }
+        }
     }
     public bool IsSearchable()
     {

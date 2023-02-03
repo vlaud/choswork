@@ -18,6 +18,7 @@ public class GameManagement : MonoBehaviour
     public MapManager myMapManager;
     public SceneLoader mySceneLoader;
     public Mainmenu myMainmenu;
+    public TMPro.TMP_Text myActionText;
 
     [Range(0.01f, 1f)]
     public float GameTimeScale = 1f;
@@ -25,6 +26,7 @@ public class GameManagement : MonoBehaviour
     public float GameFixedTimeScale = 0.02f;
     public bool IsGameClear = false;
     private float timer;
+    private bool IsBulletTime = false;
     private void Awake()
     {
         Inst = this;
@@ -41,6 +43,10 @@ public class GameManagement : MonoBehaviour
             Physics.Simulate(Time.fixedDeltaTime);
         }
         DoSlowmotion();
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            SetBulletTime(0.3f, 5f);
+        }
     }
     public void DoSlowmotion()
     {
@@ -52,5 +58,21 @@ public class GameManagement : MonoBehaviour
     {
         if (IsGameClear)
             myMainmenu?.FadeToLevel();
+    }
+    public void SetBulletTime(float SetScale, float Cooltime)
+    {
+        if (IsBulletTime) return;
+
+        IsBulletTime = true;
+        StartCoroutine(BulletTime(SetScale, Cooltime));
+    }
+    IEnumerator BulletTime(float SetScale, float Cooltime)
+    {
+        GameTimeScale = SetScale;
+        Debug.Log("Slow Time Start: " + Cooltime + "sec");
+        yield return new WaitForSecondsRealtime(Cooltime);
+        GameTimeScale = 1f;
+        Debug.Log("Slow Time End");
+        IsBulletTime = false;
     }
 }

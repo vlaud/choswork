@@ -71,6 +71,7 @@ public class Inventory : InputManager, ItemEvent
     }
     public void DestroyItem(Item _item)
     {
+        if (_item == null) return;
         if (itemTypeToSlotListMap.TryGetValue(_item, out var itemSlotList))
         {
             var itemSlot = itemSlotList.FindLast(s => s.GetItemValue() == _item);
