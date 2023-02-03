@@ -123,7 +123,7 @@ public class InputManager : PlayerAction, InputManagement
             ToggleCam(CamState.UI);
             myInventory?.GetComponent<InputManager>()?.ToggleInventory();
         }
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.C))
         {
             DebugCamera();
         }
