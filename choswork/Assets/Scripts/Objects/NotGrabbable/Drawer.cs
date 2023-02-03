@@ -21,6 +21,10 @@ public class Drawer : ObjectNotGrabbable
         SetOpenCloseText();
         drawerAnim.SetBool("IsOpen", IsOpen);
     }
+    public override void InteractwithMob()
+    {
+        if (!IsOpen) Interact();
+    }
     public void SetOpenCloseText()
     {
         if(IsOpen) ShowMessage = " ´Ý±â ";
