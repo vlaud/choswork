@@ -6,12 +6,14 @@ using UnityEngine;
 public class Drawer : ObjectNotGrabbable
 {
     [SerializeField] Animator drawerAnim;
-    [SerializeField] bool IsOpen = false;
+    [SerializeField] bool IsOpen;
     // Start is called before the first frame update
     void Start()
     {
         if (actionText == null) actionText = GameManagement.Inst.myActionText;
         drawerAnim = transform.GetComponent<Animator>();
+        Debug.Log(IsOpen);
+        drawerAnim.SetBool("IsOpen", IsOpen);
     }
     public override void Interact()
     {
