@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class PlayerBulletTime : MonoBehaviour
 {
+    public enum State
+    {
+        Create, Start, Play, Pause
+    }
+    public State myState = State.Create;
+
     private Scene _simulationScene;
     private PhysicsScene _physicsScene;
     [SerializeField] private Transform _map;
@@ -12,25 +18,66 @@ public class PlayerBulletTime : MonoBehaviour
     private Dictionary<ObjectNotGrabbable, ObjectNotGrabbable> _ghostInterables = new Dictionary<ObjectNotGrabbable, ObjectNotGrabbable>();
     private Transform ghostPlayer;
     private float time_start;
-    private float time_current;
+    [SerializeField] private float time_current;
     private float time_Max = 1f;
+
+    void ChangeState(State s)
+    {
+        if (myState == s) return;
+        myState = s;
+
+        switch (myState)
+        {
+            case State.Start:
+                transform.GetComponent<Player>().ReturnAnim().updateMode = AnimatorUpdateMode.Normal;
+                ghostPlayer.GetComponent<Player>().ReturnAnim().updateMode = AnimatorUpdateMode.Normal;
+                break;
+            case State.Play:
+                transform.GetComponent<Player>().ReturnAnim().updateMode = AnimatorUpdateMode.UnscaledTime;
+                ghostPlayer.GetComponent<Player>().ReturnAnim().updateMode = AnimatorUpdateMode.UnscaledTime;
+                break;
+            case State.Pause:
+                transform.GetComponent<Player>().ReturnAnim().updateMode = AnimatorUpdateMode.Normal;
+                ghostPlayer.GetComponent<Player>().ReturnAnim().updateMode = AnimatorUpdateMode.Normal;
+                break;
+        }
+    }
+    void StateProcess()
+    {
+        switch (myState)
+        {
+            case State.Start:
+                time_current = Time.time - time_start;
+                if (time_current > time_Max) ChangeState(State.Play);
+                break;
+            case State.Play:
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    ChangeState(State.Pause);
+                }
+                break;
+            case State.Pause:
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    ChangeState(State.Play);
+                }
+                break;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
         CreatePhysicsScene();
         SimulateMovement();
         time_start = Time.time;
+        ChangeState(State.Start);
     }
 
     // Update is called once per frame
     void Update()
     {
-        time_current = Time.time - time_start;
-        if (time_current > time_Max)
-        {
-            _physicsScene.Simulate(Time.fixedUnscaledDeltaTime);
-        }
-        else _physicsScene.Simulate(Time.fixedDeltaTime);
+        StateProcess();
+        SetBulletTime();
 
         transform.position = ghostPlayer.position;
         transform.rotation = ghostPlayer.rotation;
@@ -44,6 +91,11 @@ public class PlayerBulletTime : MonoBehaviour
         {
             item.Value.GhostBehaviour(item.Key);
         }
+    }
+    void SetBulletTime()
+    {
+        if (myState != State.Start)_physicsScene.Simulate(Time.fixedUnscaledDeltaTime);
+        else _physicsScene.Simulate(Time.fixedDeltaTime);
     }
     void CreatePhysicsScene()
     {
