@@ -18,6 +18,7 @@ public class GameManagement : MonoBehaviour
     public MapManager myMapManager;
     public SceneLoader mySceneLoader;
     public Mainmenu myMainmenu;
+    public TMPro.TMP_Text myActionText;
 
     [Range(0.01f, 1f)]
     public float GameTimeScale = 1f;

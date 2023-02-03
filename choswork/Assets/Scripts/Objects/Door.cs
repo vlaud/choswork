@@ -8,6 +8,7 @@ public class Door : ObjectInteractable, ItemEvent
     // Start is called before the first frame update
     void Start()
     {
+        if (actionText == null) actionText = GameManagement.Inst.myActionText;
         myInventory = GameManagement.Inst.myInventory.gameObject;
     }
     public override void SetText()
