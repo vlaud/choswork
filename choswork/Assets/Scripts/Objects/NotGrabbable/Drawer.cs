@@ -12,8 +12,8 @@ public class Drawer : ObjectNotGrabbable
     {
         if (actionText == null) actionText = GameManagement.Inst.myActionText;
         drawerAnim = transform.GetComponent<Animator>();
-        Debug.Log(IsOpen);
         drawerAnim.SetBool("IsOpen", IsOpen);
+        SetOpenCloseText();
     }
     public override void Interact()
     {
@@ -25,5 +25,13 @@ public class Drawer : ObjectNotGrabbable
     {
         if(IsOpen) ShowMessage = " ´Ý±â ";
         else ShowMessage = " ¿­±â ";
+    }
+    public override void GhostBehaviour(ObjectNotGrabbable original) 
+    {
+        if(IsGhost)
+        {
+            IsOpen = original.GetComponent<Animator>().GetBool("IsOpen");
+            drawerAnim.SetBool("IsOpen", IsOpen);
+        }
     }
 }
