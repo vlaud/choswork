@@ -19,7 +19,6 @@ public static class GetRandomNumber
             for(int i = 0; i < RemoveNums.Length; ++i)
             {
                 Numbers.Remove(RemoveNums[i]);
-                Debug.Log("Removed: " + RemoveNums[i]);
             }
         }
         List<int> LottoNumber = new List<int>();
