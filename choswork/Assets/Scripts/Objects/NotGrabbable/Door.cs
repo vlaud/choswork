@@ -2,21 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : ObjectInteractable, ItemEvent
+public class Door : ObjectNotGrabbable, ItemEvent
 {
     public Item requiredItem;
     // Start is called before the first frame update
     void Start()
     {
-        if (actionText == null) actionText = GameManagement.Inst.myActionText;
+        SetActionText();
         myInventory = GameManagement.Inst.myInventory.gameObject;
     }
-    public override void SetText()
-    {
-        if (actionText == null) return;
-        actionText.text = transform.GetComponent<ItemPickUp>()?.item.itemName + ShowMessage + "<color=yellow>" + "(E)" + "</color>";
-    }
-    public void InteractDoor() 
+    public override void Interact() 
     {
         Inventory inv = myInventory.GetComponent<Inventory>();
         inv.GetComponent<ItemEvent>()?.SetItemTargetObj(transform);
@@ -27,8 +22,5 @@ public class Door : ObjectInteractable, ItemEvent
     {
         GameManagement.Inst.IsGameClear = true;
     }
-    public void SetItemTargetObj(Transform target)
-    {
-
-    }
+    public void SetItemTargetObj(Transform target) { }
 }
