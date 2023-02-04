@@ -76,17 +76,33 @@ public class MapManager : MonoBehaviour
         KeySpawning();
         DoorSpawn();
         PlayerSpawn();
+        HintNoteSpawn();
     }
     // Start is called before the first frame update
     void Start()
     {
         myPath = new NavMeshPath();
     }
+    #region ObjectSpawn
     void DoorSpawn()
     {
         doorObj.SetParent(transform.GetChild(Random.Range(1, mapSize.x)));
         doorObj.localPosition = new Vector3(-1f, -0.6f, -2.6f);
     }
+    void KeySpawning()
+    {
+        ItemPoint.SetParent(transform.GetChild(Random.Range(1, transform.childCount)));
+        ItemPoint.transform.localPosition = new Vector3(-3f, 2, -3);
+        item.transform.position = ItemPoint.position;
+    }
+    void HintNoteSpawn()
+    {
+        Transform hintnote = GameManagement.Inst.myKeypad.myHintNote;
+        hintnote.SetParent(transform.GetChild(Random.Range(1, transform.childCount)));
+        hintnote.localPosition = new Vector3(1.003f, 1.777f, -0.086f);
+    }
+    #endregion
+    #region MobAndPlayer
     void PlayerSpawn()
     {
         int floor = mapSize.x * mapSize.z; // 아래층에서만 소환
@@ -131,12 +147,8 @@ public class MapManager : MonoBehaviour
             StartPoint.transform.localPosition = new Vector3(3f, 1, -3);
         }
     }
-    void KeySpawning()
-    {
-        ItemPoint.SetParent(transform.GetChild(Random.Range(1, transform.childCount)));
-        ItemPoint.transform.localPosition = new Vector3(-3f, 2, -3);
-        item.transform.position = ItemPoint.position;
-    }
+    #endregion
+    #region MapGenerator
     void GenerateDungeon()
     {
         List<TileBehaviour> tiles = new List<TileBehaviour>();
@@ -314,4 +326,5 @@ public class MapManager : MonoBehaviour
             DestroyImmediate(transform.GetChild(0).gameObject);
         }
     }
+    #endregion
 }

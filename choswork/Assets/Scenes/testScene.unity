@@ -3958,9 +3958,6 @@ MonoBehaviour:
   enemyMask:
     serializedVersion: 2
     m_Bits: 8
-  obstructionMask:
-    serializedVersion: 2
-    m_Bits: 8384
   mobTarget: {fileID: 0}
   myRagDolls: {fileID: 727837965}
   myHips: {fileID: 60917377}
@@ -18872,7 +18869,8 @@ MonoBehaviour:
   rightFootSound: {fileID: 0}
   kickSound: {fileID: 0}
   kickWallSound: {fileID: 0}
-  myFootSound: {fileID: 0}
+  monsterScreamSound: {fileID: 0}
+  mySoundSpeaker: {fileID: 0}
   KickBlock:
     serializedVersion: 2
     m_Bits: 0
@@ -19342,6 +19340,7 @@ MonoBehaviour:
   myMapManager: {fileID: 1580464323}
   mySceneLoader: {fileID: 0}
   myMainmenu: {fileID: 0}
+  myActionText: {fileID: 0}
   GameTimeScale: 1
   GameFixedTimeScale: 0.02
   IsGameClear: 0
@@ -29892,7 +29891,8 @@ MonoBehaviour:
   rightFootSound: {fileID: 8300000, guid: 8bc94ec6ed537e743b481638bdcd503d, type: 3}
   kickSound: {fileID: 8300000, guid: 482611fe6bc559142a00be6e726b4862, type: 3}
   kickWallSound: {fileID: 8300000, guid: 74198389e177d0948b63ca9a3fb22801, type: 3}
-  myFootSound: {fileID: 1122521300}
+  monsterScreamSound: {fileID: 0}
+  mySoundSpeaker: {fileID: 1122521300}
   KickBlock:
     serializedVersion: 2
     m_Bits: 1152
@@ -33615,8 +33615,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: babf0bbd41e469d41a9b66f595492335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myState: 0
   _map: {fileID: 1580464321}
   _player: {fileID: 1289304343}
+  time_current: 0
 --- !u!114 &1289304349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33653,6 +33655,9 @@ MonoBehaviour:
   pickUpLayerMask:
     serializedVersion: 2
     m_Bits: 6144
+  obstructionMask:
+    serializedVersion: 2
+    m_Bits: 0
   Strength: 2000
   pickUpDistance: 2
   _projection: {fileID: 1289304349}

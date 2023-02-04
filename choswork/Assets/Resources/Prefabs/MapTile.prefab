@@ -1183,6 +1183,7 @@ MonoBehaviour:
   IsGhost: 0
   drawerAnim: {fileID: 0}
   IsOpen: 1
+  IsDrawer: 0
 --- !u!95 &5075991247505199838
 Animator:
   serializedVersion: 4
@@ -3087,6 +3088,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3928906387214221749}
+  - component: {fileID: 6084335666105031591}
   m_Layer: 7
   m_Name: GameObject
   m_TagString: Untagged
@@ -3117,6 +3119,19 @@ Transform:
   m_Father: {fileID: 1966132421973348667}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6084335666105031591
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8990361023198193082}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 4.45, y: 1.96, z: 0.1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9095920774458177471
 GameObject:
   m_ObjectHideFlags: 0

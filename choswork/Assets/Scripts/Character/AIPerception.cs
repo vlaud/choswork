@@ -63,7 +63,7 @@ public class AIPerception : MonoBehaviour
                 FieldOfViewCheck();
             else if (myMonster.GetMyState() == Monster.STATE.Angry)
                 ChangeState(State.Chase);
-            yield return null;
+            yield return new WaitForSeconds(0.2f);
         }
     }
     IEnumerator CheckDist()
@@ -79,7 +79,7 @@ public class AIPerception : MonoBehaviour
                     ChangeState(State.Search);
                 }
             }
-            yield return null;
+            yield return new WaitForSeconds(0.2f);
         }
     }
     private void FieldOfViewCheck()
@@ -102,7 +102,6 @@ public class AIPerception : MonoBehaviour
                     myMonster.ReturnAnim().SetTrigger("Detect");
                     foundPlayer?.Invoke(myTarget, Monster.STATE.Angry);
                     Debug.Log("플레이어 발견!");
-                    ChangeState(State.Chase);
                 }
                 else
                     canSeePlayer = false;

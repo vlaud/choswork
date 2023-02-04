@@ -32,10 +32,9 @@ public class Projection : MonoBehaviour
         {
             var ghostObj = Instantiate(obj.gameObject, obj.position, obj.rotation);
             var Renders = ghostObj.GetComponentsInChildren<Renderer>();
-            foreach(var r in Renders)
-            {
-                r.enabled = false;
-            }
+            var Canvases = ghostObj.GetComponentsInChildren<Canvas>();
+            foreach(var r in Renders) r.enabled = false;
+            foreach (var r in Canvases) r.enabled = false;
             SceneManager.MoveGameObjectToScene(ghostObj, _simulationScene);
             if (!ghostObj.isStatic) _spawnedObjects.Add(obj, ghostObj.transform);
         }

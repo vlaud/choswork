@@ -49,7 +49,7 @@ public class Player : BattleSystem
             x = Mathf.Lerp(myAnim.GetFloat("x"), targetDir.x, Time.unscaledDeltaTime * smoothMoveSpeed);
             z = Mathf.Lerp(myAnim.GetFloat("z"), targetDir.y, Time.unscaledDeltaTime * smoothMoveSpeed);
 
-            myMoveSpeed = (Input.GetKey(KeyCode.LeftShift) && !IsWall) ? 1.5f : myStat.MoveSpeed; // 벽 충돌시엔 질주 off
+            myMoveSpeed = (IsDashKeyPressed() && !IsWall) ? 1.5f : myStat.MoveSpeed; // 벽 충돌시엔 질주 off
 
             //x, z값이 0에 가까우면 0으로 고정
             if (Mathf.Epsilon - animOffset < x && x < Mathf.Epsilon + animOffset) x = 0.0f;
