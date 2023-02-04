@@ -18,6 +18,8 @@ public class GameManagement : MonoBehaviour
     public MapManager myMapManager;
     public SceneLoader mySceneLoader;
     public Mainmenu myMainmenu;
+    public Keypad myKeypad;
+    public Canvas myCanvas;
     public TMPro.TMP_Text myActionText;
 
     [Range(0.01f, 1f)]

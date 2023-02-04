@@ -111,11 +111,10 @@ public class PlayerBulletTime : MonoBehaviour
             var Renders = ghostObj.GetComponentsInChildren<Renderer>();
             var Interactables = obj.GetComponentsInChildren<ObjectNotGrabbable>();
             var ghostInteractables = ghostObj.GetComponentsInChildren<ObjectNotGrabbable>();
-            foreach (var r in Renders)
-            {
-                r.enabled = false;
-            }
-            
+            var Canvases = ghostObj.GetComponentsInChildren<Canvas>();
+            foreach (var r in Renders) r.enabled = false;
+            foreach (var r in Canvases) r.enabled = false;
+
             for (int i = 0; i < Interactables.Length; ++i)
             {
                 ghostInteractables[i].SetGhost(true);
