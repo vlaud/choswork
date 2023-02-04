@@ -19,7 +19,7 @@ public class Keypad : ObjectNotGrabbable
     public Transform myKeypadUI;
     public Button[] myButtons;
     private string Nr = null;
-    private int NrIndex = 0;
+    [SerializeField] private int NrIndex = 0;
     private void Awake()
     {
         SetActionText();
@@ -37,18 +37,19 @@ public class Keypad : ObjectNotGrabbable
         myButtons = myKeypadUI.GetComponentsInChildren<Button>();
         ButtonClick();
         hintText.text = Password;
-        DisableUI();
+        DisableKeypad();
     }
     public override void Interact()
     {
         myKeypadUI.gameObject.SetActive(true);
     }
-    public void DisableUI()
+    public override void DisableKeypad()
     {
         myKeypadUI.gameObject.SetActive(false);
     }
     public void CodeFunction(string Number)
     {
+        if (NrIndex > 3) DeleteNumber();
         NrIndex++;
         Nr = Nr + Number;
         passwordInput.text = Nr;
@@ -61,12 +62,22 @@ public class Keypad : ObjectNotGrabbable
             myButtons[x].onClick.AddListener(delegate { CodeFunction(x.ToString()); });
         }
         myButtons[10].onClick.AddListener(EnterNumber);
+        myButtons[11].onClick.AddListener(DeleteNumber);
     }
     public void EnterNumber()
     {
-        if(Nr == hintText.text)
+        if(Nr == hintText.text) passwordInput.text = "correct!";
+        else
         {
-            Debug.Log("correct");
+            passwordInput.text = "Wrong!";
+            NrIndex = 0;
+            Nr = null;
         }
+    }
+    public void DeleteNumber()
+    {
+        NrIndex = 0;
+        Nr = null;
+        passwordInput.text = Nr;
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Events;
 
-public class AnimEvent : MonoBehaviour
+public class AnimEvent : InputManager
 {
     public UnityEvent Attack = default;
     public UnityEvent Kick = default;
@@ -27,30 +27,15 @@ public class AnimEvent : MonoBehaviour
     public void LeftFootEvent()
     {
         if (noSoundandEffect) return;
-        foreach (KeyCode key in StudyCommandPattern.Inst.Keylist.Keys) // 이동키를 눌러야만 발소리 나오게 설정
-        {
-            if (myPlayer.myCameras.myCameraState == SpringArms.ViewState.UI) return; // UI상태에선 리턴
-            if (Input.GetKey(key))
-            {
-                SoundManager.Inst.PlayOneShot(mySoundSpeaker, leftFootSound);
-            }
-        }
+        if (IsMoveKeyPressed()) SoundManager.Inst.PlayOneShot(mySoundSpeaker, leftFootSound);
         if (orgDustEff == null) return;
         Instantiate(orgDustEff, leftFoot.position, Quaternion.identity); // 나중에 발바닥 이펙트 추가
-        
     }
 
     public void RightFootEvent()
     {
         if (noSoundandEffect) return;
-        foreach (KeyCode key in StudyCommandPattern.Inst.Keylist.Keys)
-        {
-            if (myPlayer.myCameras.myCameraState == SpringArms.ViewState.UI) return;
-            if (Input.GetKey(key))
-            {
-                SoundManager.Inst.PlayOneShot(mySoundSpeaker, rightFootSound);
-            }
-        }
+        if (IsMoveKeyPressed()) SoundManager.Inst.PlayOneShot(mySoundSpeaker, rightFootSound);
         if (orgDustEff == null) return;
         Instantiate(orgDustEff, rightFoot.position, Quaternion.identity);
     }

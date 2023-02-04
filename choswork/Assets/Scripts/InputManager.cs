@@ -17,6 +17,7 @@ public interface PlayerHandler
     Vector2 GetMoveRaw();
     bool IsKickKeyPressed();
     bool IsDashKeyPressed();
+    bool IsMoveKeyPressed();
     Animator ReturnAnim();
 }
 public interface CameraHandler
@@ -28,6 +29,7 @@ public interface CameraHandler
 public interface UIHandler
 {
     void ToggleInventory();
+    void DisableKeypad();
 }
 public class PlayerAction : MonoBehaviour, ObjectHandler, PlayerHandler, CameraHandler, UIHandler
 {
@@ -56,6 +58,19 @@ public class PlayerAction : MonoBehaviour, ObjectHandler, PlayerHandler, CameraH
     {
         return Input.GetKey(KeyCode.LeftShift);
     }
+    public virtual bool IsMoveKeyPressed()
+    {
+        var myCamera = GameManagement.Inst.mySpringArms;
+        foreach (KeyCode key in StudyCommandPattern.Inst.Keylist.Keys)
+        {
+            if (myCamera.myCameraState == SpringArms.ViewState.UI) return false;
+            if (Input.GetKey(key))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     public virtual Animator ReturnAnim()
     {
         Animator myAnim = null;
@@ -67,6 +82,7 @@ public class PlayerAction : MonoBehaviour, ObjectHandler, PlayerHandler, CameraH
     public virtual bool GetIsUI() { return false; }
     //UIHandler
     public virtual void ToggleInventory() { }
+    public virtual void DisableKeypad() { }
 }
 
 public interface InputManagement
@@ -122,10 +138,15 @@ public class InputManager : PlayerAction, InputManagement
         {
             ToggleCam(CamState.UI);
             myInventory?.GetComponent<InputManager>()?.ToggleInventory();
+            GameManagement.Inst.myKeypad.DisableKeypad();
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
             DebugCamera();
+        }
+        if(IsMoveKeyPressed())
+        {
+            GameManagement.Inst.myKeypad.DisableKeypad();
         }
     }
 
