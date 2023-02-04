@@ -79,7 +79,7 @@ public class AIPerception : MonoBehaviour
                     ChangeState(State.Search);
                 }
             }
-            yield return null;
+            yield return new WaitForSeconds(0.2f);
         }
     }
     private void FieldOfViewCheck()
