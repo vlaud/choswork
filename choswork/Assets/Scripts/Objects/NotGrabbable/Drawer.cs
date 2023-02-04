@@ -7,6 +7,7 @@ public class Drawer : ObjectNotGrabbable
 {
     [SerializeField] Animator drawerAnim;
     [SerializeField] bool IsOpen;
+    public bool IsDrawer;
     // Start is called before the first frame update
     void Start()
     {

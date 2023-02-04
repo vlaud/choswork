@@ -412,9 +412,10 @@ public class Monster : BattleSystem
         }
         if (collision.gameObject.layer == LayerMask.NameToLayer("NotGrabbableObj"))
         {
-            if(collision.gameObject.TryGetComponent<ObjectNotGrabbable>(out var obj))
+            if(collision.gameObject.TryGetComponent<Drawer>(out var obj))
             {
-                obj.InteractwithMob();
+                if(!obj.IsDrawer)
+                    obj.InteractwithMob();
             }
         }
     }

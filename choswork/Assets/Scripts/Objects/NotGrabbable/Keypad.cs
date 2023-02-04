@@ -5,6 +5,7 @@ using UnityEngine;
 public class Keypad : ObjectNotGrabbable
 {
     [SerializeField] protected TMPro.TMP_Text passwordText;
+    [SerializeField] protected GameObject keypadUI;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +17,6 @@ public class Keypad : ObjectNotGrabbable
         {
             Password += num.ToString();
         }
-        
         passwordText.text = Password;
     }
 
