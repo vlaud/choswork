@@ -29,16 +29,13 @@ public class PlayerBulletTime : MonoBehaviour
         switch (myState)
         {
             case State.Start:
-                transform.GetComponent<Player>().ReturnAnim().updateMode = AnimatorUpdateMode.Normal;
-                ghostPlayer.GetComponent<Player>().ReturnAnim().updateMode = AnimatorUpdateMode.Normal;
+                ChangeAnimUpdateMode(AnimatorUpdateMode.Normal);
                 break;
             case State.Play:
-                transform.GetComponent<Player>().ReturnAnim().updateMode = AnimatorUpdateMode.UnscaledTime;
-                ghostPlayer.GetComponent<Player>().ReturnAnim().updateMode = AnimatorUpdateMode.UnscaledTime;
+                ChangeAnimUpdateMode(AnimatorUpdateMode.UnscaledTime);
                 break;
             case State.Pause:
-                transform.GetComponent<Player>().ReturnAnim().updateMode = AnimatorUpdateMode.Normal;
-                ghostPlayer.GetComponent<Player>().ReturnAnim().updateMode = AnimatorUpdateMode.Normal;
+                ChangeAnimUpdateMode(AnimatorUpdateMode.Normal);
                 break;
         }
     }
@@ -91,6 +88,12 @@ public class PlayerBulletTime : MonoBehaviour
         {
             item.Value.GhostBehaviour(item.Key);
         }
+    }
+    #region BulletTime
+    void ChangeAnimUpdateMode(AnimatorUpdateMode mode)
+    {
+        transform.GetComponent<Player>().ReturnAnim().updateMode = mode;
+        ghostPlayer.GetComponent<Player>().ReturnAnim().updateMode = mode;
     }
     void SetBulletTime()
     {
@@ -154,4 +157,5 @@ public class PlayerBulletTime : MonoBehaviour
         //if (!ghostPlayer.gameObject.isStatic) _spawnedObjects.Add(_player.transform, ghostPlayer.transform);
         this.ghostPlayer = ghostPlayer.transform;
     }
+    #endregion
 }
