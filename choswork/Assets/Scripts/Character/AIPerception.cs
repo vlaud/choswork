@@ -102,7 +102,6 @@ public class AIPerception : MonoBehaviour
                     myMonster.ReturnAnim().SetTrigger("Detect");
                     foundPlayer?.Invoke(myTarget, Monster.STATE.Angry);
                     Debug.Log("플레이어 발견!");
-                    ChangeState(State.Chase);
                 }
                 else
                     canSeePlayer = false;

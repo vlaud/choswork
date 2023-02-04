@@ -37,7 +37,7 @@ public class Keypad : ObjectNotGrabbable
         myButtons = myKeypadUI.GetComponentsInChildren<Button>();
         ButtonClick();
         hintText.text = Password;
-        //DisableUI();
+        DisableUI();
     }
     public override void Interact()
     {
@@ -59,6 +59,14 @@ public class Keypad : ObjectNotGrabbable
         {
             int x = i; //원인 불명으로 i를 바로 쓰면 죄다 10으로 변함
             myButtons[x].onClick.AddListener(delegate { CodeFunction(x.ToString()); });
+        }
+        myButtons[10].onClick.AddListener(EnterNumber);
+    }
+    public void EnterNumber()
+    {
+        if(Nr == hintText.text)
+        {
+            Debug.Log("correct");
         }
     }
 }
