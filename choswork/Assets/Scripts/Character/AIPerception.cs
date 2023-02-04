@@ -63,7 +63,7 @@ public class AIPerception : MonoBehaviour
                 FieldOfViewCheck();
             else if (myMonster.GetMyState() == Monster.STATE.Angry)
                 ChangeState(State.Chase);
-            yield return null;
+            yield return new WaitForSeconds(0.2f);
         }
     }
     IEnumerator CheckDist()
