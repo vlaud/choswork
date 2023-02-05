@@ -28,6 +28,7 @@ public class Player : BattleSystem
         myMoveSpeed = myStat.MoveSpeed;
         KickPoint.SetActive(false);
         transform.position = myGamemanager.myMapManager.PlayerStart.position;
+        transform.rotation = myGamemanager.myMapManager.PlayerStart.rotation;
         myStat.changeHP = (float v) => myHPBar.GetValue = v;
     }
 
