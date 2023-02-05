@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 399d65a59db2fb046a0bfe8c911dd41c, type: 3}
+  m_Name: Journal
+  m_EditorClassIdentifier: 
+  Name: Journal
+  dialogue:
+  - "\uBE44\uBC00\uBC88\uD638\uB97C \uCC3E\uC544\n\uD0A4\uD328\uB4DC\uB294 \uB4A4\uC5D0
+    \uC788\uC5B4"
+  - "\uB140\uC11D\uC744 \uC870\uC2EC\uD574\n\uB188\uC740 \uC8FD\uC9C0 \uC54A\uC544"
+  - "\uC18C\uB9AC\uC5D0 \uBBFC\uAC10\uD558\uB2C8 \uC870\uC6A9\uD788 \uB2E4\uB140\n\uD568\uBD80\uB85C
+    \uBB3C\uAC74\uC744 \uC9D1\uC5B4\uB358\uC9C0\uC9C0 \uB9D0\uB77C\uACE0"
+  playerDialogue: []
