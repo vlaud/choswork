@@ -19,6 +19,10 @@ public class DialogueManager : ObjectNotGrabbable
         SetActionText();
         DisableUI();
     }
+    public override void Interact()
+    {
+        diaglogueUI.gameObject.SetActive(true);
+    }
     public override void DisableUI()
     {
         diaglogueUI.gameObject.SetActive(false);
