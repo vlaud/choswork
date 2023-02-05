@@ -6,10 +6,8 @@ using UnityEngine.UI;
 public class DialogueManager : ObjectNotGrabbable
 {
     public Dialogue _dialogue;
-    private bool isTalking = false;
-    private float curDialogueTracker = 0f;
-
-    public GameObject player;
+    [SerializeField] private bool isTalking = false;
+    [SerializeField] private int curDialogueTracker = 0;
     public GameObject diaglogueUI;
 
     public TMPro.TMP_Text journalText;
@@ -21,10 +19,37 @@ public class DialogueManager : ObjectNotGrabbable
     }
     public override void Interact()
     {
-        diaglogueUI.gameObject.SetActive(true);
+        if (!isTalking) StartJournal();
+        else DisableUI();
     }
     public override void DisableUI()
     {
-        diaglogueUI.gameObject.SetActive(false);
+        diaglogueUI.SetActive(false);
+        isTalking = false;
+    }
+    void StartJournal()
+    {
+        isTalking = true;
+        curDialogueTracker = 0;
+        diaglogueUI.SetActive(true);
+        journalText.text = "<color=#000000>" + _dialogue.dialogue[0] + "</color>";
+    }
+    public override void LeftMouseClickEvent()
+    {
+        curDialogueTracker--;
+        if (curDialogueTracker < 0)
+        {
+            curDialogueTracker = 0;
+        }
+        journalText.text = "<color=#000000>" + _dialogue.dialogue[curDialogueTracker] + "</color>";
+    }
+    public override void RightMouseClickEvent()
+    {
+        curDialogueTracker++;
+        if (curDialogueTracker > _dialogue.dialogue.Length - 1)
+        {
+            curDialogueTracker = _dialogue.dialogue.Length - 1;
+        }
+        journalText.text = "<color=#000000>" + _dialogue.dialogue[curDialogueTracker] + "</color>";
     }
 }

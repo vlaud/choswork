@@ -30,6 +30,8 @@ public interface UIHandler
 {
     void ToggleInventory();
     void DisableUI();
+    void LeftMouseClickEvent();
+    void RightMouseClickEvent();
 }
 public class PlayerAction : MonoBehaviour, ObjectHandler, PlayerHandler, CameraHandler, UIHandler
 {
@@ -83,6 +85,8 @@ public class PlayerAction : MonoBehaviour, ObjectHandler, PlayerHandler, CameraH
     //UIHandler
     public virtual void ToggleInventory() { }
     public virtual void DisableUI() { }
+    public virtual void LeftMouseClickEvent() { }
+    public virtual void RightMouseClickEvent() { }
 }
 
 public interface InputManagement
@@ -155,6 +159,14 @@ public class InputManager : PlayerAction, InputManagement
         if (Input.GetKeyDown(KeyCode.I))
         {
             DisableUI();
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            RightMouseClickEvent();
+        }
+        if (Input.GetMouseButtonDown(0))
+        {
+            LeftMouseClickEvent();
         }
     }
 
