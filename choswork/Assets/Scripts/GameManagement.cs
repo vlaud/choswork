@@ -12,13 +12,12 @@ public class GameManagement : MonoBehaviour
     public static GameManagement Inst = null;
     public Player myPlayer;
     public Monster myMonster;
-    public Inventory myInventory;
     public SpringArms mySpringArms;
+    public Inventory myInventory;
     public SoundManager mySound;
     public MapManager myMapManager;
     public SceneLoader mySceneLoader;
     public Mainmenu myMainmenu;
-    public Keypad myKeypad;
     public Canvas myCanvas;
     public TMPro.TMP_Text myActionText;
 

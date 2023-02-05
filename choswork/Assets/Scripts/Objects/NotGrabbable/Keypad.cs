@@ -37,13 +37,13 @@ public class Keypad : ObjectNotGrabbable
         myButtons = myKeypadUI.GetComponentsInChildren<Button>();
         ButtonClick();
         hintText.text = Password;
-        DisableKeypad();
+        DisableUI();
     }
     public override void Interact()
     {
         myKeypadUI.gameObject.SetActive(true);
     }
-    public override void DisableKeypad()
+    public override void DisableUI()
     {
         myKeypadUI.gameObject.SetActive(false);
     }

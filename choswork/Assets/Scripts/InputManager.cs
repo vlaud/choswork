@@ -29,7 +29,9 @@ public interface CameraHandler
 public interface UIHandler
 {
     void ToggleInventory();
-    void DisableKeypad();
+    void DisableUI();
+    void LeftMouseClickEvent();
+    void RightMouseClickEvent();
 }
 public class PlayerAction : MonoBehaviour, ObjectHandler, PlayerHandler, CameraHandler, UIHandler
 {
@@ -82,7 +84,9 @@ public class PlayerAction : MonoBehaviour, ObjectHandler, PlayerHandler, CameraH
     public virtual bool GetIsUI() { return false; }
     //UIHandler
     public virtual void ToggleInventory() { }
-    public virtual void DisableKeypad() { }
+    public virtual void DisableUI() { }
+    public virtual void LeftMouseClickEvent() { }
+    public virtual void RightMouseClickEvent() { }
 }
 
 public interface InputManagement
@@ -138,21 +142,32 @@ public class InputManager : PlayerAction, InputManagement
         {
             ToggleCam(CamState.UI);
             myInventory?.GetComponent<InputManager>()?.ToggleInventory();
-            GameManagement.Inst.myKeypad.DisableKeypad();
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
             DebugCamera();
-        }
-        if(IsMoveKeyPressed())
-        {
-            GameManagement.Inst.myKeypad.DisableKeypad();
         }
     }
 
     public virtual void HandleUI()
     {
         // UI handling
+        if (IsMoveKeyPressed())
+        {
+            DisableUI();
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            DisableUI();
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            RightMouseClickEvent();
+        }
+        if (Input.GetMouseButtonDown(0))
+        {
+            LeftMouseClickEvent();
+        }
     }
 
     public virtual void HandleOtherInput()

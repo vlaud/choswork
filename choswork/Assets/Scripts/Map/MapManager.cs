@@ -14,11 +14,15 @@ public class MapManager : MonoBehaviour
     }
     public static MapManager Inst = null;
     // 디폴트 프로퍼티
+    [field: Header("플레이어 위치 설정")]
+    [SerializeField] Vector3 PlayerStartPos = Vector3.zero;
     [field: SerializeField] public Transform PlayerStart
     {
         get;
         private set;
     }
+    [field: Header("몬스터 위치 설정")]
+    [SerializeField] Vector3 MobPos = Vector3.zero;
     [field:SerializeField] public Transform StartPoint
     {
         get;
@@ -31,17 +35,26 @@ public class MapManager : MonoBehaviour
         private set;
     }
     public int EndNum;
+    [field: Header("아이템 위치 설정")]
     [field: SerializeField] public Transform ItemPoint
     {
         get;
         private set;
     }
+    [SerializeField] Vector3 ItemStartPos = Vector3.zero;
+    [Header("오브젝트 위치 설정")]
+    [SerializeField] Vector3 doorPos = Vector3.zero;
+    [SerializeField] Vector3 keypadPos = Vector3.zero;
+    [SerializeField] Vector3 hintNotePos = Vector3.zero;
+    [Header("맵 크기 설정")]
     [SerializeField] Vector3Int mapSize = Vector3Int.zero;
     [SerializeField] int startPos = 0;
     public NavMeshSurface surfaces;
     public Vector3 offset;
     List<Cell> board;
+    [Header("오브젝트 설정")]
     [SerializeField] GameObject map;
+    [SerializeField] GameObject keyPad;
     [SerializeField] Transform item;
     [SerializeField] Transform doorObj;
     NavMeshPath myPath = null;
@@ -87,19 +100,23 @@ public class MapManager : MonoBehaviour
     void DoorSpawn()
     {
         doorObj.SetParent(transform.GetChild(Random.Range(1, mapSize.x)));
-        doorObj.localPosition = new Vector3(-1f, -0.6f, -2.6f);
+        doorObj.localPosition = doorPos;
     }
     void KeySpawning()
     {
         ItemPoint.SetParent(transform.GetChild(Random.Range(1, transform.childCount)));
-        ItemPoint.transform.localPosition = new Vector3(-3f, 2, -3);
+        ItemPoint.transform.localPosition = ItemStartPos;
         item.transform.position = ItemPoint.position;
     }
     void HintNoteSpawn()
     {
-        Transform hintnote = GameManagement.Inst.myKeypad.myHintNote;
+        GameObject obj = Instantiate(keyPad, transform.GetChild(0));
+        obj.transform.localPosition = keypadPos;
+        obj.transform.SetParent(null);
+        Transform hintnote = obj.GetComponent<Keypad>().myHintNote;
         hintnote.SetParent(transform.GetChild(Random.Range(1, transform.childCount)));
-        hintnote.localPosition = new Vector3(1.003f, 1.777f, -0.086f);
+        hintnote.localPosition = hintNotePos;
+        hintnote.SetParent(null);
     }
     #endregion
     #region MobAndPlayer
@@ -108,7 +125,7 @@ public class MapManager : MonoBehaviour
         int floor = mapSize.x * mapSize.z; // 아래층에서만 소환
 
         PlayerStart.SetParent(transform.GetChild(0));
-        PlayerStart.localPosition = new Vector3(3f, 0f, 3f);
+        PlayerStart.localPosition = PlayerStartPos;
     }
     void MobSpawning()
     {
@@ -120,11 +137,11 @@ public class MapManager : MonoBehaviour
         //시작 위치
         StartNum = spawnNums[0];
         StartPoint.SetParent(transform.GetChild(StartNum));
-        StartPoint.localPosition = new Vector3(3f, 1, -3f);
+        StartPoint.localPosition = MobPos;
         //도착 위치
         EndNum = spawnNums[1];
         EndPoint.SetParent(transform.GetChild(EndNum));
-        EndPoint.localPosition = new Vector3(3f, 1, -3f);
+        EndPoint.localPosition = MobPos;
     }
     public void MobChangePath(bool isStart)
     {
@@ -138,13 +155,13 @@ public class MapManager : MonoBehaviour
         {
             EndNum = spawnNums[1];
             EndPoint.transform.SetParent(transform.GetChild(spawnNums[1]));
-            EndPoint.transform.localPosition = new Vector3(3f, 1, -3);
+            EndPoint.transform.localPosition = MobPos;
         }
         else
         {
             StartNum = spawnNums[0];
             StartPoint.transform.SetParent(transform.GetChild(spawnNums[0]));
-            StartPoint.transform.localPosition = new Vector3(3f, 1, -3);
+            StartPoint.transform.localPosition = MobPos;
         }
     }
     #endregion

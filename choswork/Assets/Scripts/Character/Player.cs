@@ -28,6 +28,7 @@ public class Player : BattleSystem
         myMoveSpeed = myStat.MoveSpeed;
         KickPoint.SetActive(false);
         transform.position = myGamemanager.myMapManager.PlayerStart.position;
+        transform.rotation = myGamemanager.myMapManager.PlayerStart.rotation;
         myStat.changeHP = (float v) => myHPBar.GetValue = v;
     }
 
@@ -46,20 +47,20 @@ public class Player : BattleSystem
         {
             targetDir.x = GetMoveRaw().x;
             targetDir.y = GetMoveRaw().y;
-            x = Mathf.Lerp(myAnim.GetFloat("x"), targetDir.x, Time.unscaledDeltaTime * smoothMoveSpeed);
-            z = Mathf.Lerp(myAnim.GetFloat("z"), targetDir.y, Time.unscaledDeltaTime * smoothMoveSpeed);
-
-            myMoveSpeed = (IsDashKeyPressed() && !IsWall) ? 1.5f : myStat.MoveSpeed; // 벽 충돌시엔 질주 off
-
-            //x, z값이 0에 가까우면 0으로 고정
-            if (Mathf.Epsilon - animOffset < x && x < Mathf.Epsilon + animOffset) x = 0.0f;
-            if (Mathf.Epsilon - animOffset < z && z < Mathf.Epsilon + animOffset) z = 0.0f;
-            myAnim.SetFloat("x", x);
-            myAnim.SetFloat("z", z);
-
-            HandlePlayerMovement();
         }
 
+        x = Mathf.Lerp(myAnim.GetFloat("x"), targetDir.x, Time.unscaledDeltaTime * smoothMoveSpeed);
+        z = Mathf.Lerp(myAnim.GetFloat("z"), targetDir.y, Time.unscaledDeltaTime * smoothMoveSpeed);
+
+        myMoveSpeed = (IsDashKeyPressed() && !IsWall) ? 1.5f : myStat.MoveSpeed; // 벽 충돌시엔 질주 off
+
+        //x, z값이 0에 가까우면 0으로 고정
+        if (Mathf.Epsilon - animOffset < x && x < Mathf.Epsilon + animOffset) x = 0.0f;
+        if (Mathf.Epsilon - animOffset < z && z < Mathf.Epsilon + animOffset) z = 0.0f;
+        myAnim.SetFloat("x", x);
+        myAnim.SetFloat("z", z);
+
+        HandlePlayerMovement();
     }
     private void OnCollisionStay(Collision collision) // 벽 충돌시엔 질주 off
     {
