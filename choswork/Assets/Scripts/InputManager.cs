@@ -29,7 +29,7 @@ public interface CameraHandler
 public interface UIHandler
 {
     void ToggleInventory();
-    void DisableKeypad();
+    void DisableUI();
 }
 public class PlayerAction : MonoBehaviour, ObjectHandler, PlayerHandler, CameraHandler, UIHandler
 {
@@ -82,7 +82,7 @@ public class PlayerAction : MonoBehaviour, ObjectHandler, PlayerHandler, CameraH
     public virtual bool GetIsUI() { return false; }
     //UIHandler
     public virtual void ToggleInventory() { }
-    public virtual void DisableKeypad() { }
+    public virtual void DisableUI() { }
 }
 
 public interface InputManagement
@@ -138,21 +138,24 @@ public class InputManager : PlayerAction, InputManagement
         {
             ToggleCam(CamState.UI);
             myInventory?.GetComponent<InputManager>()?.ToggleInventory();
-            GameManagement.Inst.myKeypad.DisableKeypad();
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
             DebugCamera();
-        }
-        if(IsMoveKeyPressed())
-        {
-            GameManagement.Inst.myKeypad.DisableKeypad();
         }
     }
 
     public virtual void HandleUI()
     {
         // UI handling
+        if (IsMoveKeyPressed())
+        {
+            DisableUI();
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            DisableUI();
+        }
     }
 
     public virtual void HandleOtherInput()

@@ -10,7 +10,7 @@ public class ItemSlot : MonoBehaviour
     public int itemCount; // »πµÊ«— æ∆¿Ã≈€¿« ∞≥ºˆ
     public GameObject ItemImage;
     public Transform mySlotMask;
-    [SerializeField] private Text text_Count;
+    [SerializeField] private TMPro.TMP_Text text_Count;
     [SerializeField] private GameObject go_CountImage;
     [SerializeField] private Item myItem;
     public void GetItem(Item _item)
