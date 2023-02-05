@@ -44,6 +44,7 @@ public class MapManager : MonoBehaviour
     [SerializeField] Vector3 ItemStartPos = Vector3.zero;
     [Header("오브젝트 위치 설정")]
     [SerializeField] Vector3 doorPos = Vector3.zero;
+    [SerializeField] Vector3 keypadPos = Vector3.zero;
     [SerializeField] Vector3 hintNotePos = Vector3.zero;
     [Header("맵 크기 설정")]
     [SerializeField] Vector3Int mapSize = Vector3Int.zero;
@@ -53,6 +54,7 @@ public class MapManager : MonoBehaviour
     List<Cell> board;
     [Header("오브젝트 설정")]
     [SerializeField] GameObject map;
+    [SerializeField] GameObject keyPad;
     [SerializeField] Transform item;
     [SerializeField] Transform doorObj;
     NavMeshPath myPath = null;
@@ -108,9 +110,13 @@ public class MapManager : MonoBehaviour
     }
     void HintNoteSpawn()
     {
-        Transform hintnote = GameManagement.Inst.myKeypad.myHintNote;
+        GameObject obj = Instantiate(keyPad, transform.GetChild(0));
+        obj.transform.localPosition = keypadPos;
+        obj.transform.SetParent(null);
+        Transform hintnote = obj.GetComponent<Keypad>().myHintNote;
         hintnote.SetParent(transform.GetChild(Random.Range(1, transform.childCount)));
         hintnote.localPosition = hintNotePos;
+        hintnote.SetParent(null);
     }
     #endregion
     #region MobAndPlayer
