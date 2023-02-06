@@ -34,6 +34,9 @@ public class Inventory : InputManager, ItemEvent
     {
         isInventory = !isInventory;
         InventoryBase.SetActive(isInventory);
+
+        if (InventoryBase.activeSelf == true) Cursor.lockState = CursorLockMode.None;
+        else Cursor.lockState = CursorLockMode.Locked;
     }
     public void AcquireItem(Item _item)
     {

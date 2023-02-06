@@ -154,6 +154,7 @@ public class InputManager : PlayerAction, InputManagement
         // UI handling
         if (IsMoveKeyPressed())
         {
+            Cursor.lockState = CursorLockMode.Locked;
             DisableUI();
         }
         if (Input.GetKeyDown(KeyCode.I))

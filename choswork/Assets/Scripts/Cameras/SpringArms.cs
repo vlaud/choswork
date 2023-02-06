@@ -275,6 +275,7 @@ public class SpringArms : CameraProperty
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         myInventory = GameManagement.Inst.myInventory.gameObject;
         camPos = myTPSCam.myCam.transform.localPosition;
         desireDistance = camPos.z;
@@ -338,7 +339,7 @@ public class SpringArms : CameraProperty
     public CameraSet SpringArmWork(CameraSet s) // 카메라 마우스
     {
         CameraSet set = s;
-        if (Input.GetMouseButton(1))
+        if (Cursor.lockState == CursorLockMode.Locked)
         {
             set.curRot.x -= Input.GetAxisRaw("Mouse Y") * LookupSpeed;
             set.curRot.x = Mathf.Clamp(set.curRot.x, LookupRange.x, LookupRange.y);
