@@ -184,6 +184,10 @@ public class InputManager : PlayerAction, InputManagement
         // Any other input handling
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if (Cursor.lockState == CursorLockMode.Locked)
+                Cursor.lockState = CursorLockMode.None;
+            else
+                Cursor.lockState = CursorLockMode.Locked;
             ToggleEscapeEvent();
         }
     }
