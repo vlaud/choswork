@@ -18,6 +18,7 @@ public class SpringArms : CameraProperty
     public Player myPlayer;
     public bool UIkeyAvailable = true;
     public bool isFPSCamRotinTPS = false;
+    [SerializeField] private bool IsPaused = false;
     private bool isGhost = false;
 
     void ChangeState(ViewState s)
@@ -64,6 +65,8 @@ public class SpringArms : CameraProperty
 
     void StateProcess()
     {
+        HandleOtherInput();
+        if (IsPaused) return;
         if (myCameraState != ViewState.UI)
             myTPSCam = SpringArmWork(myTPSCam); // 1인칭, 3인칭 카메라값을 같게 
 
@@ -424,5 +427,9 @@ public class SpringArms : CameraProperty
     public void GhostSet(bool vGhost = false)
     {
         isGhost = vGhost;
+    }
+    public override void ToggleEscapeEvent()
+    {
+        IsPaused = !IsPaused;
     }
 }

@@ -9,6 +9,11 @@ public interface ItemEvent
 }
 public class GameManagement : MonoBehaviour
 {
+    public enum GameState
+    {
+        Create, Play, Pause
+    }
+    public GameState myGameState = GameState.Create;
     public static GameManagement Inst = null;
     public Player myPlayer;
     public Monster myMonster;
@@ -27,13 +32,46 @@ public class GameManagement : MonoBehaviour
     public float GameFixedTimeScale = 0.02f;
     public bool IsGameClear = false;
     private float timer;
-    private bool IsBulletTime = false;
+    [SerializeField] private bool IsBulletTime = false;
+    [SerializeField] private float curBulletTime;
+    [SerializeField] private float desireScale;
+
+    void ChangeState(GameState s)
+    {
+        if (myGameState == s) return;
+        myGameState = s;
+
+        switch(myGameState)
+        {
+            case GameState.Play:
+                IsBulletTime = false;
+                if (curBulletTime > Mathf.Epsilon) SetBulletTime(desireScale, curBulletTime);
+                else GameTimeScale = 1f;
+                break;
+            case GameState.Pause:
+                StopAllCoroutines();
+                GameTimeScale = 0.01f;
+                break;
+        }
+    }
+    void StateProcess()
+    {
+        switch (myGameState)
+        {
+            case GameState.Play:
+                if (IsBulletTime) curBulletTime -= Time.unscaledDeltaTime;
+                break;
+            case GameState.Pause:
+                break;
+        }
+    }
     private void Awake()
     {
         Inst = this;
         Physics.autoSimulation = false;
         mySceneLoader = GameObject.Find("SceneLoader")?.GetComponent<SceneLoader>();
         myMainmenu = mySceneLoader?.gameObject.GetComponentInChildren<Mainmenu>();
+        ChangeState(GameState.Play);
     }
     private void Update()
     {
@@ -44,6 +82,7 @@ public class GameManagement : MonoBehaviour
             Physics.Simulate(Time.fixedDeltaTime);
         }
         DoSlowmotion();
+        StateProcess();
     }
     public void DoSlowmotion()
     {
@@ -59,8 +98,9 @@ public class GameManagement : MonoBehaviour
     public void SetBulletTime(float SetScale, float Cooltime)
     {
         if (IsBulletTime) return;
-
         IsBulletTime = true;
+        curBulletTime = Cooltime;
+        desireScale = SetScale;
         StartCoroutine(BulletTime(SetScale, Cooltime));
     }
     IEnumerator BulletTime(float SetScale, float Cooltime)
@@ -71,5 +111,13 @@ public class GameManagement : MonoBehaviour
         GameTimeScale = 1f;
         Debug.Log("Slow Time End");
         IsBulletTime = false;
+    }
+    public void PauseGame()
+    {
+        ChangeState(GameState.Pause);
+    }
+    public void UnPauseGame()
+    {
+        ChangeState(GameState.Play);
     }
 }

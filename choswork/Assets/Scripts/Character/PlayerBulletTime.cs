@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public class PlayerBulletTime : MonoBehaviour
+public class PlayerBulletTime : InputManager
 {
     public enum State
     {
@@ -48,16 +48,10 @@ public class PlayerBulletTime : MonoBehaviour
                 if (time_current > time_Max) ChangeState(State.Play);
                 break;
             case State.Play:
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    ChangeState(State.Pause);
-                }
+                HandleOtherInput();
                 break;
             case State.Pause:
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    ChangeState(State.Play);
-                }
+                HandleOtherInput();
                 break;
         }
     }
@@ -88,6 +82,13 @@ public class PlayerBulletTime : MonoBehaviour
         {
             item.Value.GhostBehaviour(item.Key);
         }
+    }
+    public override void ToggleEscapeEvent()
+    {
+        if(myState != State.Pause)
+            ChangeState(State.Pause);
+        else
+            ChangeState(State.Play);
     }
     #region BulletTime
     void ChangeAnimUpdateMode(AnimatorUpdateMode mode)

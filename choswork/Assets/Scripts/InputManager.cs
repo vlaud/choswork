@@ -98,6 +98,7 @@ public interface InputManagement
     void HandleCameraSwitching();
     void HandleUI();
     void HandleOtherInput();
+    void ToggleEscapeEvent();
 
 }
 public class InputManager : PlayerAction, InputManagement
@@ -183,7 +184,8 @@ public class InputManager : PlayerAction, InputManagement
         // Any other input handling
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            GameManagement.Inst.GameTimeScale = 0.01f;
+            ToggleEscapeEvent();
         }
     }
+    public virtual void ToggleEscapeEvent() { }
 }
