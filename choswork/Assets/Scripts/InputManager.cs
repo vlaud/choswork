@@ -185,9 +185,15 @@ public class InputManager : PlayerAction, InputManagement
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (GameManagement.Inst.myGameState == GameManagement.GameState.Pause)
+            {
                 Cursor.lockState = CursorLockMode.None;
+                GameManagement.Inst.myMainmenu?.ShowMenuAnim(true);
+            }
             else
+            {
                 Cursor.lockState = CursorLockMode.Locked;
+                GameManagement.Inst.myMainmenu?.ShowMenuAnim(false);
+            }
             ToggleEscapeEvent();
         }
     }

@@ -61,6 +61,11 @@ public class Mainmenu : MonoBehaviour
             faderAnim.SetTrigger("FadeIn");
         }
     }
+    public void ShowMenuAnim(bool v)
+    {
+        if(v) anim.Play("buttonTweenAnims_off");
+        else anim.Play("buttonTweenAnims_on");
+    }
     void DisableUI()
     {
         MainOptionsPanel.SetActive(false);
