@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Mainmenu : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class Mainmenu : MonoBehaviour
     public GameObject Fader;
     [Header("BGM 설정")]
     public AudioClip titleBGM;
+    [Header("슬라이더 목록")]
+    public Slider[] Sliders;
     // Use this for initialization
     void Start()
     {
@@ -28,6 +31,7 @@ public class Mainmenu : MonoBehaviour
         faderAnim = Fader.GetComponent<Animator>();
         //new key
         PlayerPrefs.SetInt("quickSaveSlot", quickSaveSlotID);
+        Sliders = GamePanel.transform.GetComponentsInChildren<Slider>();
     }
     #region Scene Change
     void OnEnable()
