@@ -115,6 +115,7 @@ public class MapManager : MonoBehaviour
         Transform hintnote = obj.GetComponent<Keypad>().myHintNote;
         hintnote.SetParent(transform.GetChild(Random.Range(1, transform.childCount)));
         hintnote.localPosition = hintNotePos;
+        hintnote.SetParent(null);
     }
     #endregion
     #region MobAndPlayer
