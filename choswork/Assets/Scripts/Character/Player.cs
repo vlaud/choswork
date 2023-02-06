@@ -78,6 +78,10 @@ public class Player : BattleSystem
             IsWall = false;
         }
     }
+    public override void TimeStop()
+    {
+        GameManagement.Inst.SetBulletTime(0.3f, 5f);
+    }
     public void KickTarget()
     {
         Collider[] list = Physics.OverlapSphere(KickPoint.transform.position, 0.2f, 1 << LayerMask.NameToLayer("Enemy"));

@@ -44,10 +44,6 @@ public class GameManagement : MonoBehaviour
             Physics.Simulate(Time.fixedDeltaTime);
         }
         DoSlowmotion();
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            SetBulletTime(0.3f, 5f);
-        }
     }
     public void DoSlowmotion()
     {
