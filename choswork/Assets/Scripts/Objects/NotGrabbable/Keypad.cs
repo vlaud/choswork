@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,12 +42,12 @@ public class Keypad : ObjectNotGrabbable
     }
     public override void Interact()
     {
-        myKeypadUI.gameObject.SetActive(true);
+        myKeypadUI?.gameObject.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
     }
     public override void DisableUI()
     {
-        myKeypadUI.gameObject.SetActive(false);
+        myKeypadUI?.gameObject.SetActive(false);
     }
     public void CodeFunction(string Number)
     {
@@ -80,5 +81,14 @@ public class Keypad : ObjectNotGrabbable
         NrIndex = 0;
         Nr = null;
         passwordInput.text = Nr;
+    }
+    public override void GhostBehaviour()
+    {
+        if (IsGhost)
+        {
+            Destroy(myKeypadUI.gameObject);
+            myKeypadUI = null;
+            Destroy(myHintNote.gameObject);
+        }
     }
 }

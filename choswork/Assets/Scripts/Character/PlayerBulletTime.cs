@@ -137,22 +137,13 @@ public class PlayerBulletTime : InputManager
         ghostPlayer.myHPBar = null;
         ghostPlayer.myCameras.GhostSet(true);
         var AnimEvent = ghostPlayer.GetComponentsInChildren<AnimEvent>();
-        foreach (var r in Renders)
-        {
-            r.enabled = false;
-        }
-        foreach (var c in Camera)
-        {
-            c.enabled = false;
-        }
-        foreach (var c in AudioListner)
-        {
-            c.enabled = false;
-        }
-        foreach (var c in AnimEvent)
-        {
-            c.noSoundandEffect = true;
-        }
+
+        foreach (var r in Renders) r.enabled = false;
+        foreach (var c in Camera) c.enabled = false;
+        foreach (var c in AudioListner) c.enabled = false;
+        foreach (var c in AnimEvent) c.noSoundandEffect = true;
+        foreach (var item in _ghostInterables) item.Value.GhostBehaviour();
+        
         SceneManager.MoveGameObjectToScene(ghostPlayer.gameObject, _simulationScene);
         //if (!ghostPlayer.gameObject.isStatic) _spawnedObjects.Add(_player.transform, ghostPlayer.transform);
         this.ghostPlayer = ghostPlayer.transform;

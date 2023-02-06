@@ -36,7 +36,11 @@ public class Projection : MonoBehaviour
             var ghostInteractables = ghostObj.GetComponentsInChildren<ObjectNotGrabbable>();
             foreach (var r in Renders) r.enabled = false;
             foreach (var r in Canvases) r.enabled = false;
-            foreach (var r in ghostInteractables) r.SetGhost(true);
+            foreach (var r in ghostInteractables)
+            {
+                r.SetGhost(true);
+                r.GhostBehaviour();
+            }
             SceneManager.MoveGameObjectToScene(ghostObj, _simulationScene);
             if (!ghostObj.isStatic) _spawnedObjects.Add(obj, ghostObj.transform);
         }

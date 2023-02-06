@@ -112,11 +112,9 @@ public class MapManager : MonoBehaviour
     {
         GameObject obj = Instantiate(keyPad, transform.GetChild(0));
         obj.transform.localPosition = keypadPos;
-        obj.transform.SetParent(null);
         Transform hintnote = obj.GetComponent<Keypad>().myHintNote;
         hintnote.SetParent(transform.GetChild(Random.Range(1, transform.childCount)));
         hintnote.localPosition = hintNotePos;
-        hintnote.SetParent(null);
     }
     #endregion
     #region MobAndPlayer
