@@ -42,6 +42,7 @@ public class Keypad : ObjectNotGrabbable
     public override void Interact()
     {
         myKeypadUI.gameObject.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
     }
     public override void DisableUI()
     {

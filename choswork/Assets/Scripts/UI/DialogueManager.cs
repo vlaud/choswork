@@ -19,6 +19,7 @@ public class DialogueManager : ObjectNotGrabbable
     }
     public override void Interact()
     {
+        Cursor.lockState = CursorLockMode.None;
         if (!isTalking) StartJournal();
         else DisableUI();
     }

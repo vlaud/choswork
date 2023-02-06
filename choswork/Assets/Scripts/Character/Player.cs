@@ -18,9 +18,41 @@ public class Player : BattleSystem
     private GameManagement myGamemanager;
     public enum STATE
     {
-        Create, Play, Death
+        Create, Play, Pause, Death
     }
     public STATE myState = STATE.Create;
+
+    void ChangeState(STATE s)
+    {
+        if (myState == s) return;
+        myState = s;
+
+        switch (myState)
+        {
+            case STATE.Play:
+                GameManagement.Inst.UnPauseGame();
+                break;
+            case STATE.Pause:
+                GameManagement.Inst.PauseGame();
+                break;
+            case STATE.Death:
+                break;
+        }
+    }
+    void StateProcess()
+    {
+        HandleOtherInput();
+        switch (myState)
+        {
+            case STATE.Play:
+                PlayerMove();
+                break;
+            case STATE.Pause:
+                break;
+            case STATE.Death:
+                break;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -30,12 +62,13 @@ public class Player : BattleSystem
         transform.position = myGamemanager.myMapManager.PlayerStart.position;
         transform.rotation = myGamemanager.myMapManager.PlayerStart.rotation;
         myStat.changeHP = (float v) => myHPBar.GetValue = v;
+        ChangeState(STATE.Play);
     }
 
     // Update is called once per frame
     void Update()
     {
-        PlayerMove();
+        StateProcess();
     }
     public override void PlayerMove()
     {
@@ -78,6 +111,10 @@ public class Player : BattleSystem
             IsWall = false;
         }
     }
+    public override void TimeStop()
+    {
+        GameManagement.Inst.SetBulletTime(0.3f, 5f);
+    }
     public void KickTarget()
     {
         Collider[] list = Physics.OverlapSphere(KickPoint.transform.position, 0.2f, 1 << LayerMask.NameToLayer("Enemy"));
@@ -101,8 +138,15 @@ public class Player : BattleSystem
         myStat.HP -= dmg;
         if (Mathf.Approximately(myStat.HP, 0.0f))
         {
-            //ChangeState(STATE.Death);
+            ChangeState(STATE.Death);
         }
         //myAnim.SetTrigger("Damage");
+    }
+    public override void ToggleEscapeEvent()
+    {
+        if (myState != STATE.Pause)
+            ChangeState(STATE.Pause);
+        else
+            ChangeState(STATE.Play);
     }
 }

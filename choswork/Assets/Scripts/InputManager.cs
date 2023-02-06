@@ -14,6 +14,7 @@ public interface ObjectHandler
 public interface PlayerHandler
 {
     void PlayerMove();
+    void TimeStop();
     Vector2 GetMoveRaw();
     bool IsKickKeyPressed();
     bool IsDashKeyPressed();
@@ -45,6 +46,7 @@ public class PlayerAction : MonoBehaviour, ObjectHandler, PlayerHandler, CameraH
     }
     //PlayerHandler
     public virtual void PlayerMove() { }
+    public virtual void TimeStop() { }
     public virtual Vector2 GetMoveRaw()
     {
         Vector2 targetDir = Vector2.zero;
@@ -96,6 +98,7 @@ public interface InputManagement
     void HandleCameraSwitching();
     void HandleUI();
     void HandleOtherInput();
+    void ToggleEscapeEvent();
 
 }
 public class InputManager : PlayerAction, InputManagement
@@ -112,6 +115,7 @@ public class InputManager : PlayerAction, InputManagement
     public virtual void HandlePlayerMovement()
     {
         // 플레이어 움직임
+        if (Input.GetKeyDown(KeyCode.T)) TimeStop();
         if (IsKickKeyPressed() && !ReturnAnim().GetBool("IsKicking")) ReturnAnim().SetTrigger("Kick");
     }
 
@@ -154,9 +158,14 @@ public class InputManager : PlayerAction, InputManagement
         // UI handling
         if (IsMoveKeyPressed())
         {
+            Cursor.lockState = CursorLockMode.Locked;
             DisableUI();
         }
         if (Input.GetKeyDown(KeyCode.I))
+        {
+            DisableUI();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             DisableUI();
         }
@@ -173,5 +182,10 @@ public class InputManager : PlayerAction, InputManagement
     public virtual void HandleOtherInput()
     {
         // Any other input handling
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ToggleEscapeEvent();
+        }
     }
+    public virtual void ToggleEscapeEvent() { }
 }

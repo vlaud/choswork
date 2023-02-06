@@ -18,6 +18,7 @@ public class SpringArms : CameraProperty
     public Player myPlayer;
     public bool UIkeyAvailable = true;
     public bool isFPSCamRotinTPS = false;
+    [SerializeField] private bool IsPaused = false;
     private bool isGhost = false;
 
     void ChangeState(ViewState s)
@@ -64,6 +65,8 @@ public class SpringArms : CameraProperty
 
     void StateProcess()
     {
+        HandleOtherInput();
+        if (IsPaused) return;
         if (myCameraState != ViewState.UI)
             myTPSCam = SpringArmWork(myTPSCam); // 1인칭, 3인칭 카메라값을 같게 
 
@@ -275,6 +278,7 @@ public class SpringArms : CameraProperty
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         myInventory = GameManagement.Inst.myInventory.gameObject;
         camPos = myTPSCam.myCam.transform.localPosition;
         desireDistance = camPos.z;
@@ -338,7 +342,7 @@ public class SpringArms : CameraProperty
     public CameraSet SpringArmWork(CameraSet s) // 카메라 마우스
     {
         CameraSet set = s;
-        if (Input.GetMouseButton(1))
+        if (Cursor.lockState == CursorLockMode.Locked)
         {
             set.curRot.x -= Input.GetAxisRaw("Mouse Y") * LookupSpeed;
             set.curRot.x = Mathf.Clamp(set.curRot.x, LookupRange.x, LookupRange.y);
@@ -423,5 +427,9 @@ public class SpringArms : CameraProperty
     public void GhostSet(bool vGhost = false)
     {
         isGhost = vGhost;
+    }
+    public override void ToggleEscapeEvent()
+    {
+        IsPaused = !IsPaused;
     }
 }
