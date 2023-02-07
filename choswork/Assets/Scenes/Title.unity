@@ -16733,7 +16733,7 @@ MonoBehaviour:
   Fader: {fileID: 4478274297032803781}
   titleBGM: {fileID: 8300000, guid: b911662f2b94547e8a834cff9d26a788, type: 3}
   InGameBGM: {fileID: 8300000, guid: dc1d6b96e081b4befbd033dee4730596, type: 3}
-  DangerBGM: {fileID: 8300000, guid: 23b9010e7c1bbf04eb643132f8095d4a, type: 3}
+  DangerBGM: {fileID: 8300000, guid: 0619c83f3a316514fa98ce31d4038f9d, type: 3}
   GamePanel_Sliders: []
 --- !u!114 &4590805333565766513
 MonoBehaviour:
