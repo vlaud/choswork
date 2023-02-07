@@ -58,6 +58,7 @@ public class Mainmenu : MonoBehaviour
         PlayerPrefs.SetInt("quickSaveSlot", quickSaveSlotID);
         GamePanel_Sliders = GamePanel.transform.GetComponentsInChildren<Slider>();
         GamePanel_Sliders[2].value = SoundManager.Inst.bgmVolume;
+        GamePanel_Sliders[3].value = SoundManager.Inst.effectVolume;
         ChangeState(State.Menu);
     }
     #region Scene Change
