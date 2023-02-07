@@ -11,7 +11,7 @@ public class ObjectInteractable : InputManager
     {
         if (actionText == null) actionText = GameManagement.Inst.myActionText;
     }
-    public void SetItemInfoAppear(bool v) //오브젝트와 아이템 집기 UI 보이기
+    public virtual void SetItemInfoAppear(bool v) //오브젝트와 아이템 집기 UI 보이기
     {
         actionText?.gameObject.SetActive(v);
     }

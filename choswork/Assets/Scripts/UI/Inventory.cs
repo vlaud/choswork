@@ -110,4 +110,8 @@ public class Inventory : InputManager, ItemEvent
     {
         myTargetObj = target;
     }
+    public bool IsItemExist(Item item)
+    {
+        return itemTypeToSlotListMap.ContainsKey(item);
+    }
 }
