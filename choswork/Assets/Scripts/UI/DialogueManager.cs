@@ -27,6 +27,7 @@ public class DialogueManager : ObjectNotGrabbable
     {
         diaglogueUI.SetActive(false);
         isTalking = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
     void StartJournal()
     {
