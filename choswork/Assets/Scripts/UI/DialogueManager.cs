@@ -27,8 +27,7 @@ public class DialogueManager : ObjectNotGrabbable
     {
         diaglogueUI.SetActive(false);
         isTalking = false;
-        if (GameManagement.Inst.myGameState == GameManagement.GameState.Play)
-            Cursor.lockState = CursorLockMode.Locked;
+        DesireCursorState(GameManagement.GameState.Play, CursorLockMode.Locked);
     }
     void StartJournal()
     {

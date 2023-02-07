@@ -114,4 +114,8 @@ public class Inventory : InputManager, ItemEvent
     {
         return itemTypeToSlotListMap.ContainsKey(item);
     }
+    public bool IsInventoryEnabled()
+    {
+        return isInventory;
+    }
 }

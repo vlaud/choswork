@@ -99,6 +99,7 @@ public interface InputManagement
     void HandleUI();
     void HandleOtherInput();
     void ToggleEscapeEvent();
+    void DesireCursorState(GameManagement.GameState state, CursorLockMode cursorState);
 
 }
 public class InputManager : PlayerAction, InputManagement
@@ -158,7 +159,7 @@ public class InputManager : PlayerAction, InputManagement
         // UI handling
         if (IsMoveKeyPressed())
         {
-            Cursor.lockState = CursorLockMode.Locked;
+            DesireCursorState(GameManagement.GameState.Play, CursorLockMode.Locked);
             DisableUI();
         }
         if (Input.GetKeyDown(KeyCode.I))
@@ -200,11 +201,20 @@ public class InputManager : PlayerAction, InputManagement
             }
             else
             {
-                Cursor.lockState = CursorLockMode.Locked;
+                if(GameManagement.Inst.myInventory.IsInventoryEnabled())
+                    Cursor.lockState = CursorLockMode.None;
+                else
+                    Cursor.lockState = CursorLockMode.Locked;
                 mainMenu?.ShowMenuAnim(false);
                 mainMenu?.DisableUI();
             }
         }
     }
     public virtual void ToggleEscapeEvent() { }
+    
+    public void DesireCursorState(GameManagement.GameState state, CursorLockMode cursorState)
+    {
+        if (GameManagement.Inst.myGameState == state)
+            Cursor.lockState = cursorState;
+    }
 }
