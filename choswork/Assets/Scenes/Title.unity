@@ -1688,7 +1688,7 @@ Camera:
   field of view: 60
   orthographic: 0
   orthographic size: 5
-  m_Depth: 2
+  m_Depth: 3
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 32
@@ -16724,6 +16724,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   newGameSceneName: GameStage
   quickSaveSlotID: 6
+  MainScreenPanel: {fileID: 4478286826061960671}
   MainOptionsPanel: {fileID: 4477126751097145591}
   StartGameOptionsPanel: {fileID: 4477923738885147327}
   GamePanel: {fileID: 4478669919552603351}

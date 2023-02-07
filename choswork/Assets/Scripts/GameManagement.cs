@@ -71,6 +71,11 @@ public class GameManagement : MonoBehaviour
         Physics.autoSimulation = false;
         mySceneLoader = GameObject.Find("SceneLoader")?.GetComponent<SceneLoader>();
         myMainmenu = mySceneLoader?.gameObject.GetComponentInChildren<Mainmenu>();
+        if(myMainmenu != null)
+        {
+            myCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            myCanvas.worldCamera = myMainmenu.transform.parent.GetComponent<Camera>();
+        }
         ChangeState(GameState.Play);
     }
     private void Update()

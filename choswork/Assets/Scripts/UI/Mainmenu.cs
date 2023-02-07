@@ -13,6 +13,7 @@ public class Mainmenu : MonoBehaviour
     public int quickSaveSlotID;
 
     [Header("옵션 설정")]
+    public GameObject MainScreenPanel;
     public GameObject MainOptionsPanel;
     public GameObject StartGameOptionsPanel;
     public GameObject GamePanel;
@@ -81,13 +82,13 @@ public class Mainmenu : MonoBehaviour
     }
     void DisableUI()
     {
+        MainScreenPanel.SetActive(false);
         MainOptionsPanel.SetActive(false);
         StartGameOptionsPanel.SetActive(false);
         GamePanel.SetActive(false);
         ControlsPanel.SetActive(false);
         GfxPanel.SetActive(false); ;
         LoadGamePanel.SetActive(false);
-        //Fader.SetActive(false);
     }
     #endregion
 

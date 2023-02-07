@@ -188,13 +188,14 @@ public class InputManager : PlayerAction, InputManagement
             {
                 Cursor.lockState = CursorLockMode.None;
                 GameManagement.Inst.myMainmenu?.ShowMenuAnim(true);
+                ToggleEscapeEvent();
             }
             else
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 GameManagement.Inst.myMainmenu?.ShowMenuAnim(false);
+                ToggleEscapeEvent();
             }
-            ToggleEscapeEvent();
         }
     }
     public virtual void ToggleEscapeEvent() { }
