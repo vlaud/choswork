@@ -23,6 +23,7 @@ public class Mainmenu : MonoBehaviour
     [Header("BGM 설정")]
     public AudioClip titleBGM;
     public AudioClip InGameBGM;
+    public AudioClip DangerBGM;
     [Header("슬라이더 목록")]
     public Slider[] GamePanel_Sliders;
     // Use this for initialization
@@ -39,6 +40,14 @@ public class Mainmenu : MonoBehaviour
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
         print("Scene has loaded");
+    }
+    public void PlayDangerMusic()
+    {
+        SoundManager.Inst.PlayBGM(DangerBGM);
+    }
+    public void PlayInGameMusic()
+    {
+        SoundManager.Inst.PlayBGM(InGameBGM);
     }
     public void FadeToLevel()
     {

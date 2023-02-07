@@ -37,10 +37,12 @@ public class AIPerception : MonoBehaviour
         {
             case State.Search:
                 StopAllCoroutines();
+                myGamemanager.myMainmenu?.PlayInGameMusic();
                 StartCoroutine(FOVRoutine());
                 break;
             case State.Chase:
                 StopAllCoroutines();
+                myGamemanager.myMainmenu?.PlayDangerMusic();
                 StartCoroutine(CheckDist());
                 break;
         }
