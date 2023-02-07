@@ -5,6 +5,7 @@ using UnityEngine;
 public class SoundManager : Singleton<SoundManager> // 사운드 매니저는 싱클톤 방식으로
 {
     public AudioSource bgmPlayer = null;
+    public List<AudioSource> soundPlayer = null;
 
     public float bgmVolume
     {
@@ -18,7 +19,15 @@ public class SoundManager : Singleton<SoundManager> // 사운드 매니저는 싱클톤 방
         }
 
     }
-
+    public float soundVolume
+    {
+        get => soundPlayer[0].volume;
+        set
+        {
+            soundPlayer[0].volume = Mathf.Clamp(value, 0.0f, 1.0f);
+            PlayerPrefs.SetFloat("Game_Sound_Volume", 1.0f - bgmPlayer.volume);
+        }
+    }
     public float bgmPitch
     {
         get => bgmPlayer.pitch;
@@ -44,6 +53,12 @@ public class SoundManager : Singleton<SoundManager> // 사운드 매니저는 싱클톤 방
             bgmPlayer.volume = 1.0f - PlayerPrefs.GetFloat("Game_BGM_Volume");
         _effectvolume = 1.0f - PlayerPrefs.GetFloat("Game_Effect_Volume");
 
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("SoundSpeaker");
+        for (int i = 0; i < objs.Length; ++i)
+        {
+            soundPlayer.Add(objs[i].GetComponent<AudioSource>());
+        }
+        
     }
 
     public void PlayBGM(AudioClip clip, bool loop = true)
