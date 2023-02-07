@@ -27,6 +27,28 @@ public class Mainmenu : MonoBehaviour
     public AudioClip DangerBGM;
     [Header("슬라이더 목록")]
     public Slider[] GamePanel_Sliders;
+
+    public enum State
+    {
+        Create, Menu, Options, SubOptions
+    }
+    public State myState = State.Create;
+
+    public void ChangeState(State s)
+    {
+        if (myState == s) return;
+        myState = s;
+
+        switch (myState)
+        {
+            case State.Menu:
+                break;
+            case State.Options:
+                break;
+            case State.SubOptions:
+                break;
+        }
+    }
     // Use this for initialization
     void Start()
     {
@@ -36,6 +58,7 @@ public class Mainmenu : MonoBehaviour
         PlayerPrefs.SetInt("quickSaveSlot", quickSaveSlotID);
         GamePanel_Sliders = GamePanel.transform.GetComponentsInChildren<Slider>();
         GamePanel_Sliders[2].value = SoundManager.Inst.bgmVolume;
+        ChangeState(State.Menu);
     }
     #region Scene Change
     void OnEnable()
@@ -64,6 +87,7 @@ public class Mainmenu : MonoBehaviour
         }
         if (scene.name == "GameStage")
         {
+            ChangeState(State.Menu);
             SoundManager.Inst.PlayBGM(InGameBGM);
             GamePanel_Sliders[2].onValueChanged.AddListener((float v) => SoundManager.Inst.bgmVolume = v);
             newGameSceneName = "testScene";
@@ -80,7 +104,7 @@ public class Mainmenu : MonoBehaviour
         if(v) anim.Play("buttonTweenAnims_off");
         else anim.Play("buttonTweenAnims_on");
     }
-    void DisableUI()
+    public void DisableUI()
     {
         MainScreenPanel.SetActive(false);
         MainOptionsPanel.SetActive(false);
@@ -108,7 +132,7 @@ public class Mainmenu : MonoBehaviour
 
         //enable BLUR
         //Camera.main.GetComponent<Animator>().Play("BlurOn");
-
+        ChangeState(State.Options);
     }
 
     public void openStartGameOptions()
@@ -125,7 +149,7 @@ public class Mainmenu : MonoBehaviour
 
         //enable BLUR
         //Camera.main.GetComponent<Animator>().Play("BlurOn");
-
+        ChangeState(State.Options);
     }
 
     public void openOptions_Game()
@@ -141,7 +165,7 @@ public class Mainmenu : MonoBehaviour
 
         //play click sfx
         playClickSound();
-
+        ChangeState(State.SubOptions);
     }
     public void openOptions_Controls()
     {
@@ -156,7 +180,7 @@ public class Mainmenu : MonoBehaviour
 
         //play click sfx
         playClickSound();
-
+        ChangeState(State.SubOptions);
     }
     public void openOptions_Gfx()
     {
@@ -171,7 +195,7 @@ public class Mainmenu : MonoBehaviour
 
         //play click sfx
         playClickSound();
-
+        ChangeState(State.SubOptions);
     }
 
     public void openContinue_Load()
@@ -187,7 +211,7 @@ public class Mainmenu : MonoBehaviour
 
         //play click sfx
         playClickSound();
-
+        ChangeState(State.SubOptions);
     }
 
     public void newGame()
@@ -216,6 +240,7 @@ public class Mainmenu : MonoBehaviour
 
         //play click sfx
         playClickSound();
+        ChangeState(State.Menu);
     }
 
     public void back_options_panels()
@@ -225,7 +250,7 @@ public class Mainmenu : MonoBehaviour
 
         //play click sfx
         playClickSound();
-
+        ChangeState(State.Options);
     }
 
     public void Quit()

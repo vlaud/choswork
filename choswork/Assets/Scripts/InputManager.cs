@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum CamState
@@ -184,17 +185,25 @@ public class InputManager : PlayerAction, InputManagement
         // Any other input handling
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            var mainMenu = GameManagement.Inst.myMainmenu;
+            if (mainMenu != null)
+            {
+                if(mainMenu.myState == Mainmenu.State.Menu) ToggleEscapeEvent();
+                else return;
+            }
+            else if (mainMenu == null) ToggleEscapeEvent();
+            else return;
+                
             if (GameManagement.Inst.myGameState == GameManagement.GameState.Pause)
             {
                 Cursor.lockState = CursorLockMode.None;
-                GameManagement.Inst.myMainmenu?.ShowMenuAnim(true);
-                ToggleEscapeEvent();
+                mainMenu?.ShowMenuAnim(true);
             }
             else
             {
                 Cursor.lockState = CursorLockMode.Locked;
-                GameManagement.Inst.myMainmenu?.ShowMenuAnim(false);
-                ToggleEscapeEvent();
+                mainMenu?.ShowMenuAnim(false);
+                mainMenu?.DisableUI();
             }
         }
     }
