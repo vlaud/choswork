@@ -90,7 +90,7 @@ public class Mainmenu : MonoBehaviour
             ChangeState(State.Menu);
             SoundManager.Inst.PlayBGM(InGameBGM);
             GamePanel_Sliders[2].onValueChanged.AddListener((float v) => SoundManager.Inst.bgmVolume = v);
-            //GamePanel_Sliders[3].onValueChanged.AddListener((float v) => SoundManager.Inst.soundPlayer = v);
+            GamePanel_Sliders[3].onValueChanged.AddListener((float v) => SoundManager.Inst.effectVolume = v);
             newGameSceneName = "testScene";
             faderAnim.SetTrigger("FadeIn");
             DisableUI();
