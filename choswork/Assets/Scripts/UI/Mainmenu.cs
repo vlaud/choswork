@@ -22,8 +22,9 @@ public class Mainmenu : MonoBehaviour
     public GameObject Fader;
     [Header("BGM 설정")]
     public AudioClip titleBGM;
+    public AudioClip InGameBGM;
     [Header("슬라이더 목록")]
-    public Slider[] Sliders;
+    public Slider[] GamePanel_Sliders;
     // Use this for initialization
     void Start()
     {
@@ -31,7 +32,7 @@ public class Mainmenu : MonoBehaviour
         faderAnim = Fader.GetComponent<Animator>();
         //new key
         PlayerPrefs.SetInt("quickSaveSlot", quickSaveSlotID);
-        Sliders = GamePanel.transform.GetComponentsInChildren<Slider>();
+        GamePanel_Sliders = GamePanel.transform.GetComponentsInChildren<Slider>();
     }
     #region Scene Change
     void OnEnable()
@@ -52,6 +53,8 @@ public class Mainmenu : MonoBehaviour
         }
         if (scene.name == "GameStage")
         {
+            SoundManager.Inst.PlayBGM(InGameBGM);
+            GamePanel_Sliders[2].onValueChanged.AddListener((float v) => SoundManager.Inst.bgmVolume = v);
             newGameSceneName = "testScene";
             faderAnim.SetTrigger("FadeIn");
             DisableUI();
