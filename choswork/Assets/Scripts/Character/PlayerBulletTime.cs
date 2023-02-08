@@ -74,6 +74,10 @@ public class PlayerBulletTime : InputManager
         transform.position = ghostPlayer.position;
         transform.rotation = ghostPlayer.rotation;
 
+        _player.myCameras.myFPSCam.curRot = ghostCamera.myFPSCam.curRot;
+        _player.myCameras.myTPSCam.curRot = ghostCamera.myTPSCam.curRot;
+        _player.myCameras.myUICam.curRot = ghostCamera.myUICam.curRot;
+
         foreach (var item in _spawnedObjects)
         {
             //Debug.Log(_simulationScene + ", " + item.Value);
@@ -152,6 +156,8 @@ public class PlayerBulletTime : InputManager
         ghostCamera = ghostPlayer.myCameras;
         
         if (!ghostCamera.myRoot.gameObject.isStatic) _spawnedObjects.Add(_player.myCameras.myRoot, ghostCamera.myRoot);
+        if (!ghostCamera.mySpring.gameObject.isStatic) _spawnedObjects.Add(_player.myCameras.mySpring, ghostCamera.mySpring);
+        if (!ghostCamera.myUI_basePos.gameObject.isStatic) _spawnedObjects.Add(_player.myCameras.myUI_basePos, ghostCamera.myUI_basePos);
     }
     #endregion
 }
