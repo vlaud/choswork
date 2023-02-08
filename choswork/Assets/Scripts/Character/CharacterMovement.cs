@@ -19,7 +19,7 @@ public class CharacterMovement : CharacterProperty
     public void RePath(NavMeshPath myPath, Vector3 pos, UnityAction done = null, string anim = "IsMoving")
     {
         StopAllCoroutines();
-        //Debug.Log("목표지점: " + pos);
+        Debug.Log("목표지점: " + pos);
         StartCoroutine(MovingByPath(myPath, pos, anim, done));
     }
     IEnumerator MovingByPath(NavMeshPath myPath, Vector3 pos, string anim, UnityAction done)

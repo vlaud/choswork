@@ -85,7 +85,7 @@ public class Monster : BattleSystem
             case STATE.Search:
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
-                RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
+                //RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
                 break;
             case STATE.RagDoll:
                 StopAllCoroutines();
