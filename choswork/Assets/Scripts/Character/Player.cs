@@ -16,9 +16,12 @@ public class Player : BattleSystem
     public HPBar myHPBar;
     private float animOffset = 0.04f;
     private GameManagement myGamemanager;
+    [Header("카메라 이펙트 설정")]
     public CameraShake camShake;
     [SerializeField] private CameraSet? curCamset;
     [SerializeField] private GameObject playerCamera;
+    [SerializeField] private float shake_duration;
+    [SerializeField] private float shake_magnitude;
     public enum STATE
     {
         Create, Play, Pause, Death
@@ -144,7 +147,7 @@ public class Player : BattleSystem
     }
     public override void OnDamage(float dmg)
     {
-        StartCoroutine(camShake.Shake(.15f, .4f));
+        StartCoroutine(camShake.Shake(shake_duration, shake_magnitude));
         myStat.HP -= dmg;
         if (Mathf.Approximately(myStat.HP, 0.0f))
         {
