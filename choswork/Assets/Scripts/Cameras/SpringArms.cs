@@ -11,6 +11,7 @@ public class SpringArms : CameraProperty
     {
         Create, FPS, TPS, UI, Turn, Temp
     }
+    [Header("카메라 상태 설정")]
     public ViewState myCameraState = ViewState.Create; // 카메라 상태기계
     public CameraSet myFPSCam;
     public CameraSet myTPSCam;

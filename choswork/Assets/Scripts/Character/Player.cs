@@ -140,7 +140,7 @@ public class Player : BattleSystem
         {
             ChangeState(STATE.Death);
         }
-        //myAnim.SetTrigger("Damage");
+        myAnim.SetTrigger("Damage");
     }
     public override void ToggleEscapeEvent()
     {

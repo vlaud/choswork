@@ -16,7 +16,8 @@ public class PlayerBulletTime : InputManager
     [SerializeField] private Player _player;
     private Dictionary<Transform, Transform> _spawnedObjects = new Dictionary<Transform, Transform>();
     private Dictionary<ObjectNotGrabbable, ObjectNotGrabbable> _ghostInterables = new Dictionary<ObjectNotGrabbable, ObjectNotGrabbable>();
-    private Transform ghostPlayer;
+    [SerializeField] private Transform ghostPlayer;
+    [SerializeField] private SpringArms ghostCamera;
     private float time_start;
     [SerializeField] private float time_current;
     private float time_Max = 1f;
@@ -75,8 +76,9 @@ public class PlayerBulletTime : InputManager
 
         foreach (var item in _spawnedObjects)
         {
-            item.Value.position = item.Key.position;
-            item.Value.rotation = item.Key.rotation;
+            //Debug.Log(_simulationScene + ", " + item.Value);
+            item.Key.position = item.Value.position;
+            item.Key.rotation = item.Value.rotation;
         }
         foreach (var item in _ghostInterables)
         {
@@ -145,8 +147,11 @@ public class PlayerBulletTime : InputManager
         foreach (var item in _ghostInterables) item.Value.GhostBehaviour();
         
         SceneManager.MoveGameObjectToScene(ghostPlayer.gameObject, _simulationScene);
-        //if (!ghostPlayer.gameObject.isStatic) _spawnedObjects.Add(_player.transform, ghostPlayer.transform);
+        if (!ghostPlayer.gameObject.isStatic) _spawnedObjects.Add(_player.transform, ghostPlayer.transform);
         this.ghostPlayer = ghostPlayer.transform;
+        ghostCamera = ghostPlayer.myCameras;
+        
+        if (!ghostCamera.myRoot.gameObject.isStatic) _spawnedObjects.Add(_player.myCameras.myRoot, ghostCamera.myRoot);
     }
     #endregion
 }
