@@ -25,7 +25,7 @@ public class CharacterMovement : CharacterProperty
     IEnumerator MovingByPath(NavMeshPath myPath, Vector3 pos, string anim, UnityAction done)
     {
         int cur = 1;
-        NavMesh.CalculatePath(transform.position, pos, NavMesh.AllAreas, myPath);
+        NavMesh.CalculatePath(transform.position, pos, 1 << NavMesh.GetAreaFromName("Ground"), myPath);
         Vector3[] list = myPath.corners;
 
         Vector3 dir = pos - transform.position;
@@ -39,7 +39,7 @@ public class CharacterMovement : CharacterProperty
 
             if (cur < list.Length)
             {
-                NavMesh.CalculatePath(transform.position, pos, NavMesh.AllAreas, myPath); // 실시간으로 네비메쉬 검사
+                NavMesh.CalculatePath(transform.position, pos, 1 << NavMesh.GetAreaFromName("Ground"), myPath); // 실시간으로 네비메쉬 검사
                 list = myPath.corners;
                 for (int i = 0; i < list.Length - 1; ++i)
                 {
@@ -263,7 +263,7 @@ public class CharacterMovement : CharacterProperty
         {
             if (!myAnim.GetBool("IsAttacking")) playTime += Time.deltaTime;
             // 이동
-            NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, myPath);
+            NavMesh.CalculatePath(transform.position, target.position, 1 << NavMesh.GetAreaFromName("Ground"), myPath);
             Vector3[] list = myPath.corners;
             Vector3 dir = target.position - transform.position;
             float dist = dir.magnitude;
