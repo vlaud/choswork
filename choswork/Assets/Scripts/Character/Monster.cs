@@ -167,19 +167,23 @@ public class Monster : BattleSystem
     #region Mob Detect Sound
     void SetSoundPos()
     {
+        var player = GameManagement.Inst.myPlayer.myHips;
+
         if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1))
         {
-            if (hearingObj.position.y > hit.position.y)
+            if (player.position.y < hit.position.y) // 물건이 천장으로 to ceiling
             {
-                hearingPos = hit.position;
-            }
-            else
-            {
-                if (Physics.Raycast(hearingObj.position, Vector3.down, out RaycastHit thit,
+                if (Physics.Raycast(hearingPos, Vector3.down, out RaycastHit thit,
                     20f, 1 << LayerMask.NameToLayer("Ground")))
                 {
+                    Debug.Log("천장" + thit.point);
                     hearingPos = thit.point;
                 }
+            }
+            else  // 물건이 바닥으로 to floor
+            {
+                Debug.Log("바닥" + hit.position);
+                hearingPos = hit.position;
             }
         }
         HearingTr.position = hearingPos;

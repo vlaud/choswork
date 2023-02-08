@@ -16,6 +16,7 @@ public class Player : BattleSystem
     public HPBar myHPBar;
     private float animOffset = 0.04f;
     private GameManagement myGamemanager;
+    public Transform myHips;
     [Header("카메라 이펙트 설정")]
     public CameraShake camShake;
     [SerializeField] private CameraSet? curCamset;
