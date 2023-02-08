@@ -169,7 +169,7 @@ public class Monster : BattleSystem
     {
         var player = GameManagement.Inst.myPlayer.myHips;
 
-        if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1))
+        if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1 << NavMesh.GetAreaFromName("Ground")))
         {
             if (player.position.y < hit.position.y) // 물건이 천장으로 to ceiling
             {
