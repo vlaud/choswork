@@ -96,6 +96,13 @@ public class MapManager : MonoBehaviour
     {
         myPath = new NavMeshPath();
     }
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            surfaces.BuildNavMesh();
+        }
+    }
     #region ObjectSpawn
     void DoorSpawn()
     {
