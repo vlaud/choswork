@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class Mainmenu : MonoBehaviour
+public class Mainmenu : Singleton<Mainmenu>
 {
     Animator anim;
     Animator faderAnim;
@@ -49,6 +49,10 @@ public class Mainmenu : MonoBehaviour
                 break;
         }
     }
+    private void Awake()
+    {
+        base.Initialize();
+    }
     // Use this for initialization
     void Start()
     {
@@ -67,6 +71,11 @@ public class Mainmenu : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
         print("Scene has loaded");
     }
+    private void OnDestroy()
+    {
+        anim = null;
+        faderAnim = null;
+    }
     public void PlayDangerMusic()
     {
         SoundManager.Inst.PlayBGM(DangerBGM);
@@ -84,11 +93,10 @@ public class Mainmenu : MonoBehaviour
         print("Scene on scene");
         if (scene.name == "Title")
         {
+            newGameSceneName = "GameStage";
+            faderAnim?.SetTrigger("FadeIn");
+            ShowMenuAnim(true);
             Cursor.lockState = CursorLockMode.None;
-            if (transform.parent.parent == GameObject.Find("SceneLoader").transform)
-            {
-                Destroy(GameObject.Find("SceneLoader"));
-            }
             SoundManager.Inst.PlayBGM(titleBGM);
         }
         if (scene.name == "GameStage")
@@ -98,7 +106,7 @@ public class Mainmenu : MonoBehaviour
             GamePanel_Sliders[2].onValueChanged.AddListener((float v) => SoundManager.Inst.bgmVolume = v);
             GamePanel_Sliders[3].onValueChanged.AddListener((float v) => SoundManager.Inst.effectVolume = v);
             newGameSceneName = "testScene";
-            faderAnim.SetTrigger("FadeIn");
+            faderAnim?.SetTrigger("FadeIn");
             DisableUI();
         }
         if (scene.name == "testScene")
@@ -108,8 +116,8 @@ public class Mainmenu : MonoBehaviour
     }
     public void ShowMenuAnim(bool v)
     {
-        if(v) anim.Play("buttonTweenAnims_off");
-        else anim.Play("buttonTweenAnims_on");
+        if(v) anim?.Play("buttonTweenAnims_off");
+        else anim?.Play("buttonTweenAnims_on");
     }
     public void DisableUI()
     {
