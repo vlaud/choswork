@@ -148,7 +148,8 @@ public class Player : BattleSystem
     }
     public override void OnDamage(float dmg)
     {
-        StartCoroutine(camShake.Shake(shake_duration, shake_magnitude));
+        camShake?.OnShakeCamera(shake_duration, shake_magnitude);
+        camShake?.OnRotateCamera(shake_duration, shake_magnitude);
         myStat.HP -= dmg;
         if (Mathf.Approximately(myStat.HP, 0.0f))
         {
