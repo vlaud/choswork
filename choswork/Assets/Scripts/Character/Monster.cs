@@ -144,7 +144,7 @@ public class Monster : BattleSystem
         }
         PopulateAnimation(_standupClipName, _standupTransforms);
         RagDollSet(false);
-        transform.position = GameManagement.Inst.myMapManager.StartPoint.position;
+        transform.position = myGamemanager.myMapManager.StartPoint.position;
     }
     // Start is called before the first frame update
     void Start()
@@ -303,8 +303,7 @@ public class Monster : BattleSystem
     {
         if (!myAnim.GetCurrentAnimatorStateInfo(0).IsName(_standupName))
         {
-            var manager = GameManagement.Inst;
-            FindTarget(manager.myPlayer.transform, STATE.Angry);
+            FindTarget(myGamemanager.myPlayer.transform, STATE.Angry);
         }
     }
     void ResetBonesBehaviour()
@@ -426,6 +425,8 @@ public class Monster : BattleSystem
     }
     public bool IsSearchable()
     {
+        if (IsGameOver) return false;
+
         return (myState == STATE.Idle ||
             myState == STATE.Roaming ||
             myState == STATE.Search);

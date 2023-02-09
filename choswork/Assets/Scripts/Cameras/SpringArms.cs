@@ -68,6 +68,8 @@ public class SpringArms : CameraProperty
     {
         HandleOtherInput();
         if (IsPaused) return;
+        if (GameManagement.Inst.myGameState == GameManagement.GameState.GameOver) return;
+
         if (myCameraState != ViewState.UI)
             myTPSCam = SpringArmWork(myTPSCam); // 1인칭, 3인칭 카메라값을 같게 
 

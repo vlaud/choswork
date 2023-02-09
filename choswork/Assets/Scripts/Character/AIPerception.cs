@@ -99,7 +99,7 @@ public class AIPerception : MonoBehaviour
 
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
                 {
-                    if(!myMonster.IsGameOver)
+                    //if(!myMonster.IsGameOver)
                     {
                         canSeePlayer = true;
                         myTarget = target;

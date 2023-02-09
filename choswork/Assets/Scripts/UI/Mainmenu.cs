@@ -84,6 +84,11 @@ public class Mainmenu : MonoBehaviour
         print("Scene on scene");
         if (scene.name == "Title")
         {
+            Cursor.lockState = CursorLockMode.None;
+            if (transform.parent.parent == GameObject.Find("SceneLoader").transform)
+            {
+                Destroy(GameObject.Find("SceneLoader"));
+            }
             SoundManager.Inst.PlayBGM(titleBGM);
         }
         if (scene.name == "GameStage")

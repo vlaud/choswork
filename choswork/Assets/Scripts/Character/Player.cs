@@ -43,6 +43,7 @@ public class Player : BattleSystem
                 break;
             case STATE.Death:
                 StopAllCoroutines();
+                GameManagement.Inst.GameOver();
                 myAnim.SetTrigger("Dead");
                 foreach (IBattle ib in myAttackers)
                 {
@@ -164,6 +165,8 @@ public class Player : BattleSystem
     }
     public override void ToggleEscapeEvent()
     {
+        if (myState == STATE.Death) return;
+
         if (myState != STATE.Pause)
             ChangeState(STATE.Pause);
         else
