@@ -45,7 +45,8 @@ public class Monster : BattleSystem
 
     //ai path
     private NavMeshPath myPath;
-   
+    NavMeshQueryFilter filter;
+
     public enum STATE
     {
         Create, Idle, Roaming, Search, Angry, RagDoll, StandUp, ResetBones, Death
@@ -75,11 +76,11 @@ public class Monster : BattleSystem
                 StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
                 break;
             case STATE.Roaming:
-                RePath(myPath, myTarget.position, () => LostTarget());
+                RePath(myPath, myTarget.position, filter, () => LostTarget());
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
-                AttackTarget(myPath, myTarget);
+                AttackTarget(myPath, myTarget, filter);
                 break;
             case STATE.Search:
                 myAnim.SetBool("IsMoving", false);
@@ -150,6 +151,8 @@ public class Monster : BattleSystem
     void Start()
     {
         myPath = new NavMeshPath();
+        filter.areaMask = 1 << NavMesh.GetAreaFromName("Ground");
+        filter.agentTypeID = 0;
         ChangeState(STATE.Idle);
     }
 
@@ -168,7 +171,7 @@ public class Monster : BattleSystem
     {
         var player = GameManagement.Inst.myPlayer.myHips;
 
-        if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1 << NavMesh.GetAreaFromName("Ground")))
+        if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, filter))
         {
             if (player.position.y < hit.position.y) // 물건이 천장으로 to ceiling
             {
@@ -198,7 +201,7 @@ public class Monster : BattleSystem
             Debug.Log("거리: " + dist);
             aiHeardPlayer = true;
             myTarget = HearingTr;
-            RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
+            RePath(myPath, myTarget.position, filter, () => LostTarget(), "IsChasing");
         }
         else
         {
