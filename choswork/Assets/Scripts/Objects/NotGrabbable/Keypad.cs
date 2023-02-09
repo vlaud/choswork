@@ -9,6 +9,8 @@ public struct KeypadStat
 {
     public GameObject keypadUI;
     public GameObject hintNote;
+    public GameObject keyItem;
+    public Transform keyItemPos;
 }
 public class Keypad : ObjectNotGrabbable
 {
@@ -20,6 +22,28 @@ public class Keypad : ObjectNotGrabbable
     public Button[] myButtons;
     private string Nr = null;
     [SerializeField] private int NrIndex = 0;
+
+    public enum State
+    {
+        Create, Default, Correct
+    }
+    public State myState = State.Create;
+
+    void ChangeState(State s)
+    {
+        if (myState == s) return;
+        myState = s;
+
+        switch (myState)
+        {
+            case State.Default:
+                break;
+            case State.Correct:
+                DisableUI();
+                Cursor.lockState = CursorLockMode.Locked;
+                break;
+        }
+    }
     private void Awake()
     {
         SetActionText();
@@ -38,15 +62,24 @@ public class Keypad : ObjectNotGrabbable
         ButtonClick();
         hintText.text = Password;
         DisableUI();
+        ChangeState(State.Default);
     }
     public override void Interact()
     {
-        myKeypadUI.gameObject.SetActive(true);
-        Cursor.lockState = CursorLockMode.None;
+        switch (myState)
+        {
+            case State.Default:
+                myKeypadUI?.gameObject.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+                break;
+            case State.Correct:
+                Instantiate(myKeypad.keyItem, myKeypad.keyItemPos.position, Quaternion.identity);
+                break;
+        }
     }
     public override void DisableUI()
     {
-        myKeypadUI.gameObject.SetActive(false);
+        myKeypadUI?.gameObject.SetActive(false);
     }
     public void CodeFunction(string Number)
     {
@@ -67,7 +100,11 @@ public class Keypad : ObjectNotGrabbable
     }
     public void EnterNumber()
     {
-        if(Nr == hintText.text) passwordInput.text = "correct!";
+        if (Nr == hintText.text)
+        {
+            passwordInput.text = "correct!";
+            ChangeState(State.Correct);
+        }
         else
         {
             passwordInput.text = "Wrong!";
@@ -80,5 +117,15 @@ public class Keypad : ObjectNotGrabbable
         NrIndex = 0;
         Nr = null;
         passwordInput.text = Nr;
+    }
+    public override void GhostBehaviour()
+    {
+        if (IsGhost)
+        {
+            Destroy(myKeypadUI.gameObject);
+            myKeypadUI = null;
+            Destroy(myHintNote.gameObject);
+            myHintNote = null;
+        }
     }
 }

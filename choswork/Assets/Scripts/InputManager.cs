@@ -99,6 +99,7 @@ public interface InputManagement
     void HandleUI();
     void HandleOtherInput();
     void ToggleEscapeEvent();
+    void DesireCursorState(GameManagement.GameState state, CursorLockMode cursorState);
 
 }
 public class InputManager : PlayerAction, InputManagement
@@ -158,7 +159,7 @@ public class InputManager : PlayerAction, InputManagement
         // UI handling
         if (IsMoveKeyPressed())
         {
-            Cursor.lockState = CursorLockMode.Locked;
+            DesireCursorState(GameManagement.GameState.Play, CursorLockMode.Locked);
             DisableUI();
         }
         if (Input.GetKeyDown(KeyCode.I))
@@ -184,8 +185,36 @@ public class InputManager : PlayerAction, InputManagement
         // Any other input handling
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            ToggleEscapeEvent();
+            var mainMenu = GameManagement.Inst.myMainmenu;
+            if (mainMenu != null)
+            {
+                if(mainMenu.myState == Mainmenu.State.Menu) ToggleEscapeEvent();
+                else return;
+            }
+            else if (mainMenu == null) ToggleEscapeEvent();
+            else return;
+                
+            if (GameManagement.Inst.myGameState == GameManagement.GameState.Pause)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                mainMenu?.ShowMenuAnim(true);
+            }
+            else
+            {
+                if(GameManagement.Inst.myInventory.IsInventoryEnabled())
+                    Cursor.lockState = CursorLockMode.None;
+                else
+                    Cursor.lockState = CursorLockMode.Locked;
+                mainMenu?.ShowMenuAnim(false);
+                mainMenu?.DisableUI();
+            }
         }
     }
     public virtual void ToggleEscapeEvent() { }
+    
+    public void DesireCursorState(GameManagement.GameState state, CursorLockMode cursorState)
+    {
+        if (GameManagement.Inst.myGameState == state)
+            Cursor.lockState = cursorState;
+    }
 }

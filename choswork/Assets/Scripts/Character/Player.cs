@@ -16,6 +16,13 @@ public class Player : BattleSystem
     public HPBar myHPBar;
     private float animOffset = 0.04f;
     private GameManagement myGamemanager;
+    public Transform myHips;
+    [Header("카메라 이펙트 설정")]
+    public CameraShake camShake;
+    [SerializeField] private CameraSet? curCamset;
+    [SerializeField] private GameObject playerCamera;
+    [SerializeField] private float shake_duration;
+    [SerializeField] private float shake_magnitude;
     public enum STATE
     {
         Create, Play, Pause, Death
@@ -56,6 +63,9 @@ public class Player : BattleSystem
     // Start is called before the first frame update
     void Start()
     {
+        curCamset = myCameras.GetMyCamera();
+        playerCamera = curCamset?.myCam;
+        camShake = playerCamera?.GetComponent<CameraShake>();
         myGamemanager = GameManagement.Inst;
         myMoveSpeed = myStat.MoveSpeed;
         KickPoint.SetActive(false);
@@ -69,6 +79,9 @@ public class Player : BattleSystem
     void Update()
     {
         StateProcess();
+        curCamset = myCameras.GetMyCamera();
+        playerCamera = curCamset?.myCam;
+        camShake = playerCamera?.GetComponent<CameraShake>();
     }
     public override void PlayerMove()
     {
@@ -135,12 +148,13 @@ public class Player : BattleSystem
     }
     public override void OnDamage(float dmg)
     {
+        StartCoroutine(camShake.Shake(shake_duration, shake_magnitude));
         myStat.HP -= dmg;
         if (Mathf.Approximately(myStat.HP, 0.0f))
         {
             ChangeState(STATE.Death);
         }
-        //myAnim.SetTrigger("Damage");
+        myAnim.SetTrigger("Damage");
     }
     public override void ToggleEscapeEvent()
     {

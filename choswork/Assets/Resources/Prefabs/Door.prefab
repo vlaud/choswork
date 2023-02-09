@@ -92,7 +92,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionText: {fileID: 0}
-  ShowMessage: " \uC5F4\uAE30 "
+  ShowMessage: " \uC544\uC774\uD15C \uD544\uC694 "
+  IsGhost: 0
   requiredItem: {fileID: 11400000, guid: 72ef8158939b3b7499caf0f3c8ce7676, type: 2}
 --- !u!1 &2479829241652559760
 GameObject:

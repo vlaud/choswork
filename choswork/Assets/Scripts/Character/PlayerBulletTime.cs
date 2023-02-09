@@ -16,7 +16,8 @@ public class PlayerBulletTime : InputManager
     [SerializeField] private Player _player;
     private Dictionary<Transform, Transform> _spawnedObjects = new Dictionary<Transform, Transform>();
     private Dictionary<ObjectNotGrabbable, ObjectNotGrabbable> _ghostInterables = new Dictionary<ObjectNotGrabbable, ObjectNotGrabbable>();
-    private Transform ghostPlayer;
+    [SerializeField] private Transform ghostPlayer;
+    [SerializeField] private SpringArms ghostCamera;
     private float time_start;
     [SerializeField] private float time_current;
     private float time_Max = 1f;
@@ -73,10 +74,15 @@ public class PlayerBulletTime : InputManager
         transform.position = ghostPlayer.position;
         transform.rotation = ghostPlayer.rotation;
 
+        _player.myCameras.myFPSCam.curRot = ghostCamera.myFPSCam.curRot;
+        _player.myCameras.myTPSCam.curRot = ghostCamera.myTPSCam.curRot;
+        _player.myCameras.myUICam.curRot = ghostCamera.myUICam.curRot;
+
         foreach (var item in _spawnedObjects)
         {
-            item.Value.position = item.Key.position;
-            item.Value.rotation = item.Key.rotation;
+            //Debug.Log(_simulationScene + ", " + item.Value);
+            item.Key.position = item.Value.position;
+            item.Key.rotation = item.Value.rotation;
         }
         foreach (var item in _ghostInterables)
         {
@@ -137,25 +143,21 @@ public class PlayerBulletTime : InputManager
         ghostPlayer.myHPBar = null;
         ghostPlayer.myCameras.GhostSet(true);
         var AnimEvent = ghostPlayer.GetComponentsInChildren<AnimEvent>();
-        foreach (var r in Renders)
-        {
-            r.enabled = false;
-        }
-        foreach (var c in Camera)
-        {
-            c.enabled = false;
-        }
-        foreach (var c in AudioListner)
-        {
-            c.enabled = false;
-        }
-        foreach (var c in AnimEvent)
-        {
-            c.noSoundandEffect = true;
-        }
+
+        foreach (var r in Renders) r.enabled = false;
+        foreach (var c in Camera) c.enabled = false;
+        foreach (var c in AudioListner) c.enabled = false;
+        foreach (var c in AnimEvent) c.noSoundandEffect = true;
+        foreach (var item in _ghostInterables) item.Value.GhostBehaviour();
+        
         SceneManager.MoveGameObjectToScene(ghostPlayer.gameObject, _simulationScene);
-        //if (!ghostPlayer.gameObject.isStatic) _spawnedObjects.Add(_player.transform, ghostPlayer.transform);
+        if (!ghostPlayer.gameObject.isStatic) _spawnedObjects.Add(_player.transform, ghostPlayer.transform);
         this.ghostPlayer = ghostPlayer.transform;
+        ghostCamera = ghostPlayer.myCameras;
+        
+        if (!ghostCamera.myRoot.gameObject.isStatic) _spawnedObjects.Add(_player.myCameras.myRoot, ghostCamera.myRoot);
+        if (!ghostCamera.mySpring.gameObject.isStatic) _spawnedObjects.Add(_player.myCameras.mySpring, ghostCamera.mySpring);
+        if (!ghostCamera.myUI_basePos.gameObject.isStatic) _spawnedObjects.Add(_player.myCameras.myUI_basePos, ghostCamera.myUI_basePos);
     }
     #endregion
 }

@@ -11,6 +11,7 @@ public class SpringArms : CameraProperty
     {
         Create, FPS, TPS, UI, Turn, Temp
     }
+    [Header("카메라 상태 설정")]
     public ViewState myCameraState = ViewState.Create; // 카메라 상태기계
     public CameraSet myFPSCam;
     public CameraSet myTPSCam;
@@ -44,7 +45,7 @@ public class SpringArms : CameraProperty
                 else
                     UICameraSetPos(myTPSCam);
                 StartCoroutine(UIMoving(myUI_basePos));
-                StartCoroutine(UIRotating(myModel_baseForward.forward, Space.World)); // UI때 모델 회전
+                StartCoroutine(UIRotating(myModel_baseForward.forward, true)); // UI때 모델 회전
                 SelectCamera(myUICam);
                 break;
             case ViewState.Turn:
@@ -56,7 +57,7 @@ public class SpringArms : CameraProperty
                 {
                     StartCoroutine(UIMoving(myTPSCam.myCam.transform, () => ChangeState(ViewState.TPS)));
                 }
-                StartCoroutine(UIRotating(myRoot.forward, Space.World)); // 모델 회전값을 fps 회전값과 맞춘다
+                StartCoroutine(UIRotating(myRoot.forward, false)); // 모델 회전값을 fps 회전값과 맞춘다
                 break;
             case ViewState.Temp:
                 break;
@@ -177,39 +178,44 @@ public class SpringArms : CameraProperty
     }
     IEnumerator UIMoving(Transform tr, UnityAction done = null) //UI카메라 활성화때 시점 자연스럽게 움직임
     {
-        Transform cam = myUICam.myCam.transform;
-        Vector3 dir = tr.position - cam.position;
+        Vector3 dir = tr.position - myUICam.myCam.transform.position;
         float dist = dir.magnitude;
         dir.Normalize();
 
-        while (dist > 0.0f)
+        while (dist > Mathf.Epsilon)
         {
+            dir = tr.position - myUICam.myCam.transform.position;
+            dist = dir.magnitude;
+            dir.Normalize();
             float delta = LookupSpeed * Time.unscaledDeltaTime;
             if (delta > dist)
             {
                 delta = dist;
             }
             dist -= delta;
-            cam.Translate(dir * delta, Space.World);
+            myUICam.myCam.transform.Translate(dir * delta, Space.World);
 
             yield return null;
         }
         done?.Invoke();
     }
-    IEnumerator UIRotating(Vector3 pos, Space sp)
+    IEnumerator UIRotating(Vector3 dir, bool IsUI, Space sp = Space.World)
     {
         UIkeyAvailable = false; // 잠깐 i키 안먹히게
+        
         //UI카메라 캐릭터 모델 돌리기
-        Vector3 dir = pos;
         float Angle = Vector3.Angle(myModel.forward, dir);
-
         float rotDir = 1.0f;
-        if (Vector3.Dot(myModel.right, dir) < 0.0f)
+        if (Vector3.Dot(myModel.right, dir) < Mathf.Epsilon)
         {
             rotDir = -rotDir;
         }
-        while (Angle > 0.0f)
+        while (Angle > Mathf.Epsilon)
         {
+            if (IsUI) dir = myModel_baseForward.forward;
+            else dir = myRoot.forward;
+            Angle = Vector3.Angle(myModel.forward, dir);
+
             float delta = myRotSpeed * Time.unscaledDeltaTime;
 
             if (delta > Angle)
@@ -342,7 +348,7 @@ public class SpringArms : CameraProperty
     public CameraSet SpringArmWork(CameraSet s) // 카메라 마우스
     {
         CameraSet set = s;
-        if (Cursor.lockState == CursorLockMode.Locked)
+        if (Cursor.lockState == CursorLockMode.Locked || myCameraState == ViewState.UI)
         {
             set.curRot.x -= Input.GetAxisRaw("Mouse Y") * LookupSpeed;
             set.curRot.x = Mathf.Clamp(set.curRot.x, LookupRange.x, LookupRange.y);

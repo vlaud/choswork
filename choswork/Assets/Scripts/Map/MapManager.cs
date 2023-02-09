@@ -96,6 +96,13 @@ public class MapManager : MonoBehaviour
     {
         myPath = new NavMeshPath();
     }
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            surfaces.BuildNavMesh();
+        }
+    }
     #region ObjectSpawn
     void DoorSpawn()
     {
@@ -112,7 +119,6 @@ public class MapManager : MonoBehaviour
     {
         GameObject obj = Instantiate(keyPad, transform.GetChild(0));
         obj.transform.localPosition = keypadPos;
-        obj.transform.SetParent(null);
         Transform hintnote = obj.GetComponent<Keypad>().myHintNote;
         hintnote.SetParent(transform.GetChild(Random.Range(1, transform.childCount)));
         hintnote.localPosition = hintNotePos;

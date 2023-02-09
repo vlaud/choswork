@@ -1688,7 +1688,7 @@ Camera:
   field of view: 60
   orthographic: 0
   orthographic size: 5
-  m_Depth: 2
+  m_Depth: 3
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 32
@@ -16724,6 +16724,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   newGameSceneName: GameStage
   quickSaveSlotID: 6
+  MainScreenPanel: {fileID: 4478286826061960671}
   MainOptionsPanel: {fileID: 4477126751097145591}
   StartGameOptionsPanel: {fileID: 4477923738885147327}
   GamePanel: {fileID: 4478669919552603351}
@@ -16732,6 +16733,9 @@ MonoBehaviour:
   LoadGamePanel: {fileID: 4478541477159661647}
   Fader: {fileID: 4478274297032803781}
   titleBGM: {fileID: 8300000, guid: b911662f2b94547e8a834cff9d26a788, type: 3}
+  InGameBGM: {fileID: 8300000, guid: dc1d6b96e081b4befbd033dee4730596, type: 3}
+  DangerBGM: {fileID: 8300000, guid: 0619c83f3a316514fa98ce31d4038f9d, type: 3}
+  GamePanel_Sliders: []
 --- !u!114 &4590805333565766513
 MonoBehaviour:
   m_ObjectHideFlags: 0

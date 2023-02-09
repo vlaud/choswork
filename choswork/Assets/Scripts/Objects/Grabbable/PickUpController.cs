@@ -10,6 +10,7 @@ public class PickUpController : ObjectGrabbable
     {
         myInventory = GameManagement.Inst.myInventory.gameObject;
         hearing = GameManagement.Inst.myMonster.HearingSound;
+        SetActionText();
     }
     public void CanPickUp()
     {
