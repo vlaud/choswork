@@ -19764,10 +19764,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 910030834}
+  - component: {fileID: 910030837}
   - component: {fileID: 910030838}
   - component: {fileID: 910030839}
   - component: {fileID: 910030841}
-  - component: {fileID: 910030837}
   - component: {fileID: 910030835}
   - component: {fileID: 910030836}
   - component: {fileID: 910030840}
@@ -43059,7 +43059,7 @@ MonoBehaviour:
     maxHp: 100
     moveSpeed: 1
     rotSpeed: 360
-    ap: 10
+    ap: 90
     attackRange: 1.5
     attackDelay: 1
   enemyMask:
@@ -43073,6 +43073,7 @@ MonoBehaviour:
   _changeStateTime: 3
   _standupName: Stand Up
   _standupClipName: Stand Up
+  IsGameOver: 0
   IsStart: 0
   HearingTr: {fileID: 922377815}
   hearingPos: {x: 0, y: 0, z: 0}

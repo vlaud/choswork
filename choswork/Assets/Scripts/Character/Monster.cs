@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEditor.PlayerSettings;
-using static UnityEngine.GraphicsBuffer;
 
 public class Monster : BattleSystem
 {
@@ -33,6 +31,7 @@ public class Monster : BattleSystem
     private BoneTransform[] _standupTransforms;
     private BoneTransform[] _ragdollTransforms;
     private Transform[] _bones;
+    public bool IsGameOver = false;
 
     //mob startPos
     public bool IsStart = false;
@@ -364,6 +363,7 @@ public class Monster : BattleSystem
     public void FindTarget(Transform target, STATE state)
     {
         if (myState == STATE.Death) return;
+        if(target == myGamemanager.myPlayer.transform && IsGameOver) return;
         myTarget = target;
         StopAllCoroutines();
         ChangeState(state);
@@ -385,6 +385,7 @@ public class Monster : BattleSystem
     {
         if (tr == myTarget)
         {
+            IsGameOver = true;
             LostTarget();
         }
     }

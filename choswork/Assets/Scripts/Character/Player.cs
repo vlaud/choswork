@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class Player : BattleSystem
 {
@@ -43,6 +42,12 @@ public class Player : BattleSystem
                 GameManagement.Inst.PauseGame();
                 break;
             case STATE.Death:
+                StopAllCoroutines();
+                myAnim.SetTrigger("Dead");
+                foreach (IBattle ib in myAttackers)
+                {
+                    ib.DeadMessage(transform);
+                }
                 break;
         }
     }
