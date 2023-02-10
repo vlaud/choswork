@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class Player : BattleSystem
 {
@@ -43,6 +42,13 @@ public class Player : BattleSystem
                 GameManagement.Inst.PauseGame();
                 break;
             case STATE.Death:
+                StopAllCoroutines();
+                GameManagement.Inst.GameOver();
+                myAnim.SetTrigger("Dead");
+                foreach (IBattle ib in myAttackers)
+                {
+                    ib.DeadMessage(transform);
+                }
                 break;
         }
     }
@@ -148,16 +154,20 @@ public class Player : BattleSystem
     }
     public override void OnDamage(float dmg)
     {
-        StartCoroutine(camShake.Shake(shake_duration, shake_magnitude));
+        camShake?.OnShakeCamera(shake_duration, shake_magnitude);
+        camShake?.OnRotateCamera(shake_duration, shake_magnitude);
         myStat.HP -= dmg;
         if (Mathf.Approximately(myStat.HP, 0.0f))
         {
             ChangeState(STATE.Death);
+            return;
         }
         myAnim.SetTrigger("Damage");
     }
     public override void ToggleEscapeEvent()
     {
+        if (myState == STATE.Death) return;
+
         if (myState != STATE.Pause)
             ChangeState(STATE.Pause);
         else

@@ -122,6 +122,7 @@ public class InputManager : PlayerAction, InputManagement
 
     public virtual void HandleObjectPickupAndThrow()
     {
+        if (GameManagement.Inst.myGameState == GameManagement.GameState.Pause) return;
         // 플레이어 오브젝트 집기 + 던지기
         if (Input.GetMouseButtonDown(0))
         {

@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEditor.PlayerSettings;
-using static UnityEngine.GraphicsBuffer;
 
 public class Monster : BattleSystem
 {
@@ -33,6 +31,7 @@ public class Monster : BattleSystem
     private BoneTransform[] _standupTransforms;
     private BoneTransform[] _ragdollTransforms;
     private Transform[] _bones;
+    public bool IsGameOver = false;
 
     //mob startPos
     public bool IsStart = false;
@@ -46,7 +45,8 @@ public class Monster : BattleSystem
 
     //ai path
     private NavMeshPath myPath;
-   
+    NavMeshQueryFilter filter;
+
     public enum STATE
     {
         Create, Idle, Roaming, Search, Angry, RagDoll, StandUp, ResetBones, Death
@@ -76,11 +76,11 @@ public class Monster : BattleSystem
                 StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
                 break;
             case STATE.Roaming:
-                RePath(myPath, myTarget.position, () => LostTarget());
+                RePath(myPath, myTarget.position, filter, () => LostTarget());
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
-                AttackTarget(myPath, myTarget);
+                AttackTarget(myPath, myTarget, filter);
                 break;
             case STATE.Search:
                 myAnim.SetBool("IsMoving", false);
@@ -145,12 +145,14 @@ public class Monster : BattleSystem
         }
         PopulateAnimation(_standupClipName, _standupTransforms);
         RagDollSet(false);
-        transform.position = GameManagement.Inst.myMapManager.StartPoint.position;
+        transform.position = myGamemanager.myMapManager.StartPoint.position;
     }
     // Start is called before the first frame update
     void Start()
     {
         myPath = new NavMeshPath();
+        filter.areaMask = 1 << myGamemanager.myMapManager.surfaces.defaultArea;
+        filter.agentTypeID = myGamemanager.myMapManager.surfaces.agentTypeID;
         ChangeState(STATE.Idle);
     }
 
@@ -169,7 +171,7 @@ public class Monster : BattleSystem
     {
         var player = GameManagement.Inst.myPlayer.myHips;
 
-        if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1 << NavMesh.GetAreaFromName("Ground")))
+        if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, filter))
         {
             if (player.position.y < hit.position.y) // 물건이 천장으로 to ceiling
             {
@@ -199,7 +201,7 @@ public class Monster : BattleSystem
             Debug.Log("거리: " + dist);
             aiHeardPlayer = true;
             myTarget = HearingTr;
-            RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
+            RePath(myPath, myTarget.position, filter, () => LostTarget(), "IsChasing");
         }
         else
         {
@@ -304,8 +306,7 @@ public class Monster : BattleSystem
     {
         if (!myAnim.GetCurrentAnimatorStateInfo(0).IsName(_standupName))
         {
-            var manager = GameManagement.Inst;
-            FindTarget(manager.myPlayer.transform, STATE.Angry);
+            FindTarget(myGamemanager.myPlayer.transform, STATE.Angry);
         }
     }
     void ResetBonesBehaviour()
@@ -364,6 +365,7 @@ public class Monster : BattleSystem
     public void FindTarget(Transform target, STATE state)
     {
         if (myState == STATE.Death) return;
+        if(target == myGamemanager.myPlayer.transform && IsGameOver) return;
         myTarget = target;
         StopAllCoroutines();
         ChangeState(state);
@@ -385,6 +387,7 @@ public class Monster : BattleSystem
     {
         if (tr == myTarget)
         {
+            IsGameOver = true;
             LostTarget();
         }
     }
@@ -425,6 +428,8 @@ public class Monster : BattleSystem
     }
     public bool IsSearchable()
     {
+        if (IsGameOver) return false;
+
         return (myState == STATE.Idle ||
             myState == STATE.Roaming ||
             myState == STATE.Search);

@@ -16,16 +16,17 @@ public class CharacterMovement : CharacterProperty
     //Coroutine CoroutineLerp = null;
     Coroutine attackCo = null;
     Coroutine CoRoot = null;
-    public void RePath(NavMeshPath myPath, Vector3 pos, UnityAction done = null, string anim = "IsMoving")
+    public void RePath(NavMeshPath myPath, Vector3 pos, NavMeshQueryFilter filter, UnityAction done = null, string anim = "IsMoving")
     {
         StopAllCoroutines();
         Debug.Log("목표지점: " + pos);
-        StartCoroutine(MovingByPath(myPath, pos, anim, done));
+        StartCoroutine(MovingByPath(myPath, pos, filter, anim, done));
     }
-    IEnumerator MovingByPath(NavMeshPath myPath, Vector3 pos, string anim, UnityAction done)
+    IEnumerator MovingByPath(NavMeshPath myPath, Vector3 pos, NavMeshQueryFilter filter, string anim, UnityAction done)
     {
         int cur = 1;
-        NavMesh.CalculatePath(transform.position, pos, 1 << NavMesh.GetAreaFromName("Ground"), myPath);
+        NavMesh.CalculatePath(transform.position, pos, filter, myPath);
+        //NavMesh.CalculatePath(transform.position, pos, 1 << NavMesh.GetAreaFromName("Ground"), myPath);
         Vector3[] list = myPath.corners;
 
         Vector3 dir = pos - transform.position;
@@ -39,7 +40,7 @@ public class CharacterMovement : CharacterProperty
 
             if (cur < list.Length)
             {
-                NavMesh.CalculatePath(transform.position, pos, 1 << NavMesh.GetAreaFromName("Ground"), myPath); // 실시간으로 네비메쉬 검사
+                NavMesh.CalculatePath(transform.position, pos, filter, myPath); // 실시간으로 네비메쉬 검사
                 list = myPath.corners;
                 for (int i = 0; i < list.Length - 1; ++i)
                 {
@@ -52,10 +53,10 @@ public class CharacterMovement : CharacterProperty
         }
         done?.Invoke();
     }
-    protected void AttackTarget(NavMeshPath myPath, Transform target)
+    protected void AttackTarget(NavMeshPath myPath, Transform target, NavMeshQueryFilter filter)
     {
         StopAllCoroutines();
-        attackCo = StartCoroutine(AttackRoot(myPath, target, myStat.AttackRange, myStat.AttackDelay));
+        attackCo = StartCoroutine(AttackRoot(myPath, target, filter, myStat.AttackRange, myStat.AttackDelay));
     }
     protected void RotateToTarget(Vector3 pos, UnityAction done = null)
     {
@@ -255,7 +256,7 @@ public class CharacterMovement : CharacterProperty
         myAnim.SetBool("IsMoving", false);
     }
     // 루트모션 공격
-    IEnumerator AttackRoot(NavMeshPath myPath, Transform target, float AttackRange, float AttackDelay)
+    IEnumerator AttackRoot(NavMeshPath myPath, Transform target, NavMeshQueryFilter filter, float AttackRange, float AttackDelay)
     {
         float playTime = 0.0f;
         float delta = 0.0f;
@@ -263,7 +264,7 @@ public class CharacterMovement : CharacterProperty
         {
             if (!myAnim.GetBool("IsAttacking")) playTime += Time.deltaTime;
             // 이동
-            NavMesh.CalculatePath(transform.position, target.position, 1 << NavMesh.GetAreaFromName("Ground"), myPath);
+            NavMesh.CalculatePath(transform.position, target.position, filter, myPath);
             Vector3[] list = myPath.corners;
             Vector3 dir = target.position - transform.position;
             float dist = dir.magnitude;

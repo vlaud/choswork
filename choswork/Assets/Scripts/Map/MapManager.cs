@@ -95,6 +95,7 @@ public class MapManager : MonoBehaviour
     void Start()
     {
         myPath = new NavMeshPath();
+        surfaces.BuildNavMesh();
     }
     private void Update()
     {
@@ -195,7 +196,6 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
-        surfaces.BuildNavMesh();
         for(int i = 0; i < tiles.Count; ++i)
         {
             tiles[i].StairPlusOffset();

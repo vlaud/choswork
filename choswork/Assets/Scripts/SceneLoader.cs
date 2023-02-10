@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-public class SceneLoader : MonoBehaviour
+public class SceneLoader : Singleton<SceneLoader>
 {
-    public static SceneLoader Inst = null;
+    //public static SceneLoader Inst = null;
     bool isChange = false;
     private void Awake()
     {
-        Inst = this;
+        //Inst = this;
+        base.Initialize();
         DontDestroyOnLoad(gameObject);
     }
 

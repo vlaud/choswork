@@ -11,7 +11,7 @@ public class GameManagement : MonoBehaviour
 {
     public enum GameState
     {
-        Create, Play, Pause
+        Create, Play, Pause, GameOver
     }
     public GameState myGameState = GameState.Create;
     public static GameManagement Inst = null;
@@ -52,6 +52,15 @@ public class GameManagement : MonoBehaviour
                 StopAllCoroutines();
                 GameTimeScale = 0.01f;
                 break;
+            case GameState.GameOver:
+                StopAllCoroutines();
+                if(myMainmenu != null)
+                {
+                    myMainmenu.transform.parent.SetParent(null);
+                    myMainmenu.newGameSceneName = "Title";
+                    myMainmenu?.FadeToLevel();
+                }
+                break;
         }
     }
     void StateProcess()
@@ -62,6 +71,8 @@ public class GameManagement : MonoBehaviour
                 if (IsBulletTime) curBulletTime -= Time.unscaledDeltaTime;
                 break;
             case GameState.Pause:
+                break;
+            case GameState.GameOver:
                 break;
         }
     }
@@ -124,5 +135,9 @@ public class GameManagement : MonoBehaviour
     public void UnPauseGame()
     {
         ChangeState(GameState.Play);
+    }
+    public void GameOver()
+    {
+        ChangeState(GameState.GameOver);
     }
 }
