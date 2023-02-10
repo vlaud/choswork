@@ -151,8 +151,8 @@ public class Monster : BattleSystem
     void Start()
     {
         myPath = new NavMeshPath();
-        filter.areaMask = 1 << NavMesh.GetAreaFromName("Ground");
-        filter.agentTypeID = 0;
+        filter.areaMask = 1 << myGamemanager.myMapManager.surfaces.defaultArea;
+        filter.agentTypeID = myGamemanager.myMapManager.surfaces.agentTypeID;
         ChangeState(STATE.Idle);
     }
 
