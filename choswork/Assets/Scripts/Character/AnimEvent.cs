@@ -18,7 +18,8 @@ public class AnimEvent : InputManager
     public AudioClip rightFootSound;// 오른발소리 
     public AudioClip kickSound;// 발차기 소리
     public AudioClip kickWallSound;// 닿는 발차기 소리
-    public AudioClip monsterScreamSound;// 닿는 발차기 소리
+    public AudioClip DamageSound; // 데미지 신음
+    public AudioClip ScreamSound;// 닿는 발차기 소리
     public AudioSource mySoundSpeaker; // 발소리 오디오
     public LayerMask KickBlock; // 발차기 닿는 레이어
     public GameObject orgDustEff;
@@ -82,9 +83,14 @@ public class AnimEvent : InputManager
     {
         ComboCheck?.Invoke(false);
     }
+    public void PlayDamage()
+    {
+        if (noSoundandEffect) return;
+        SoundManager.Inst.PlayOneShot(mySoundSpeaker, DamageSound);
+    }
     public void PlayScream()
     {
         if (noSoundandEffect) return;
-        SoundManager.Inst.PlayOneShot(mySoundSpeaker, monsterScreamSound);
+        SoundManager.Inst.PlayOneShot(mySoundSpeaker, ScreamSound);
     }
 }
