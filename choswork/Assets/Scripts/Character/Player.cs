@@ -160,6 +160,7 @@ public class Player : BattleSystem
         if (Mathf.Approximately(myStat.HP, 0.0f))
         {
             ChangeState(STATE.Death);
+            return;
         }
         myAnim.SetTrigger("Damage");
     }
