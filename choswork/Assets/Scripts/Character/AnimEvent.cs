@@ -56,8 +56,6 @@ public class AnimEvent : InputManager
     public void OnAttack()
     {
         Attack?.Invoke();
-        if (noSoundandEffect) return;
-        SoundManager.Inst.PlayOneShot(mySoundSpeaker, MobAttackSound);
     }
     public void OnKick()
     {
@@ -98,6 +96,11 @@ public class AnimEvent : InputManager
     public void ComboCheckEnd()
     {
         ComboCheck?.Invoke(false);
+    }
+    public void PlayHit()
+    {
+        if (noSoundandEffect) return;
+        SoundManager.Inst.PlayOneShot(mySoundSpeaker, MobAttackSound);
     }
     public void PlayDamage()
     {
