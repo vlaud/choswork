@@ -22,6 +22,8 @@ public class Player : BattleSystem
     [SerializeField] private GameObject playerCamera;
     [SerializeField] private float shake_duration;
     [SerializeField] private float shake_magnitude;
+    [SerializeField] private bool IsPosPerlin;
+    [SerializeField] private bool IsRotPerlin;
     public enum STATE
     {
         Create, Play, Pause, Death
@@ -141,6 +143,8 @@ public class Player : BattleSystem
         foreach (Collider col in list)
         {
             Debug.Log(col);
+            camShake?.OnShakeCamera(shake_duration, shake_magnitude, IsPosPerlin);
+            camShake?.OnRotateCamera(shake_duration, shake_magnitude, IsRotPerlin);
             col.GetComponent<Monster>().GetKick(myCameras.myRoot.transform.forward, KickStrength);
         }
     }
@@ -154,8 +158,8 @@ public class Player : BattleSystem
     }
     public override void OnDamage(float dmg)
     {
-        camShake?.OnShakeCamera(shake_duration, shake_magnitude);
-        camShake?.OnRotateCamera(shake_duration, shake_magnitude);
+        camShake?.OnShakeCamera(shake_duration, shake_magnitude, IsPosPerlin);
+        camShake?.OnRotateCamera(shake_duration, shake_magnitude, IsRotPerlin);
         myStat.HP -= dmg;
         if (Mathf.Approximately(myStat.HP, 0.0f))
         {

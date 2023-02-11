@@ -19859,8 +19859,10 @@ MonoBehaviour:
   myHips: {fileID: 6567089735124704536}
   camShake: {fileID: 0}
   playerCamera: {fileID: 0}
-  shake_duration: 0.3
-  shake_magnitude: 0.12
+  shake_duration: 0.4
+  shake_magnitude: 2.1
+  IsPosPerlin: 1
+  IsRotPerlin: 1
   myState: 0
 --- !u!114 &910030838
 MonoBehaviour:
@@ -43059,7 +43061,7 @@ MonoBehaviour:
     maxHp: 100
     moveSpeed: 1
     rotSpeed: 360
-    ap: 90
+    ap: 1
     attackRange: 1.5
     attackDelay: 1
   enemyMask:
