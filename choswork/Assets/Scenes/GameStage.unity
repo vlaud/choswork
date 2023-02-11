@@ -19860,7 +19860,7 @@ MonoBehaviour:
   camShake: {fileID: 0}
   playerCamera: {fileID: 0}
   shake_duration: 0.4
-  shake_magnitude: 2.1
+  shake_magnitude: 3
   IsPosPerlin: 1
   IsRotPerlin: 1
   myState: 0
