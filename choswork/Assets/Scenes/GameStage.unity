@@ -8976,6 +8976,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 459200600}
   - {fileID: 1673519384}
   - {fileID: 1505737308}
   - {fileID: 543450652745343936}
@@ -9918,6 +9919,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 456121145}
   m_CullTransparentMesh: 1
+--- !u!1 &459200599
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 459200600}
+  m_Layer: 3
+  m_Name: bloodPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &459200600
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459200599}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0.057, y: 1.43, z: 0.126}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 396468081}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &464493186
 GameObject:
   m_ObjectHideFlags: 0
@@ -19859,8 +19891,13 @@ MonoBehaviour:
   myHips: {fileID: 6567089735124704536}
   camShake: {fileID: 0}
   playerCamera: {fileID: 0}
-  shake_duration: 0.3
-  shake_magnitude: 0.12
+  shake_duration: 0.4
+  shake_magnitude: 3
+  IsPosPerlin: 1
+  IsRotPerlin: 1
+  bloodEffect_origin: {fileID: 1962516439210982, guid: 3c657dedc43d33a4987fbf09e6363067, type: 3}
+  bloodEffect: {fileID: 0}
+  bloodPos: {fileID: 459200600}
   myState: 0
 --- !u!114 &910030838
 MonoBehaviour:
@@ -34508,7 +34545,7 @@ Transform:
   m_Children:
   - {fileID: 1933621569}
   m_Father: {fileID: 396468081}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1507569136
 GameObject:
@@ -38064,7 +38101,7 @@ Transform:
   - {fileID: 810102848}
   - {fileID: 744309638}
   m_Father: {fileID: 396468081}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &1673519385
 Light:
@@ -43059,7 +43096,7 @@ MonoBehaviour:
     maxHp: 100
     moveSpeed: 1
     rotSpeed: 360
-    ap: 90
+    ap: 1
     attackRange: 1.5
     attackDelay: 1
   enemyMask:
@@ -48566,7 +48603,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 396468081}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2109581998
 GameObject:
@@ -49732,7 +49769,7 @@ Transform:
   - {fileID: 1184798680506084782}
   - {fileID: 6567089735124704536}
   m_Father: {fileID: 396468081}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &543450653258124262
 Transform:
@@ -53235,13 +53272,28 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  BleedCheck:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 910030837}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: BleedCheck
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   leftFoot: {fileID: 3816028668890046737}
   rightFoot: {fileID: 2476738135074098572}
   leftFootSound: {fileID: 8300000, guid: 42e65e088b3f4374e851b8dbd38f3df9, type: 3}
   rightFootSound: {fileID: 8300000, guid: 8bc94ec6ed537e743b481638bdcd503d, type: 3}
   kickSound: {fileID: 8300000, guid: 482611fe6bc559142a00be6e726b4862, type: 3}
   kickWallSound: {fileID: 8300000, guid: 74198389e177d0948b63ca9a3fb22801, type: 3}
-  MobAttackSound: {fileID: 0}
+  MobAttackSound: {fileID: 8300000, guid: 1f53a5fc6bd934e46a5d8cfa8fd27b64, type: 3}
   MobAttackYell: {fileID: 8300000, guid: 2d173c8646a322447b66b059a587f365, type: 3}
   DamageSound: {fileID: 8300000, guid: 1f7b08cb617fb864fafcd46f45ebec2e, type: 3}
   ScreamSound: {fileID: 8300000, guid: ddc650b445586454e9e4f5e74d58d0ed, type: 3}
@@ -53472,13 +53524,16 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  BleedCheck:
+    m_PersistentCalls:
+      m_Calls: []
   leftFoot: {fileID: 0}
   rightFoot: {fileID: 0}
   leftFootSound: {fileID: 0}
   rightFootSound: {fileID: 0}
   kickSound: {fileID: 0}
   kickWallSound: {fileID: 0}
-  MobAttackSound: {fileID: 8300000, guid: 1f53a5fc6bd934e46a5d8cfa8fd27b64, type: 3}
+  MobAttackSound: {fileID: 0}
   MobAttackYell: {fileID: 8300000, guid: 170c978187daf28498d8f2cdbe1dc3cb, type: 3}
   DamageSound: {fileID: 0}
   ScreamSound: {fileID: 8300000, guid: 4f99cc9880447d54f899cc448d1c1388, type: 3}
