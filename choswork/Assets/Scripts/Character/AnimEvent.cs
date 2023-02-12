@@ -11,6 +11,7 @@ public class AnimEvent : InputManager
     public UnityEvent Skill = default;
     public UnityEvent<bool> ComboCheck = default;
     public UnityEvent<bool> KickCheck = default;
+    public UnityEvent<bool> BleedCheck = default;
     // UnityEvent<bool, int> 파라미터 필요한 만큼 넣기
     public Transform leftFoot;
     public Transform rightFoot;
@@ -106,6 +107,14 @@ public class AnimEvent : InputManager
     {
         if (noSoundandEffect) return;
         SoundManager.Inst.PlayOneShot(mySoundSpeaker, DamageSound);
+    }
+    public void StartBleed()
+    {
+        BleedCheck?.Invoke(true);
+    }
+    public void EndBleed()
+    {
+        BleedCheck?.Invoke(false);
     }
     public void PlayScream()
     {

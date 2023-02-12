@@ -24,6 +24,10 @@ public class Player : BattleSystem
     [SerializeField] private float shake_magnitude;
     [SerializeField] private bool IsPosPerlin;
     [SerializeField] private bool IsRotPerlin;
+    [Header("¿Ã∆Â∆Æ º≥¡§")]
+    [SerializeField] private GameObject bloodEffect_origin;
+    [SerializeField] private GameObject bloodEffect;
+    [SerializeField] private Transform bloodPos;
     public enum STATE
     {
         Create, Play, Pause, Death
@@ -151,6 +155,13 @@ public class Player : BattleSystem
     public void KickCheck(bool v)
     {
         KickPoint.SetActive(v);
+    }
+    public void BleedCheck(bool v)
+    {
+        if (bloodEffect == null)
+            bloodEffect = Instantiate(bloodEffect_origin, bloodPos);
+
+        bloodEffect.SetActive(v);
     }
     public override Animator ReturnAnim()
     {
