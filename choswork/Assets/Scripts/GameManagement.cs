@@ -123,10 +123,12 @@ public class GameManagement : MonoBehaviour
     {
         GameTimeScale = SetScale;
         Debug.Log("Slow Time Start: " + Cooltime + "sec");
+        myPlayer.TimeStopCheck(true);
         yield return new WaitForSecondsRealtime(Cooltime);
         GameTimeScale = 1f;
         Debug.Log("Slow Time End");
         IsBulletTime = false;
+        myPlayer.TimeStopCheck(false);
     }
     public void PauseGame()
     {
