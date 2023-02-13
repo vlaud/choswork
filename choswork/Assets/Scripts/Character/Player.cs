@@ -146,9 +146,10 @@ public class Player : BattleSystem
     public void TimeStopCheck(bool v)
     {
         if (timeStopEffect == null)
-            timeStopEffect = Instantiate(Resources.Load("Prefabs/forcefield"), playerCamera.transform) as GameObject;
+            timeStopEffect = Instantiate(Resources.Load("Prefabs/forcefield"), transform) as GameObject;
         
         timeStopEffect.SetActive(v);
+        timeStopEffect.transform.localScale = new Vector3(3f, 3f, 3f);
     }
     public void KickTarget()
     {

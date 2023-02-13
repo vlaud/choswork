@@ -19898,6 +19898,7 @@ MonoBehaviour:
   bloodEffect_origin: {fileID: 1962516439210982, guid: 3c657dedc43d33a4987fbf09e6363067, type: 3}
   bloodEffect: {fileID: 0}
   bloodPos: {fileID: 459200600}
+  timeStopEffect: {fileID: 0}
   myState: 0
 --- !u!114 &910030838
 MonoBehaviour:
