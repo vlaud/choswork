@@ -61,6 +61,8 @@ public class Mainmenu : Singleton<Mainmenu>
         //new key
         PlayerPrefs.SetInt("quickSaveSlot", quickSaveSlotID);
         GamePanel_Sliders = GamePanel.transform.GetComponentsInChildren<Slider>();
+        GamePanel_Sliders[0].value = GraphicManager.Inst.fbrightness;
+        GamePanel_Sliders[1].value = GraphicManager.Inst.fconstrast;
         GamePanel_Sliders[2].value = SoundManager.Inst.bgmVolume;
         GamePanel_Sliders[3].value = SoundManager.Inst.effectVolume;
         ChangeState(State.Menu);
@@ -103,6 +105,8 @@ public class Mainmenu : Singleton<Mainmenu>
         {
             ChangeState(State.Menu);
             SoundManager.Inst.PlayBGM(InGameBGM);
+            GamePanel_Sliders[0].onValueChanged.AddListener((float v) => GraphicManager.Inst.fbrightness = v);
+            GamePanel_Sliders[1].onValueChanged.AddListener((float v) => GraphicManager.Inst.fconstrast = v);
             GamePanel_Sliders[2].onValueChanged.AddListener((float v) => SoundManager.Inst.bgmVolume = v);
             GamePanel_Sliders[3].onValueChanged.AddListener((float v) => SoundManager.Inst.effectVolume = v);
             newGameSceneName = "testScene";
