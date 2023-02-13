@@ -8,16 +8,15 @@ public class GraphicManager : Singleton<GraphicManager> // »ç¿îµå ¸Å´ÏÀú´Â ½ÌÅ¬Å
     public PostProcessProfile constrast;
     public PostProcessLayer layer;
 
-    AutoExposure exposure;
     ColorGrading grading;
 
     public float fbrightness
     {
-        get => exposure.keyValue.value;
+        get => grading.postExposure.value;
         set
         {
-            exposure.keyValue.value = Mathf.Clamp(value, 0.1f, 10.0f);
-            PlayerPrefs.SetFloat("Game_Graphic_Brightness", 1.0f - exposure.keyValue.value);
+            grading.postExposure.value = Mathf.Clamp(value, -3f, 3f);
+            PlayerPrefs.SetFloat("Game_Graphic_Brightness", 1.0f - grading.postExposure.value);
         }
     }
     public float fconstrast
@@ -32,35 +31,10 @@ public class GraphicManager : Singleton<GraphicManager> // »ç¿îµå ¸Å´ÏÀú´Â ½ÌÅ¬Å
     private void Awake()
     {
         base.Initialize();
-        if (brightness.TryGetSettings(out exposure))
-        {
-            exposure.keyValue.value = 1.0f - PlayerPrefs.GetFloat("Game_Graphic_Brightness");
-        }
         if (constrast.TryGetSettings(out grading))
         {
+            grading.postExposure.value = 1.0f - PlayerPrefs.GetFloat("Game_Graphic_Brightness");
             grading.contrast.value = 1.0f - PlayerPrefs.GetFloat("Game_Graphic_Contrast");
-        }
-    }
-    public void AdjustBrightness(float value)
-    {
-        if(value != 0)
-        {
-            exposure.keyValue.value = value;
-        }
-        else
-        {
-            exposure.keyValue.value = .05f;
-        }
-    }
-    public void AdjustContrast(float value)
-    {
-        if (value != 0)
-        {
-            grading.contrast.value = value;
-        }
-        else
-        {
-            grading.contrast.value = .05f;
         }
     }
 }
