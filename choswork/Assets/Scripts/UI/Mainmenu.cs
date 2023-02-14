@@ -115,6 +115,12 @@ public class Mainmenu : Singleton<Mainmenu>
         }
         if (scene.name == "testScene")
         {
+            newGameSceneName = "GameStage2";
+            faderAnim.SetTrigger("FadeIn");
+        }
+        if (scene.name == "GameStage2")
+        {
+            newGameSceneName = "Title";
             faderAnim.SetTrigger("FadeIn");
         }
     }
