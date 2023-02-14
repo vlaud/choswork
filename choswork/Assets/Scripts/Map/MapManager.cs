@@ -135,25 +135,20 @@ public class MapManager : MonoBehaviour
     {
         int floor = mapSize.x * mapSize.z; // 1층에선 소환 안되게끔
 
-        // 중복 숫자 방지
-        List<int> spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, false);
-
-        //시작 위치
         for(int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
         {
+            // 중복 숫자 방지
+            List<int> spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, false);
+            //시작 위치
             GameObject obj = Instantiate(StartObj);
             StartPoint.Add(obj.transform);
-            StartNum.Add(spawnNums[i]);
+            StartNum.Add(spawnNums[0]);
             StartPoint[i].SetParent(transform.GetChild(StartNum[i]));
             StartPoint[i].localPosition = MobPos;
-        }
-        //도착 위치
-        spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, false);
-        for (int i = 0; i < StartNum.Count; ++i)
-        {
-            GameObject obj = Instantiate(EndObj);
+            //끝 위치
+            obj = Instantiate(EndObj);
             EndPoint.Add(obj.transform);
-            EndNum.Add(spawnNums[i]);
+            EndNum.Add(spawnNums[1]);
             EndPoint[i].SetParent(transform.GetChild(EndNum[i]));
             EndPoint[i].localPosition = MobPos;
         }
