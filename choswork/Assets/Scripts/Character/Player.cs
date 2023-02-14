@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : BattleSystem
 {
     Vector2 targetDir = Vector2.zero;
+    [Header("플레이어 기본 설정")]
     public float smoothMoveSpeed = 10.0f;
     public float myMoveSpeed = 1.0f;
     public float KickStrength = 10000.0f;
@@ -28,10 +29,12 @@ public class Player : BattleSystem
     [SerializeField] private GameObject bloodEffect_origin;
     [SerializeField] private GameObject bloodEffect;
     [SerializeField] private Transform bloodPos;
+    [SerializeField] private GameObject timeStopEffect;
     public enum STATE
     {
         Create, Play, Pause, Death
     }
+    [Header("상태 설정")]
     public STATE myState = STATE.Create;
 
     void ChangeState(STATE s)
@@ -139,6 +142,14 @@ public class Player : BattleSystem
     public override void TimeStop()
     {
         GameManagement.Inst.SetBulletTime(0.3f, 5f);
+    }
+    public void TimeStopCheck(bool v)
+    {
+        if (timeStopEffect == null)
+            timeStopEffect = Instantiate(Resources.Load("Prefabs/forcefield"), transform) as GameObject;
+        
+        timeStopEffect.SetActive(v);
+        timeStopEffect.transform.localScale = new Vector3(3f, 3f, 3f);
     }
     public void KickTarget()
     {

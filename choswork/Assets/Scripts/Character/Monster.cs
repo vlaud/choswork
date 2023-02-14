@@ -35,6 +35,7 @@ public class Monster : BattleSystem
 
     //mob startPos
     public bool IsStart = false;
+    public int mobIndex;
 
     //ai hearing
     public Transform HearingTr; // 실제 추적 위치
@@ -65,14 +66,7 @@ public class Monster : BattleSystem
             case STATE.Idle: // 평상시
                 IsStart = !IsStart;
                 myGamemanager.myMapManager.MobChangePath(IsStart);
-                if (IsStart)
-                {
-                    FindTarget(myGamemanager.myMapManager.EndPoint, STATE.Idle);
-                }
-                else
-                {
-                    FindTarget(myGamemanager.myMapManager.StartPoint, STATE.Idle);
-                }
+                FindTarget(myGamemanager.myMapManager.GetDestination(IsStart, mobIndex), STATE.Idle);
                 StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
                 break;
             case STATE.Roaming:
@@ -145,7 +139,7 @@ public class Monster : BattleSystem
         }
         PopulateAnimation(_standupClipName, _standupTransforms);
         RagDollSet(false);
-        transform.position = myGamemanager.myMapManager.StartPoint.position;
+        transform.position = myGamemanager.myMapManager.GetDestination(false, mobIndex).position;
     }
     // Start is called before the first frame update
     void Start()
@@ -228,7 +222,7 @@ public class Monster : BattleSystem
                 {
                     hearingPos = grab.soundPos;
                     CheckSoundDist();
-                    grab.IsSoundable = false;
+                    //grab.IsSoundable = false;
                 }
             }
         }

@@ -16,7 +16,8 @@ public class GameManagement : MonoBehaviour
     public GameState myGameState = GameState.Create;
     public static GameManagement Inst = null;
     public Player myPlayer;
-    public Monster myMonster;
+    //public Monster myMonster;
+    public Monster[] myMonsters;
     public SpringArms mySpringArms;
     public Inventory myInventory;
     public SoundManager mySound;
@@ -80,6 +81,11 @@ public class GameManagement : MonoBehaviour
     {
         Inst = this;
         Physics.autoSimulation = false;
+        myMonsters = FindObjectsOfType(typeof(Monster)) as Monster[];
+        for(int i =0; i < myMonsters.Length; ++i)
+        {
+            myMonsters[i].mobIndex = i;
+        }
         mySceneLoader = GameObject.Find("SceneLoader")?.GetComponent<SceneLoader>();
         myMainmenu = mySceneLoader?.gameObject.GetComponentInChildren<Mainmenu>();
         if(myMainmenu != null)
@@ -123,10 +129,12 @@ public class GameManagement : MonoBehaviour
     {
         GameTimeScale = SetScale;
         Debug.Log("Slow Time Start: " + Cooltime + "sec");
+        myPlayer.TimeStopCheck(true);
         yield return new WaitForSecondsRealtime(Cooltime);
         GameTimeScale = 1f;
         Debug.Log("Slow Time End");
         IsBulletTime = false;
+        myPlayer.TimeStopCheck(false);
     }
     public void PauseGame()
     {

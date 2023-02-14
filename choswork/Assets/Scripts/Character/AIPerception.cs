@@ -154,7 +154,7 @@ public class AIPerception : MonoBehaviour
     void Start()
     {
         myGamemanager = GameManagement.Inst;
-        myMonster = myGamemanager.myMonster;
+        myMonster = transform.GetComponent<Monster>();
         foundPlayer = myMonster.FindTarget;
         LostTarget = myMonster.LostTarget;
         ChangeState(State.Search);

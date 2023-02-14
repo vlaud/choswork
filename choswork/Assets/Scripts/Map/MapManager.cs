@@ -23,18 +23,20 @@ public class MapManager : MonoBehaviour
     }
     [field: Header("몬스터 위치 설정")]
     [SerializeField] Vector3 MobPos = Vector3.zero;
-    [field:SerializeField] public Transform StartPoint
+    [SerializeField] GameObject StartObj;
+    [field:SerializeField] public List<Transform> StartPoint
     {
         get;
         private set;
     }
-    public int StartNum;
-    [field:SerializeField] public Transform EndPoint
+    public List<int> StartNum;
+    [SerializeField] GameObject EndObj;
+    [field:SerializeField] public List<Transform> EndPoint
     {
         get;
         private set;
     }
-    public int EndNum;
+    public List<int> EndNum;
     [field: Header("아이템 위치 설정")]
     [field: SerializeField] public Transform ItemPoint
     {
@@ -75,11 +77,6 @@ public class MapManager : MonoBehaviour
             }
         }
         transform.localPosition = new Vector3(-mapSize.x / 2.0f + 0.5f, 0, -mapSize.z / 2.0f + 0.5f);
-    }
-    public bool PathCheck()
-    {
-        NavMesh.CalculatePath(StartPoint.position, EndPoint.position, NavMesh.AllAreas, myPath);
-        return myPath.status == NavMeshPathStatus.PathComplete ? true : false;
     }
     private void Awake()
     {
@@ -138,38 +135,52 @@ public class MapManager : MonoBehaviour
     {
         int floor = mapSize.x * mapSize.z; // 1층에선 소환 안되게끔
 
-        // 중복 숫자 방지
-        List<int> spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, false);
-        
-        //시작 위치
-        StartNum = spawnNums[0];
-        StartPoint.SetParent(transform.GetChild(StartNum));
-        StartPoint.localPosition = MobPos;
-        //도착 위치
-        EndNum = spawnNums[1];
-        EndPoint.SetParent(transform.GetChild(EndNum));
-        EndPoint.localPosition = MobPos;
+        for(int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
+        {
+            // 중복 숫자 방지
+            List<int> spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, false);
+            //시작 위치
+            GameObject obj = Instantiate(StartObj);
+            StartPoint.Add(obj.transform);
+            StartNum.Add(spawnNums[0]);
+            StartPoint[i].SetParent(transform.GetChild(StartNum[i]));
+            StartPoint[i].localPosition = MobPos;
+            //끝 위치
+            obj = Instantiate(EndObj);
+            EndPoint.Add(obj.transform);
+            EndNum.Add(spawnNums[1]);
+            EndPoint[i].SetParent(transform.GetChild(EndNum[i]));
+            EndPoint[i].localPosition = MobPos;
+        }
     }
     public void MobChangePath(bool isStart)
     {
         int floor = mapSize.x * mapSize.z; // 1층에선 소환 안되게끔
 
         // 중복 숫자 방지
-        int[] remove = { StartNum, EndNum };
-        List<int> spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, true, remove);
-        
-        if (isStart)
+        for (int i = 0; i < StartNum.Count; ++i)
         {
-            EndNum = spawnNums[1];
-            EndPoint.transform.SetParent(transform.GetChild(spawnNums[1]));
-            EndPoint.transform.localPosition = MobPos;
+            int[] remove = { StartNum[i], EndNum[i] };
+            List<int> spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, true, remove);
+
+            if (isStart)
+            {
+                EndNum[i] = spawnNums[1];
+                EndPoint[i].transform.SetParent(transform.GetChild(spawnNums[1]));
+                EndPoint[i].transform.localPosition = MobPos;
+            }
+            else
+            {
+                StartNum[i] = spawnNums[0];
+                StartPoint[i].transform.SetParent(transform.GetChild(spawnNums[0]));
+                StartPoint[i].transform.localPosition = MobPos;
+            }
         }
-        else
-        {
-            StartNum = spawnNums[0];
-            StartPoint.transform.SetParent(transform.GetChild(spawnNums[0]));
-            StartPoint.transform.localPosition = MobPos;
-        }
+    }
+    public Transform GetDestination(bool IsStart, int mobindex)
+    {
+        if (IsStart) return EndPoint[mobindex];
+        else return StartPoint[mobindex];
     }
     #endregion
     #region MapGenerator
