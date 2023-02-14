@@ -94,14 +94,14 @@ public class MapManager : MonoBehaviour
     {
         myPath = new NavMeshPath();
         surfaces.BuildNavMesh();
-        ceilingSurface.BuildNavMesh();
+        ceilingSurface?.BuildNavMesh();
     }
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
             surfaces.BuildNavMesh();
-            ceilingSurface.BuildNavMesh();
+            ceilingSurface?.BuildNavMesh();
         }
     }
     #region ObjectSpawn
