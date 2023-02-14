@@ -228,7 +228,7 @@ public class Monster : BattleSystem
                 {
                     hearingPos = grab.soundPos;
                     CheckSoundDist();
-                    grab.IsSoundable = false;
+                    //grab.IsSoundable = false;
                 }
             }
         }

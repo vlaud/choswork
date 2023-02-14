@@ -9,7 +9,8 @@ public class PickUpController : ObjectGrabbable
     private void Start()
     {
         myInventory = GameManagement.Inst.myInventory.gameObject;
-        hearing = GameManagement.Inst.myMonster.HearingSound;
+        for (int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
+            hearings.Add(GameManagement.Inst.myMonsters[i].HearingSound);
         SetActionText();
     }
     public void CanPickUp()

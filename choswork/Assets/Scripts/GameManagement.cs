@@ -16,7 +16,8 @@ public class GameManagement : MonoBehaviour
     public GameState myGameState = GameState.Create;
     public static GameManagement Inst = null;
     public Player myPlayer;
-    public Monster myMonster;
+    //public Monster myMonster;
+    public Monster[] myMonsters;
     public SpringArms mySpringArms;
     public Inventory myInventory;
     public SoundManager mySound;
@@ -80,6 +81,7 @@ public class GameManagement : MonoBehaviour
     {
         Inst = this;
         Physics.autoSimulation = false;
+        myMonsters = FindObjectsOfType(typeof(Monster)) as Monster[];
         mySceneLoader = GameObject.Find("SceneLoader")?.GetComponent<SceneLoader>();
         myMainmenu = mySceneLoader?.gameObject.GetComponentInChildren<Mainmenu>();
         if(myMainmenu != null)
