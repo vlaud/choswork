@@ -654,6 +654,7 @@ GameObject:
   - component: {fileID: 1966132421177952270}
   - component: {fileID: 1966132421177952271}
   - component: {fileID: 1966132421177952264}
+  - component: {fileID: 1739298862903993434}
   m_Layer: 7
   m_Name: RoomWall
   m_TagString: Untagged
@@ -740,6 +741,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.9623094, y: 1, z: 1}
   m_Center: {x: 0.17951632, y: 0, z: 0}
+--- !u!208 &1739298862903993434
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1966132421177952265}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1966132421207679119
 GameObject:
   m_ObjectHideFlags: 0

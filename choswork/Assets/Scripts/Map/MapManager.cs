@@ -52,6 +52,7 @@ public class MapManager : MonoBehaviour
     [SerializeField] Vector3Int mapSize = Vector3Int.zero;
     [SerializeField] int startPos = 0;
     public NavMeshSurface surfaces;
+    public NavMeshSurface ceilingSurface;
     public Vector3 offset;
     List<Cell> board;
     [Header("오브젝트 설정")]
@@ -93,12 +94,14 @@ public class MapManager : MonoBehaviour
     {
         myPath = new NavMeshPath();
         surfaces.BuildNavMesh();
+        ceilingSurface.BuildNavMesh();
     }
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
             surfaces.BuildNavMesh();
+            ceilingSurface.BuildNavMesh();
         }
     }
     #region ObjectSpawn
