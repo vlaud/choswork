@@ -82,6 +82,10 @@ public class GameManagement : MonoBehaviour
         Inst = this;
         Physics.autoSimulation = false;
         myMonsters = FindObjectsOfType(typeof(Monster)) as Monster[];
+        for(int i =0; i < myMonsters.Length; ++i)
+        {
+            myMonsters[i].mobIndex = i;
+        }
         mySceneLoader = GameObject.Find("SceneLoader")?.GetComponent<SceneLoader>();
         myMainmenu = mySceneLoader?.gameObject.GetComponentInChildren<Mainmenu>();
         if(myMainmenu != null)

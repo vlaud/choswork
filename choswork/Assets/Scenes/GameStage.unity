@@ -15258,7 +15258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myGameState: 0
   myPlayer: {fileID: 910030837}
-  myMonster: {fileID: 1905050035}
+  myMonsters: []
   mySpringArms: {fileID: 1196819678}
   myInventory: {fileID: 1128442916}
   mySound: {fileID: 722393795}
@@ -43130,6 +43130,7 @@ MonoBehaviour:
   _standupClipName: Stand Up
   IsGameOver: 0
   IsStart: 0
+  mobIndex: 0
   HearingTr: {fileID: 922377815}
   hearingPos: {x: 0, y: 0, z: 0}
   hearingObj: {fileID: 0}
@@ -50188,10 +50189,12 @@ MonoBehaviour:
   PlayerStartPos: {x: -3, y: 0, z: -3}
   <PlayerStart>k__BackingField: {fileID: 45718839}
   MobPos: {x: 3, y: 1, z: -3}
-  <StartPoint>k__BackingField: {fileID: 685049426}
-  StartNum: 0
-  <EndPoint>k__BackingField: {fileID: 624279258}
-  EndNum: 0
+  StartObj: {fileID: 1425587472871760753, guid: d2885bbe741bd944ea26b78e6e1e489b, type: 3}
+  <StartPoint>k__BackingField: []
+  StartNum: 
+  EndObj: {fileID: 1198124612738582466, guid: d25a0da85293a6b4fb711db81e602c5f, type: 3}
+  <EndPoint>k__BackingField: []
+  EndNum: 
   <ItemPoint>k__BackingField: {fileID: 1170773548}
   ItemStartPos: {x: -3, y: 2, z: -3}
   doorPos: {x: -1, y: -0.6, z: -2.6}
