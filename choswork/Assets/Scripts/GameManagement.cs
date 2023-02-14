@@ -88,7 +88,7 @@ public class GameManagement : MonoBehaviour
         }
         mySceneLoader = GameObject.Find("SceneLoader")?.GetComponent<SceneLoader>();
         myMainmenu = mySceneLoader?.gameObject.GetComponentInChildren<Mainmenu>();
-        if(myMainmenu != null)
+        if(myMainmenu != null && myCanvas != null)
         {
             myCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             myCanvas.worldCamera = myMainmenu.transform.parent.GetComponent<Camera>();
