@@ -6,8 +6,8 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class Monster : RagDollAction
-{ private GameManagement myGamemanager;
-
+{ 
+    private GameManagement myGamemanager;
     public LayerMask enemyMask = default;
     public Transform mobTarget; // for checking myTarget
     public bool IsGameOver = false;
