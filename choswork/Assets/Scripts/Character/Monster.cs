@@ -44,7 +44,7 @@ public class Monster : RagDollAction
                 break;
             case STATE.Idle: // Æò»ó½Ã
                 IsStart = !IsStart;
-                myGamemanager.myMapManager.MobChangePath(IsStart);
+                myGamemanager.myMapManager.MobChangePath(IsStart, mobIndex);
                 FindTarget(myGamemanager.myMapManager.GetDestination(IsStart, mobIndex), STATE.Idle);
                 StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
                 break;
