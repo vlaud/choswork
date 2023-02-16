@@ -5,32 +5,11 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Monster : BattleSystem
-{
-    private class BoneTransform
-    {
-        public Vector3 Position { get; set; }
-
-        public Quaternion Rotation { get; set; }
-    }
-    private GameManagement myGamemanager;
+public class Monster : RagDollAction
+{ private GameManagement myGamemanager;
 
     public LayerMask enemyMask = default;
     public Transform mobTarget; // for checking myTarget
-    //mob ragdoll
-    public RagDollPhysics myRagDolls;
-    public Transform myHips;
-    public float _timetoWakeup = 3.0f;
-    public float _timeToResetBones;
-    public float _changeStateTime = 3.0f;
-    public string _standupName;
-    public string _standupClipName;
-    private CapsuleCollider cs;
-    private float _origintimetoWake;
-    private float _elapsedResetBonesTime;
-    private BoneTransform[] _standupTransforms;
-    private BoneTransform[] _ragdollTransforms;
-    private Transform[] _bones;
     public bool IsGameOver = false;
 
     //mob startPos
@@ -234,7 +213,7 @@ public class Monster : BattleSystem
     #endregion
 
     #region GetKickandRagDoll
-    public void GetKick(Vector3 dir, float strength)
+    public override void GetKick(Vector3 dir, float strength)
     {
         if (myState == STATE.RagDoll) return;
         Vector3 force;
@@ -244,112 +223,20 @@ public class Monster : BattleSystem
         force.y = strength;
         myRagDolls.myRagDoll.spineRigidBody.velocity += force * Time.fixedDeltaTime / (Time.timeScale * myRagDolls.myRagDoll.spineRigidBody.mass);
     }
-
-    public void RagDollSet(bool v)
+    public override void ChangeRagDollState(RagDollState ragdoll) 
     {
-        myRigid.isKinematic = v;
-        cs.isTrigger = v;
-        myAnim.enabled = !v;
-        myRagDolls.RagDollOnOff(v);
-    }
-    void AlignRotationToHips()
-    {
-        Vector3 originHipPos = myHips.position;
-        Quaternion originHipRot = myHips.rotation;
-
-        Vector3 desireDir = myHips.up * -1.0f;
-        desireDir.y = 0.0f;
-        desireDir.Normalize();
-
-        Quaternion fromtoRot = Quaternion.FromToRotation(transform.forward, desireDir);
-        transform.rotation *= fromtoRot;
-
-        myHips.position = originHipPos;
-        myHips.rotation = originHipRot;
-    }
-    void AlignPositonToHips()
-    {
-        Vector3 originHipPos = myHips.position;
-        transform.position = myHips.position;
-        Vector3 positionOffset = _standupTransforms[0].Position;
-        positionOffset.y = 0.0f;
-        positionOffset = transform.rotation * positionOffset;
-        transform.position -= positionOffset;
-
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit))
+        switch(ragdoll)
         {
-            transform.position = new Vector3(transform.position.x, hit.point.y, transform.position.z);
-        }
-        myHips.position = originHipPos;
-    }
-    void RagdollBehaviour()
-    {
-        _timetoWakeup -= Time.deltaTime;
-
-        if (_timetoWakeup <= 0.0f)
-        {
-            AlignRotationToHips();
-            AlignPositonToHips();
-
-            PopulateBoneTransforms(_ragdollTransforms);
-            ChangeState(STATE.ResetBones);
-            _elapsedResetBonesTime = 0.0f;
-        }
-    }
-    void StandingUpBehaviour()
-    {
-        if (!myAnim.GetCurrentAnimatorStateInfo(0).IsName(_standupName))
-        {
-            FindTarget(myGamemanager.myPlayer.transform, STATE.Angry);
-        }
-    }
-    void ResetBonesBehaviour()
-    {
-        _elapsedResetBonesTime += Time.deltaTime;
-        float elapsedPercentage = _elapsedResetBonesTime / _timeToResetBones;
-
-        for (int i = 0; i < _bones.Length; ++i)
-        {
-            _bones[i].localPosition = Vector3.Lerp(
-                _ragdollTransforms[i].Position,
-                _standupTransforms[i].Position,
-                elapsedPercentage);
-
-            _bones[i].localRotation = Quaternion.Lerp(
-                  _ragdollTransforms[i].Rotation,
-                    _standupTransforms[i].Rotation,
-                    elapsedPercentage);
-        }
-        if (elapsedPercentage >= 1.0f)
-        {
-            ChangeState(STATE.StandUp);
-            RagDollSet(false);
-            _timetoWakeup = _origintimetoWake;
-        }
-    }
-    void PopulateBoneTransforms(BoneTransform[] bonetransforms)
-    {
-        for (int boneIndex = 0; boneIndex < _bones.Length; ++boneIndex)
-        {
-            bonetransforms[boneIndex].Position = _bones[boneIndex].localPosition;
-            bonetransforms[boneIndex].Rotation = _bones[boneIndex].localRotation;
-        }
-    }
-    void PopulateAnimation(string clipName, BoneTransform[] bonetransforms)
-    {
-        Vector3 positionBeforeSampling = transform.position;
-        Quaternion rotationBeforeSampling = transform.rotation;
-        foreach (AnimationClip clip in myAnim.runtimeAnimatorController.animationClips)
-        {
-            if (clip.name == clipName)
-            {
-                clip.SampleAnimation(myAnim.gameObject, 0);
-                PopulateBoneTransforms(bonetransforms);
+            case RagDollState.ResetBones:
+                ChangeState(STATE.ResetBones);
                 break;
-            }
+            case RagDollState.StandUp:
+                ChangeState(STATE.StandUp);
+                break;
+            case RagDollState.NoRagdoll:
+                FindTarget(myGamemanager.myPlayer.transform, STATE.Angry);
+                break;
         }
-        transform.position = positionBeforeSampling;
-        transform.rotation = rotationBeforeSampling;
     }
     #endregion
     public void AttackCheck(bool v)
