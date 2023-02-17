@@ -77,6 +77,7 @@ public class Crawler : RagDollAction
                 break;
             case STATE.ToCeiling:
                 myReverser.localRotation = Quaternion.Euler(new Vector3(180f, 180f, 0f));
+                myReverser.localPosition = new Vector3(0f, 0.36f, 0f);
                 IsGround = false;
                 myRigid.useGravity = false;
                 ChangeState(STATE.Roaming);
@@ -84,6 +85,7 @@ public class Crawler : RagDollAction
             case STATE.RagDoll:
                 StopAllCoroutines();
                 myReverser.localRotation = Quaternion.identity;
+                myReverser.localPosition = Vector3.zero;
                 RagDollSet(true);
                 break;
             case STATE.StandUp:
