@@ -34,7 +34,7 @@ public class Crawler : RagDollAction
     public enum STATE
     {
         Create, Idle, Roaming, Search, Angry,
-        ToGround, ToJump, ToCeiling,
+        ToGround, ToJump, ToCeiling, ToAir,
         RagDoll, StandUp, ResetBones, Death
     }
     public STATE myState = STATE.Create;
@@ -72,6 +72,8 @@ public class Crawler : RagDollAction
             case STATE.ToJump:
                 StopAllCoroutines();
                 myRigid.AddForce(Vector3.up * JumpPower, ForceMode.Impulse);
+                break;
+            case STATE.ToAir:
                 break;
             case STATE.ToCeiling:
                 myReverser.localRotation = Quaternion.Euler(new Vector3(180f, 180f, 0f));
@@ -308,6 +310,17 @@ public class Crawler : RagDollAction
             if(myState == STATE.ToJump)
             {
                 ChangeState(STATE.ToCeiling);
+            }
+        }
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            if (myState == STATE.ToJump)
+            {
+                ChangeState(STATE.ToAir);
+            }
+            else if(myState == STATE.ToAir)
+            {
+                myRigid.AddForce(Vector3.up * JumpPower, ForceMode.Impulse);
             }
         }
     }
