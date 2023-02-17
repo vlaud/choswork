@@ -114,12 +114,29 @@ public class Crawler : RagDollAction
         RagDollSet(false);
         transform.position = myGamemanager.myMapManager.GetCrDestination(false).position;
     }
+    public int GetAgentId(string agentName)
+    {
+        var count = NavMesh.GetSettingsCount();
+        for (var i = 0; i < count; i++)
+        {
+            var id = NavMesh.GetSettingsByIndex(i).agentTypeID;
+            var name = NavMesh.GetSettingsNameFromID(id);
+            if (agentName == name)
+                return id;
+        }
+        return -1;
+    }
+    Vector3 GetNextCorner(NavMeshPath myPath)
+    {
+        Vector3[] list = myPath.corners;
+        return list[1];
+    }
     // Start is called before the first frame update
     void Start()
     {
         myPath = new NavMeshPath();
-        filter.areaMask = 1 << myGamemanager.myMapManager.ceilingSurface.defaultArea;
-        filter.agentTypeID = myGamemanager.myMapManager.ceilingSurface.agentTypeID;
+        filter.areaMask = 1 << NavMesh.GetAreaFromName("Ceiling");
+        filter.agentTypeID = GetAgentId("Crawler");
         ChangeState(STATE.Idle);
     }
 
