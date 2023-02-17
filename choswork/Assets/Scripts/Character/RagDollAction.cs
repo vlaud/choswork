@@ -36,7 +36,7 @@ public class RagDollAction : BattleSystem
         myAnim.enabled = !v;
         myRagDolls.RagDollOnOff(v);
     }
-    protected void AlignRotationToHips()
+    protected virtual void AlignRotationToHips()
     {
         Vector3 originHipPos = myHips.position;
         Quaternion originHipRot = myHips.rotation;

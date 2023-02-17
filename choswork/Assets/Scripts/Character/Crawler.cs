@@ -10,6 +10,10 @@ public class Crawler : RagDollAction
     public Transform mobTarget; // for checking myTarget
     public bool IsGameOver = false;
 
+    //RotReversing
+    public Transform myReverser;
+    bool IsGround = false;
+
     //mob startPos
     public bool IsStart = false;
 
@@ -25,7 +29,9 @@ public class Crawler : RagDollAction
     NavMeshQueryFilter filter;
     public enum STATE
     {
-        Create, Idle, Roaming, Search, Angry, RagDoll, StandUp, ResetBones, Death
+        Create, Idle, Roaming, Search, Angry,
+        ToGround, ToCeiling,
+        RagDoll, StandUp, ResetBones, Death
     }
     public STATE myState = STATE.Create;
     void ChangeState(STATE s)
@@ -54,8 +60,16 @@ public class Crawler : RagDollAction
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
                 break;
+            case STATE.ToGround:
+                IsGround = true;
+                ChangeState(STATE.RagDoll);
+                break;
+            case STATE.ToCeiling:
+                ChangeState(STATE.RagDoll);
+                break;
             case STATE.RagDoll:
                 StopAllCoroutines();
+                myReverser.localRotation = Quaternion.identity;
                 RagDollSet(true);
                 break;
             case STATE.StandUp:
@@ -77,6 +91,7 @@ public class Crawler : RagDollAction
             case STATE.Idle:
                 break;
             case STATE.Roaming:
+                GetNextCornerLayer();
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsAngry", true);
@@ -126,10 +141,18 @@ public class Crawler : RagDollAction
         }
         return -1;
     }
-    Vector3 GetNextCorner(NavMeshPath myPath)
+    void GetNextCornerLayer()
     {
-        Vector3[] list = myPath.corners;
-        return list[1];
+        if (myPath.corners.Length < 3) return;
+        Vector3 dir = myPath.corners[2] - myPath.corners[1];
+        if (Physics.Raycast(myPath.corners[1], dir,
+                out RaycastHit thit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Ground")))
+        {
+            Debug.DrawLine(myPath.corners[1], thit.point, Color.yellow);
+            Debug.Log(thit.transform.gameObject.layer);
+            if(!IsGround)
+                ChangeState(STATE.ToGround);
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -150,6 +173,48 @@ public class Crawler : RagDollAction
         yield return new WaitForSeconds(time);
         ChangeState(s);
     }
+    #region GetKickandRagDoll
+    public override void GetKick(Vector3 dir, float strength)
+    {
+        if (myState == STATE.RagDoll) return;
+        Vector3 force;
+        Debug.Log("kick");
+        ChangeState(STATE.RagDoll);
+        force = dir * strength;
+        force.y = strength;
+        myRagDolls.myRagDoll.spineRigidBody.velocity += force * Time.fixedDeltaTime / (Time.timeScale * myRagDolls.myRagDoll.spineRigidBody.mass);
+    }
+    protected override void AlignRotationToHips()
+    {
+        Vector3 originHipPos = myHips.position;
+        Quaternion originHipRot = myHips.rotation;
+
+        Vector3 desireDir = myHips.up;
+        desireDir.y = 0.0f;
+        desireDir.Normalize();
+
+        Quaternion fromtoRot = Quaternion.FromToRotation(transform.forward, desireDir);
+        transform.rotation *= fromtoRot;
+
+        myHips.position = originHipPos;
+        myHips.rotation = originHipRot;
+    }
+    public override void ChangeRagDollState(RagDollState ragdoll)
+    {
+        switch (ragdoll)
+        {
+            case RagDollState.ResetBones:
+                ChangeState(STATE.ResetBones);
+                break;
+            case RagDollState.StandUp:
+                ChangeState(STATE.StandUp);
+                break;
+            case RagDollState.NoRagdoll:
+                ChangeState(STATE.Roaming);
+                break;
+        }
+    }
+    #endregion
     public void FindTarget(Transform target, STATE state)
     {
         if (myState == STATE.Death) return;
