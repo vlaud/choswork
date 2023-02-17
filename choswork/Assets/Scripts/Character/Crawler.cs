@@ -13,6 +13,10 @@ public class Crawler : RagDollAction
     //RotReversing
     public Transform myReverser;
     bool IsGround = false;
+    public float JumpPower = 10f;
+
+    //old cs = r: 0.33, h: 1.21
+    //new cs = r: 0.15, h: 0.7
 
     //mob startPos
     public bool IsStart = false;
@@ -30,7 +34,7 @@ public class Crawler : RagDollAction
     public enum STATE
     {
         Create, Idle, Roaming, Search, Angry,
-        ToGround, ToCeiling,
+        ToGround, ToJump, ToCeiling,
         RagDoll, StandUp, ResetBones, Death
     }
     public STATE myState = STATE.Create;
@@ -65,8 +69,15 @@ public class Crawler : RagDollAction
                 myRigid.useGravity = true;
                 ChangeState(STATE.RagDoll);
                 break;
+            case STATE.ToJump:
+                StopAllCoroutines();
+                myRigid.AddForce(Vector3.up * JumpPower, ForceMode.Impulse);
+                break;
             case STATE.ToCeiling:
-                ChangeState(STATE.RagDoll);
+                myReverser.localRotation = Quaternion.Euler(new Vector3(180f, 180f, 0f));
+                IsGround = false;
+                myRigid.useGravity = false;
+                ChangeState(STATE.Roaming);
                 break;
             case STATE.RagDoll:
                 StopAllCoroutines();
@@ -92,7 +103,7 @@ public class Crawler : RagDollAction
             case STATE.Idle:
                 break;
             case STATE.Roaming:
-                GetNextCornerLayer();
+                SetCeilingOrFloor();
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsAngry", true);
@@ -142,17 +153,28 @@ public class Crawler : RagDollAction
         }
         return -1;
     }
-    void GetNextCornerLayer()
+    void SetCeilingOrFloor()
     {
         if (myPath.corners.Length < 3) return;
         Vector3 dir = myPath.corners[2] - myPath.corners[1];
+        LayerMask mask;
+        STATE desireState;
+        if (!IsGround)
+        {
+            mask = LayerMask.NameToLayer("Ground");
+            desireState = STATE.ToGround;
+        }
+        else
+        {
+            mask = LayerMask.NameToLayer("Ceiling");
+            desireState = STATE.ToJump;
+        }
         if (Physics.Raycast(myPath.corners[1], dir,
-                out RaycastHit thit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Ground")))
+           out RaycastHit thit, Mathf.Infinity, 1 << mask))
         {
             Debug.DrawLine(myPath.corners[1], thit.point, Color.yellow);
             Debug.Log(thit.transform.gameObject.layer);
-            if(!IsGround)
-                ChangeState(STATE.ToGround);
+            ChangeState(desireState);
         }
     }
     // Start is called before the first frame update
@@ -277,6 +299,13 @@ public class Crawler : RagDollAction
             {
                 if (!obj.IsDrawer)
                     obj.InteractwithMob();
+            }
+        }
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ceiling"))
+        {
+            if(myState == STATE.ToJump)
+            {
+                ChangeState(STATE.ToCeiling);
             }
         }
     }
