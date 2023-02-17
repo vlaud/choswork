@@ -62,6 +62,7 @@ public class Crawler : RagDollAction
                 break;
             case STATE.ToGround:
                 IsGround = true;
+                myRigid.useGravity = true;
                 ChangeState(STATE.RagDoll);
                 break;
             case STATE.ToCeiling:
