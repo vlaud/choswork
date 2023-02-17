@@ -196,6 +196,7 @@ public class Crawler : RagDollAction
     void Update()
     {
         StateProcess();
+        myAnim.speed = myStat.MoveSpeed;
     }
     IEnumerator DelayState(STATE s, float time)
     {
