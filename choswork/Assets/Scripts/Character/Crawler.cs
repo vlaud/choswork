@@ -157,6 +157,7 @@ public class Crawler : RagDollAction
     {
         if (myPath.corners.Length < 3) return;
         Vector3 dir = myPath.corners[2] - myPath.corners[1];
+        float dist = dir.magnitude;
         LayerMask mask;
         STATE desireState;
         if (!IsGround)
@@ -170,7 +171,7 @@ public class Crawler : RagDollAction
             desireState = STATE.ToJump;
         }
         if (Physics.Raycast(myPath.corners[1], dir,
-           out RaycastHit thit, Mathf.Infinity, 1 << mask))
+           out RaycastHit thit, dist + 1f, 1 << mask))
         {
             Debug.DrawLine(myPath.corners[1], thit.point, Color.yellow);
             Debug.Log(thit.transform.gameObject.layer);
