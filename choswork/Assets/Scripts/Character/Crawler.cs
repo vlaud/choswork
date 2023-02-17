@@ -182,7 +182,8 @@ public class Crawler : RagDollAction
     void Start()
     {
         myPath = new NavMeshPath();
-        filter.areaMask = 1 << NavMesh.GetAreaFromName("Ceiling");
+        filter.areaMask += 1 << NavMesh.GetAreaFromName("Ceiling");
+        filter.areaMask += 1 << NavMesh.GetAreaFromName("CrGround");
         filter.agentTypeID = GetAgentId("Crawler");
         ChangeState(STATE.Idle);
     }
