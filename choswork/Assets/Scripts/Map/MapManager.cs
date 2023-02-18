@@ -37,6 +37,20 @@ public class MapManager : MonoBehaviour
         private set;
     }
     public List<int> EndNum;
+    [field: Header("크롤러 위치 설정")]
+    [SerializeField] Vector3 Cr_MobPos = Vector3.zero;
+    [field: SerializeField] public Transform Cr_StartPoint
+    {
+        get;
+        private set;
+    }
+    public int Cr_StartNum;
+    [field: SerializeField] public Transform Cr_EndPoint
+    {
+        get;
+        private set;
+    }
+    public int Cr_EndNum;
     [field: Header("아이템 위치 설정")]
     [field: SerializeField] public Transform ItemPoint
     {
@@ -52,6 +66,8 @@ public class MapManager : MonoBehaviour
     [SerializeField] Vector3Int mapSize = Vector3Int.zero;
     [SerializeField] int startPos = 0;
     public NavMeshSurface surfaces;
+    public Transform ceilingSurfParent;
+    public NavMeshSurface[] ceilingSurface;
     public Vector3 offset;
     List<Cell> board;
     [Header("오브젝트 설정")]
@@ -83,6 +99,7 @@ public class MapManager : MonoBehaviour
         Inst = this;
         MazeGenerator();
         MobSpawning();
+        CrawlerSpawning();
         KeySpawning();
         DoorSpawn();
         PlayerSpawn();
@@ -93,12 +110,23 @@ public class MapManager : MonoBehaviour
     {
         myPath = new NavMeshPath();
         surfaces.BuildNavMesh();
+
+        if(ceilingSurfParent != null && ceilingSurface != null)
+        {
+            ceilingSurface = ceilingSurfParent.GetComponentsInChildren<NavMeshSurface>();
+            foreach (var surf in ceilingSurface) surf?.BuildNavMesh();
+        }
     }
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
             surfaces.BuildNavMesh();
+            if (ceilingSurfParent != null && ceilingSurface != null)
+            {
+                ceilingSurface = ceilingSurfParent.GetComponentsInChildren<NavMeshSurface>();
+                foreach (var surf in ceilingSurface) surf?.BuildNavMesh();
+            }
         }
     }
     #region ObjectSpawn
@@ -131,6 +159,45 @@ public class MapManager : MonoBehaviour
         PlayerStart.SetParent(transform.GetChild(0));
         PlayerStart.localPosition = PlayerStartPos;
     }
+    void CrawlerSpawning()
+    {
+        int floor = mapSize.x * mapSize.z; // 맨 위층에서만 소환
+
+        // 중복 숫자 방지
+        List<int> spawnNums = GetRandomNumber.GetRanNum(transform.childCount - floor, transform.childCount, 2, false);
+        //시작 위치
+        GameObject obj = Instantiate(StartObj);
+        Cr_StartPoint = obj.transform;
+        Cr_StartNum = spawnNums[0];
+        Cr_StartPoint.SetParent(transform.GetChild(Cr_StartNum));
+        Cr_StartPoint.localPosition = Cr_MobPos;
+        //끝 위치
+        obj = Instantiate(EndObj);
+        Cr_EndPoint = obj.transform;
+        Cr_EndNum = spawnNums[1];
+        Cr_EndPoint.SetParent(transform.GetChild(Cr_EndNum));
+        Cr_EndPoint.localPosition = Cr_MobPos;
+    }
+    public void CrawlerChangePath(bool isStart)
+    {
+        int floor = mapSize.x * mapSize.z; // 맨 위층에서만 소환
+
+        int[] remove = { Cr_StartNum, Cr_EndNum };
+        List<int> spawnNums = GetRandomNumber.GetRanNum(transform.childCount - floor, transform.childCount, 2, true, remove);
+
+        if (isStart)
+        {
+            Cr_EndNum = spawnNums[1];
+            Cr_EndPoint.transform.SetParent(transform.GetChild(spawnNums[1]));
+            Cr_EndPoint.transform.localPosition = Cr_MobPos;
+        }
+        else
+        {
+            Cr_StartNum = spawnNums[0];
+            Cr_StartPoint.transform.SetParent(transform.GetChild(spawnNums[0]));
+            Cr_StartPoint.transform.localPosition = Cr_MobPos;
+        }
+    }
     void MobSpawning()
     {
         int floor = mapSize.x * mapSize.z; // 1층에선 소환 안되게끔
@@ -153,34 +220,36 @@ public class MapManager : MonoBehaviour
             EndPoint[i].localPosition = MobPos;
         }
     }
-    public void MobChangePath(bool isStart)
+    public void MobChangePath(bool isStart, int mobindex)
     {
         int floor = mapSize.x * mapSize.z; // 1층에선 소환 안되게끔
 
-        // 중복 숫자 방지
-        for (int i = 0; i < StartNum.Count; ++i)
-        {
-            int[] remove = { StartNum[i], EndNum[i] };
-            List<int> spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, true, remove);
+        int[] remove = { StartNum[mobindex], EndNum[mobindex] };
+        List<int> spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, true, remove);
 
-            if (isStart)
-            {
-                EndNum[i] = spawnNums[1];
-                EndPoint[i].transform.SetParent(transform.GetChild(spawnNums[1]));
-                EndPoint[i].transform.localPosition = MobPos;
-            }
-            else
-            {
-                StartNum[i] = spawnNums[0];
-                StartPoint[i].transform.SetParent(transform.GetChild(spawnNums[0]));
-                StartPoint[i].transform.localPosition = MobPos;
-            }
+        if (isStart)
+        {
+            EndNum[mobindex] = spawnNums[1];
+            EndPoint[mobindex].transform.SetParent(transform.GetChild(spawnNums[1]));
+            EndPoint[mobindex].transform.localPosition = MobPos;
         }
+        else
+        {
+            StartNum[mobindex] = spawnNums[0];
+            StartPoint[mobindex].transform.SetParent(transform.GetChild(spawnNums[0]));
+            StartPoint[mobindex].transform.localPosition = MobPos;
+        }
+
     }
     public Transform GetDestination(bool IsStart, int mobindex)
     {
         if (IsStart) return EndPoint[mobindex];
         else return StartPoint[mobindex];
+    }
+    public Transform GetCrDestination(bool IsStart)
+    {
+        if (IsStart) return Cr_EndPoint;
+        else return Cr_StartPoint;
     }
     #endregion
     #region MapGenerator
