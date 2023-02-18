@@ -310,7 +310,7 @@ public class Crawler : RagDollAction
         }
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ceiling"))
         {
-            if(myState == STATE.ToJump)
+            if(myState == STATE.ToJump || myState == STATE.ToAir)
             {
                 ChangeState(STATE.ToCeiling);
             }
