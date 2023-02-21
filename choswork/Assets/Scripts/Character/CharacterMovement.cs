@@ -311,7 +311,7 @@ public class CharacterMovement : CharacterProperty
         }
         myAnim.SetBool("IsRunning", false);
     }
-    protected void CorrectBaseHeight(NavMeshPath myPath, Vector3 pos, Transform myTarget, NavMeshQueryFilter filter)
+    protected void CorrectBaseHeight(NavMeshPath myPath, Transform myTarget, NavMeshQueryFilter filter)
     {
         Vector3[] list = myPath.corners;
         int fIndex = list.Length - 1;

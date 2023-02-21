@@ -50,7 +50,7 @@ public class Monster : RagDollAction
                 break;
             case STATE.Roaming:
                 RePath(myPath, myTarget.position, filter, () => LostTarget());
-                CorrectBaseHeight(myPath, transform.position, myTarget, filter);
+                CorrectBaseHeight(myPath, myTarget, filter);
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
