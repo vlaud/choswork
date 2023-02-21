@@ -311,4 +311,17 @@ public class CharacterMovement : CharacterProperty
         }
         myAnim.SetBool("IsRunning", false);
     }
+    protected void CorrectBaseHeight(NavMeshPath myPath, Vector3 pos, Transform myTarget, NavMeshQueryFilter filter)
+    {
+        Vector3[] list = myPath.corners;
+        int fIndex = list.Length - 1;
+        if (list[fIndex] != myTarget.position)
+        {
+            Debug.Log(transform + ": ∫“¿œƒ°");
+            if (NavMesh.SamplePosition(list[fIndex], out NavMeshHit hit, 10f, filter))
+            {
+                myTarget.position = hit.position;
+            }
+        }
+    }
 }
