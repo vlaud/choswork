@@ -18,4 +18,8 @@ public class CutScenePlayer : MonoBehaviour
     {
         CarDoorAnim.SetTrigger("Close");
     }
+    public void FadeToLevel()
+    {
+        GameManagement.Inst.myMainmenu?.FadeToLevel();
+    }
 }

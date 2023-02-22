@@ -5,6 +5,7 @@ public class CarAnimEvent : MonoBehaviour
 {
     public UnityEvent CarOpen;
     public UnityEvent CarClose;
+    public UnityEvent FadeToLevel;
 
     public void OnCarOpen()
     {
@@ -13,5 +14,9 @@ public class CarAnimEvent : MonoBehaviour
     public void OnCarClose()
     {
         CarClose?.Invoke();
+    }
+    public void OnFade()
+    {
+        FadeToLevel?.Invoke();
     }
 }

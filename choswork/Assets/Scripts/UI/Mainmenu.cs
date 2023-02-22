@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -95,11 +93,17 @@ public class Mainmenu : Singleton<Mainmenu>
         print("Scene on scene");
         if (scene.name == "Title")
         {
-            newGameSceneName = "GameStage";
+            newGameSceneName = "CutScene";
             faderAnim?.SetTrigger("FadeIn");
             ShowMenuAnim(true);
             Cursor.lockState = CursorLockMode.None;
             SoundManager.Inst.PlayBGM(titleBGM);
+        }
+        if (scene.name == "CutScene")
+        {
+            newGameSceneName = "GameStage";
+            faderAnim?.SetTrigger("FadeIn");
+            DisableUI();
         }
         if (scene.name == "GameStage")
         {
