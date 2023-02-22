@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public class BezierCurve : MonoBehaviour
+public class BezierCurve
 {
     public Vector3[] Points;
 
