@@ -3738,6 +3738,7 @@ MonoBehaviour:
   GameTimeScale: 1
   GameFixedTimeScale: 0.02
   IsGameClear: 0
+  IsCutscene: 1
   IsBulletTime: 0
   curBulletTime: 0
   desireScale: 0

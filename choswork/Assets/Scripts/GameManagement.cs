@@ -32,6 +32,7 @@ public class GameManagement : MonoBehaviour
     [Range(0f, 0.02f)]
     public float GameFixedTimeScale = 0.02f;
     public bool IsGameClear = false;
+    public bool IsCutscene = false;
     private float timer;
     [SerializeField] private bool IsBulletTime = false;
     [SerializeField] private float curBulletTime;
@@ -80,7 +81,7 @@ public class GameManagement : MonoBehaviour
     private void Awake()
     {
         Inst = this;
-        Physics.autoSimulation = false;
+        Physics.autoSimulation = IsCutscene;
         myMonsters = FindObjectsOfType(typeof(Monster)) as Monster[];
         for(int i =0; i < myMonsters.Length; ++i)
         {
@@ -97,14 +98,17 @@ public class GameManagement : MonoBehaviour
     }
     private void Update()
     {
-        timer += Time.deltaTime;
-        while (timer >= Time.fixedDeltaTime)
+        if(!IsCutscene)
         {
-            timer -= Time.fixedDeltaTime;
-            Physics.Simulate(Time.fixedDeltaTime);
+            timer += Time.deltaTime;
+            while (timer >= Time.fixedDeltaTime)
+            {
+                timer -= Time.fixedDeltaTime;
+                Physics.Simulate(Time.fixedDeltaTime);
+            }
+            DoSlowmotion();
+            StateProcess();
         }
-        DoSlowmotion();
-        StateProcess();
     }
     public void DoSlowmotion()
     {
