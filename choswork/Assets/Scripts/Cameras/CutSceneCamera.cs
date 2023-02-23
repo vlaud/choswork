@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CutSceneCamera : MonoBehaviour
@@ -33,7 +31,6 @@ public class CutSceneCamera : MonoBehaviour
         switch (myState)
         {
             case State.Car:
-                CamMovement();
                 break;
             case State.Outting:
                 CamMovement();
@@ -57,5 +54,9 @@ public class CutSceneCamera : MonoBehaviour
         CutsceneCam.myCam.transform.position = myEyes.position; // 1인칭 카메라 위치를 캐릭터 눈에 고정
         CutsceneCam.curRot.y = myEyes.rotation.eulerAngles.y;
         CutsceneCam.myRig.rotation = Quaternion.Euler(CutsceneCam.curRot);
+    }
+    public void CarOut()
+    {
+        ChangeState(State.Outting);
     }
 }
