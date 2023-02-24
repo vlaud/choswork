@@ -114,6 +114,7 @@ public class Crawler : RagDollAction, AIAction
                 myAnim.SetBool("IsAngry", true);
                 break;
             case STATE.Search:
+                SetCeilingOrFloor();
                 break;
             case STATE.RagDoll:
                 RagdollBehaviour();
@@ -209,7 +210,7 @@ public class Crawler : RagDollAction, AIAction
     {
         var player = GameManagement.Inst.myPlayer.myHips;
 
-        if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, filter))
+        if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1 << NavMesh.GetAreaFromName("CrGround")))
         {
             if (player.position.y < hit.position.y) // 물건이 천장으로 to ceiling
             {
