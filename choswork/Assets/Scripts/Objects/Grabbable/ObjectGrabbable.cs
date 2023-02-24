@@ -1,11 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
 
 public class ObjectGrabbable : ObjectInteractable
 {
@@ -82,7 +78,7 @@ public class ObjectGrabbable : ObjectInteractable
     private void Start()
     {
         for (int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
-             hearings.Add(GameManagement.Inst.myMonsters[i].HearingSound);
+             hearings.Add(GameManagement.Inst.myMonsters[i].GetComponent<AIAction>().HearingSound);
     }
     public void Grab(Transform objectGrabPointTransform)
     {

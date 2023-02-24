@@ -17,7 +17,7 @@ public class GameManagement : MonoBehaviour
     public static GameManagement Inst = null;
     public Player myPlayer;
     //public Monster myMonster;
-    public Monster[] myMonsters;
+    public AIPerception[] myMonsters;
     public SpringArms mySpringArms;
     public Inventory myInventory;
     public SoundManager mySound;
@@ -82,10 +82,10 @@ public class GameManagement : MonoBehaviour
     {
         Inst = this;
         Physics.autoSimulation = IsCutscene;
-        myMonsters = FindObjectsOfType(typeof(Monster)) as Monster[];
+        myMonsters = FindObjectsOfType(typeof(AIPerception)) as AIPerception[];
         for(int i =0; i < myMonsters.Length; ++i)
         {
-            myMonsters[i].mobIndex = i;
+            myMonsters[i].GetComponent<AIAction>().SetMobIndex(i);
         }
         mySceneLoader = GameObject.Find("SceneLoader")?.GetComponent<SceneLoader>();
         myMainmenu = mySceneLoader?.gameObject.GetComponentInChildren<Mainmenu>();

@@ -1,13 +1,7 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.ConstrainedExecution;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using static UnityEditor.PlayerSettings;
-using static UnityEngine.GraphicsBuffer;
 //public delegate void MyAction();
 
 public class CharacterMovement : CharacterProperty

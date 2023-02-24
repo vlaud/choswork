@@ -1,30 +1,27 @@
 using System;
-using System.Reflection;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Events;
 
+public enum AIState
+{
+    Normal, Angry
+}
+public interface AIAction
+{
+    AIState GetAIState();
+    void FindPlayer(Transform target);
+    void LostTarget();
+    bool IsSearchable();
+    NavMeshPath GetMyPath();
+    Transform GetMyTarget();
+    void SetAnimTrigger();
+    void HearingSound();
+    int GetMobIndex();
+    void SetMobIndex(int mobIndex);
+}
 public class AIPerception : MonoBehaviour
 {
-    public static Type GetRagdollAction(Transform transform)
-    {
-        // Get all types derived from RagdollAction
-        var types = typeof(RagDollAction).Assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(RagDollAction)));
-
-        // Check if transform's type is derived from RagdollAction and return the type if it is
-        foreach (var type in types)
-        {
-            if (transform.GetComponent(type) != null)
-            {
-                return type;
-            }
-        }
-
-        // Return null if no derived type is found
-        return null;
-    }
     public enum State
     {
         Create, Search, Chase
@@ -37,13 +34,11 @@ public class AIPerception : MonoBehaviour
     public float fovAngle = 160f;
     public float losRadius = 5f;
     public float lostDist = 10f;
-    public UnityAction<Transform, Monster.STATE> foundPlayer;
-    public UnityAction LostTarget;
     public LayerMask enemyMask = default;
     public LayerMask obstructionMask = default;
     public Transform myTarget;
     private GameManagement myGamemanager;
-    private Monster myMonster;
+    private AIAction myMonster;
 
     void ChangeState(State s)
     {
@@ -80,7 +75,7 @@ public class AIPerception : MonoBehaviour
         {
             if(myMonster.IsSearchable())
                 FieldOfViewCheck();
-            else if (myMonster.GetMyState() == Monster.STATE.Angry)
+            else if (myMonster.GetAIState() == AIState.Angry)
                 ChangeState(State.Chase);
             yield return new WaitForSeconds(0.2f);
         }
@@ -89,11 +84,12 @@ public class AIPerception : MonoBehaviour
     {
         while (myState == State.Chase)
         {
-            if(myMonster.GetMyState() == Monster.STATE.Angry)
+            if(myMonster.GetAIState() == AIState.Angry)
             {
                 if (CalcPathLength(myMonster.GetMyPath(), myMonster.GetMyTarget().position) > lostDist)
                 {
-                    LostTarget?.Invoke();
+                    myMonster?.LostTarget();
+                    //LostTarget?.Invoke();
                     myTarget = null;
                     ChangeState(State.Search);
                 }
@@ -116,12 +112,13 @@ public class AIPerception : MonoBehaviour
 
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
                 {
-                    //if(!myMonster.IsGameOver)
                     {
                         canSeePlayer = true;
                         myTarget = target;
-                        myMonster.ReturnAnim().SetTrigger("Detect");
-                        foundPlayer?.Invoke(myTarget, Monster.STATE.Angry);
+                        //foundPlayer?.Invoke(myTarget, Monster.STATE.Angry);
+                        myMonster?.FindPlayer(myTarget);
+                        //myMonster.ReturnAnim().SetTrigger("Detect");
+                        myMonster?.SetAnimTrigger();
                         Debug.Log("플레이어 발견!");
                     }
                 }
@@ -171,16 +168,7 @@ public class AIPerception : MonoBehaviour
     void Start()
     {
         myGamemanager = GameManagement.Inst;
-        var type = GetRagdollAction(transform);
-        Debug.Log(type);
-        MethodInfo Find = type.GetMethod("FindTarget", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(Transform), typeof(Monster.STATE) }, null);
-        MethodInfo Lost = type.GetMethod("LostTarget", BindingFlags.Instance | BindingFlags.Public);
-
-        myMonster = transform.GetComponent<Monster>();
-        foundPlayer = ((arg1, arg2) => {
-            Find.Invoke(myMonster, new object[] { arg1, arg2 });
-        });
-        LostTarget = (UnityAction)Delegate.CreateDelegate(typeof(UnityAction), type, Lost);
+        myMonster = transform.GetComponent<AIAction>();
         ChangeState(State.Search);
     }
 
