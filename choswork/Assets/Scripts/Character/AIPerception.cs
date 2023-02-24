@@ -1,13 +1,30 @@
+using System;
+using System.Reflection;
 using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.AI;
-using static AIPerception;
-using static UnityEngine.GraphicsBuffer;
+using UnityEngine.Events;
 
 public class AIPerception : MonoBehaviour
 {
+    public static Type GetRagdollAction(Transform transform)
+    {
+        // Get all types derived from RagdollAction
+        var types = typeof(RagDollAction).Assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(RagDollAction)));
+
+        // Check if transform's type is derived from RagdollAction and return the type if it is
+        foreach (var type in types)
+        {
+            if (transform.GetComponent(type) != null)
+            {
+                return type;
+            }
+        }
+
+        // Return null if no derived type is found
+        return null;
+    }
     public enum State
     {
         Create, Search, Chase
@@ -154,9 +171,16 @@ public class AIPerception : MonoBehaviour
     void Start()
     {
         myGamemanager = GameManagement.Inst;
+        var type = GetRagdollAction(transform);
+        Debug.Log(type);
+        MethodInfo Find = type.GetMethod("FindTarget", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(Transform), typeof(Monster.STATE) }, null);
+        MethodInfo Lost = type.GetMethod("LostTarget", BindingFlags.Instance | BindingFlags.Public);
+
         myMonster = transform.GetComponent<Monster>();
-        foundPlayer = myMonster.FindTarget;
-        LostTarget = myMonster.LostTarget;
+        foundPlayer = ((arg1, arg2) => {
+            Find.Invoke(myMonster, new object[] { arg1, arg2 });
+        });
+        LostTarget = (UnityAction)Delegate.CreateDelegate(typeof(UnityAction), type, Lost);
         ChangeState(State.Search);
     }
 
