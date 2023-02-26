@@ -1,11 +1,8 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Monster : RagDollAction
+public class Monster : RagDollAction, AIAction
 { 
     private GameManagement myGamemanager;
     public LayerMask enemyMask = default;
@@ -50,6 +47,7 @@ public class Monster : RagDollAction
                 break;
             case STATE.Roaming:
                 RePath(myPath, myTarget.position, filter, () => LostTarget());
+                CorrectBaseHeight(myPath, myTarget, filter);
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
@@ -251,7 +249,10 @@ public class Monster : RagDollAction
         StopAllCoroutines();
         ChangeState(state);
     }
-
+    public void FindPlayer(Transform target)
+    {
+        FindTarget(target, STATE.Angry);
+    }
     public void LostTarget()
     {
         if (myState == STATE.Death) return;
@@ -284,9 +285,25 @@ public class Monster : RagDollAction
     {
         return myAnim;
     }
-    public STATE GetMyState()
+    public int GetMobIndex()
     {
-        return myState;
+        return mobIndex;
+    }
+    public void SetMobIndex(int mobIndex)
+    {
+        this.mobIndex = mobIndex;
+    }
+    public void SetAnimTrigger()
+    {
+        myAnim.SetTrigger("Detect");
+    }
+    public AIState GetAIState()
+    {
+        if(myState == STATE.Angry)
+        {
+            return AIState.Angry;
+        }
+        return AIState.Normal;
     }
     private void OnCollisionEnter(Collision collision)
     {

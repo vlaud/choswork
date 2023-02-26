@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -202,7 +200,11 @@ public class MapManager : MonoBehaviour
     {
         int floor = mapSize.x * mapSize.z; // 1층에선 소환 안되게끔
 
-        for(int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
+        for (int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
+        {
+            Debug.Log(GetMonsterTypeClass.GetRagdollAction(GameManagement.Inst.myMonsters[i].transform));
+        }
+        for (int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
         {
             // 중복 숫자 방지
             List<int> spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, false);

@@ -1,13 +1,7 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.ConstrainedExecution;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using static UnityEditor.PlayerSettings;
-using static UnityEngine.GraphicsBuffer;
 //public delegate void MyAction();
 
 public class CharacterMovement : CharacterProperty
@@ -310,5 +304,18 @@ public class CharacterMovement : CharacterProperty
             yield return null;
         }
         myAnim.SetBool("IsRunning", false);
+    }
+    protected void CorrectBaseHeight(NavMeshPath myPath, Transform myTarget, NavMeshQueryFilter filter)
+    {
+        Vector3[] list = myPath.corners;
+        int fIndex = list.Length - 1;
+        if (list[fIndex] != myTarget.position)
+        {
+            Debug.Log(transform + ": ∫“¿œƒ°");
+            if (NavMesh.SamplePosition(list[fIndex], out NavMeshHit hit, 10f, filter))
+            {
+                myTarget.position = hit.position;
+            }
+        }
     }
 }

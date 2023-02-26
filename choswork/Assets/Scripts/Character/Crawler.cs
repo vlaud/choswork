@@ -1,9 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Crawler : RagDollAction
+public class Crawler : RagDollAction, AIAction
 {
     private GameManagement myGamemanager;
     public LayerMask enemyMask = default;
@@ -20,6 +19,7 @@ public class Crawler : RagDollAction
 
     //mob startPos
     public bool IsStart = false;
+    public int mobIndex;
 
     //ai hearing
     public Transform HearingTr; // 실제 추적 위치
@@ -55,6 +55,7 @@ public class Crawler : RagDollAction
                 break;
             case STATE.Roaming:
                 RePath(myPath, myTarget.position, filter, () => LostTarget());
+                CorrectBaseHeight(myPath, myTarget, filter);
                 break;
             case STATE.Angry:
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
@@ -113,6 +114,7 @@ public class Crawler : RagDollAction
                 myAnim.SetBool("IsAngry", true);
                 break;
             case STATE.Search:
+                SetCeilingOrFloor();
                 break;
             case STATE.RagDoll:
                 RagdollBehaviour();
@@ -126,24 +128,6 @@ public class Crawler : RagDollAction
             case STATE.Death:
                 break;
         }
-    }
-    private void Awake()
-    {
-        myGamemanager = GameManagement.Inst;
-        cs = GetComponent<CapsuleCollider>();
-        _origintimetoWake = _timetoWakeup;
-        _bones = myHips.GetComponentsInChildren<Transform>();
-        _standupTransforms = new BoneTransform[_bones.Length];
-        _ragdollTransforms = new BoneTransform[_bones.Length];
-
-        for (int boneIndex = 0; boneIndex < _bones.Length; ++boneIndex)
-        {
-            _standupTransforms[boneIndex] = new BoneTransform();
-            _ragdollTransforms[boneIndex] = new BoneTransform();
-        }
-        PopulateAnimation(_standupClipName, _standupTransforms);
-        RagDollSet(false);
-        transform.position = myGamemanager.myMapManager.GetCrDestination(false).position;
     }
     public int GetAgentId(string agentName)
     {
@@ -182,6 +166,24 @@ public class Crawler : RagDollAction
             ChangeState(desireState);
         }
     }
+    private void Awake()
+    {
+        myGamemanager = GameManagement.Inst;
+        cs = GetComponent<CapsuleCollider>();
+        _origintimetoWake = _timetoWakeup;
+        _bones = myHips.GetComponentsInChildren<Transform>();
+        _standupTransforms = new BoneTransform[_bones.Length];
+        _ragdollTransforms = new BoneTransform[_bones.Length];
+
+        for (int boneIndex = 0; boneIndex < _bones.Length; ++boneIndex)
+        {
+            _standupTransforms[boneIndex] = new BoneTransform();
+            _ragdollTransforms[boneIndex] = new BoneTransform();
+        }
+        PopulateAnimation(_standupClipName, _standupTransforms);
+        RagDollSet(false);
+        transform.position = myGamemanager.myMapManager.GetCrDestination(false).position;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -203,6 +205,78 @@ public class Crawler : RagDollAction
         yield return new WaitForSeconds(time);
         ChangeState(s);
     }
+    #region Mob Detect Sound
+    void SetSoundPos()
+    {
+        var player = GameManagement.Inst.myPlayer.myHips;
+
+        if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1 << NavMesh.GetAreaFromName("CrGround")))
+        {
+            if (player.position.y < hit.position.y) // 물건이 천장으로 to ceiling
+            {
+                if (Physics.Raycast(hearingPos, Vector3.down, out RaycastHit thit,
+                    20f, 1 << LayerMask.NameToLayer("Ground")))
+                {
+                    Debug.Log("천장" + thit.point);
+                    hearingPos = thit.point;
+                }
+            }
+            else  // 물건이 바닥으로 to floor
+            {
+                Debug.Log("바닥" + hit.position);
+                hearingPos = hit.position;
+            }
+        }
+        HearingTr.position = hearingPos;
+    }
+    void CheckSoundDist()
+    {
+        SetSoundPos();
+        float dist = Vector3.Distance(hearingPos, transform.position);
+        if (noiseTravelDistance >= dist)
+        {
+            Debug.Log("몹이 소리를 들었다.");
+            Debug.Log("듣는 위치: " + hearingPos);
+            Debug.Log("거리: " + dist);
+            aiHeardPlayer = true;
+            myTarget = HearingTr;
+            RePath(myPath, myTarget.position, filter, () => LostTarget(), "IsChasing");
+        }
+        else
+        {
+            Debug.Log("못 들었다.");
+            aiHeardPlayer = false;
+        }
+    }
+    public void HearingSound()
+    {
+        if (myState == STATE.Death || myState == STATE.Angry || myState == STATE.RagDoll ||
+            myState == STATE.ResetBones || myState == STATE.StandUp) return;
+
+        Transform tempTarget = myGamemanager.myPlayer.transform;
+        if ((tempTarget != null && tempTarget.TryGetComponent<PlayerPickUpDrop>(out var target)))
+        {
+            if (target.GetObjectGrabbable() != null)
+            {
+                hearingObj = target.GetObjectGrabbable().transform;
+                Debug.Log("hearingObj: " + hearingObj);
+            }
+            else if (hearingObj != null && hearingObj.TryGetComponent<ObjectGrabbable>(out var grab))
+            {
+                if (grab.IsSoundable)
+                {
+                    hearingPos = grab.soundPos;
+                    CheckSoundDist();
+                    //grab.IsSoundable = false;
+                }
+            }
+        }
+        if (aiHeardPlayer)
+        {
+            ChangeState(STATE.Search);
+        }
+    }
+    #endregion
     #region GetKickandRagDoll
     public override void GetKick(Vector3 dir, float strength)
     {
@@ -253,7 +327,10 @@ public class Crawler : RagDollAction
         StopAllCoroutines();
         ChangeState(state);
     }
-
+    public void FindPlayer(Transform target)
+    {
+        FindTarget(target, STATE.Angry);
+    }
     public void LostTarget()
     {
         if (myState == STATE.Death) return;
@@ -286,9 +363,25 @@ public class Crawler : RagDollAction
     {
         return myAnim;
     }
-    public STATE GetMyState()
+    public int GetMobIndex()
     {
-        return myState;
+        return mobIndex;
+    }
+    public void SetMobIndex(int mobIndex)
+    {
+        this.mobIndex = mobIndex;
+    }
+    public void SetAnimTrigger()
+    {
+        myAnim.SetTrigger("Detect");
+    }
+    public AIState GetAIState()
+    {
+        if (myState == STATE.Angry)
+        {
+            return AIState.Angry;
+        }
+        return AIState.Normal;
     }
     private void OnCollisionEnter(Collision collision)
     {

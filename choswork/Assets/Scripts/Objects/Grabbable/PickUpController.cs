@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PickUpController : ObjectGrabbable
@@ -10,7 +7,7 @@ public class PickUpController : ObjectGrabbable
     {
         myInventory = GameManagement.Inst.myInventory.gameObject;
         for (int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
-            hearings.Add(GameManagement.Inst.myMonsters[i].HearingSound);
+            hearings.Add(GameManagement.Inst.myMonsters[i].GetComponent<AIAction>().HearingSound);
         SetActionText();
     }
     public void CanPickUp()

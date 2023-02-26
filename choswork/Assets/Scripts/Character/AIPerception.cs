@@ -1,11 +1,25 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.AI;
-using static AIPerception;
-using static UnityEngine.GraphicsBuffer;
 
+public enum AIState
+{
+    Normal, Angry
+}
+public interface AIAction
+{
+    AIState GetAIState();
+    void FindPlayer(Transform target);
+    void LostTarget();
+    bool IsSearchable();
+    NavMeshPath GetMyPath();
+    Transform GetMyTarget();
+    void SetAnimTrigger();
+    void HearingSound();
+    int GetMobIndex();
+    void SetMobIndex(int mobIndex);
+}
 public class AIPerception : MonoBehaviour
 {
     public enum State
@@ -20,13 +34,11 @@ public class AIPerception : MonoBehaviour
     public float fovAngle = 160f;
     public float losRadius = 5f;
     public float lostDist = 10f;
-    public UnityAction<Transform, Monster.STATE> foundPlayer;
-    public UnityAction LostTarget;
     public LayerMask enemyMask = default;
     public LayerMask obstructionMask = default;
     public Transform myTarget;
     private GameManagement myGamemanager;
-    private Monster myMonster;
+    private AIAction myMonster;
 
     void ChangeState(State s)
     {
@@ -63,7 +75,7 @@ public class AIPerception : MonoBehaviour
         {
             if(myMonster.IsSearchable())
                 FieldOfViewCheck();
-            else if (myMonster.GetMyState() == Monster.STATE.Angry)
+            else if (myMonster.GetAIState() == AIState.Angry)
                 ChangeState(State.Chase);
             yield return new WaitForSeconds(0.2f);
         }
@@ -72,11 +84,12 @@ public class AIPerception : MonoBehaviour
     {
         while (myState == State.Chase)
         {
-            if(myMonster.GetMyState() == Monster.STATE.Angry)
+            if(myMonster.GetAIState() == AIState.Angry)
             {
                 if (CalcPathLength(myMonster.GetMyPath(), myMonster.GetMyTarget().position) > lostDist)
                 {
-                    LostTarget?.Invoke();
+                    myMonster?.LostTarget();
+                    //LostTarget?.Invoke();
                     myTarget = null;
                     ChangeState(State.Search);
                 }
@@ -99,12 +112,13 @@ public class AIPerception : MonoBehaviour
 
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
                 {
-                    //if(!myMonster.IsGameOver)
                     {
                         canSeePlayer = true;
                         myTarget = target;
-                        myMonster.ReturnAnim().SetTrigger("Detect");
-                        foundPlayer?.Invoke(myTarget, Monster.STATE.Angry);
+                        //foundPlayer?.Invoke(myTarget, Monster.STATE.Angry);
+                        myMonster?.FindPlayer(myTarget);
+                        //myMonster.ReturnAnim().SetTrigger("Detect");
+                        myMonster?.SetAnimTrigger();
                         Debug.Log("플레이어 발견!");
                     }
                 }
@@ -154,9 +168,7 @@ public class AIPerception : MonoBehaviour
     void Start()
     {
         myGamemanager = GameManagement.Inst;
-        myMonster = transform.GetComponent<Monster>();
-        foundPlayer = myMonster.FindTarget;
-        LostTarget = myMonster.LostTarget;
+        myMonster = transform.GetComponent<AIAction>();
         ChangeState(State.Search);
     }
 
