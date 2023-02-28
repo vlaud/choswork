@@ -41,8 +41,7 @@ public class AIDetectionMovement : BattleSystem
         float dist = Vector3.Distance(hearingPos, transform.position);
         if (noiseTravelDistance >= dist)
         {
-            myTarget = HearingTr;
-            RePath(myPath, myTarget.position, filter, done, anim);
+            NavMesh.CalculatePath(transform.position, HearingTr.position, filter, myPath);
             if(myPath.status != NavMeshPathStatus.PathComplete)
             {
                 Debug.Log(transform + "'s status: " + myPath.status);
@@ -51,6 +50,8 @@ public class AIDetectionMovement : BattleSystem
             }
             else
             {
+                myTarget = HearingTr;
+                RePath(myPath, myTarget.position, filter, done, anim);
                 Debug.Log("몹이 소리를 들었다.");
                 Debug.Log("듣는 위치: " + hearingPos);
                 Debug.Log("거리: " + dist);
