@@ -31,6 +31,7 @@ public class Crawler : RagDollAction, AIAction
         RagDoll, StandUp, ResetBones, Death
     }
     public STATE myState = STATE.Create;
+    public STATE formerState = STATE.Create;
     void ChangeState(STATE s)
     {
         if (myState == s) return;
@@ -41,20 +42,24 @@ public class Crawler : RagDollAction, AIAction
             case STATE.Create:
                 break;
             case STATE.Idle: // 평상시
+                formerState = STATE.Idle;
                 IsStart = !IsStart;
                 myGamemanager.myMapManager.CrawlerChangePath(IsStart);
                 FindTarget(myGamemanager.myMapManager.GetCrDestination(IsStart), STATE.Idle);
                 StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
                 break;
             case STATE.Roaming:
+                formerState = STATE.Roaming;
                 RePath(myPath, myTarget.position, filter, () => LostTarget());
                 CorrectBaseHeight(myPath, myTarget, filter);
                 break;
             case STATE.Angry:
+                formerState = STATE.Angry;
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
                 AttackTarget(myPath, myTarget, filter);
                 break;
             case STATE.Search:
+                formerState = STATE.Search;
                 if (TrackSoundFailed(myPath)) LostTarget();
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
@@ -266,7 +271,7 @@ public class Crawler : RagDollAction, AIAction
                 ChangeState(STATE.StandUp);
                 break;
             case RagDollState.NoRagdoll:
-                ChangeState(STATE.Roaming);
+                ChangeState(formerState);
                 break;
         }
     }
