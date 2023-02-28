@@ -318,4 +318,13 @@ public class CharacterMovement : CharacterProperty
             }
         }
     }
+    protected bool TrackSoundFailed(NavMeshPath myPath)
+    {
+        if (myPath.status != NavMeshPathStatus.PathComplete)
+        {
+            Debug.Log("경로 실패: " + transform);
+            return true;
+        }
+        return false;
+    }
 }

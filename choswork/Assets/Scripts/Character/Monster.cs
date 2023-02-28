@@ -54,6 +54,7 @@ public class Monster : RagDollAction, AIAction
                 AttackTarget(myPath, myTarget, filter);
                 break;
             case STATE.Search:
+                if (TrackSoundFailed(myPath)) LostTarget();
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
                 //RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");

@@ -62,6 +62,7 @@ public class Crawler : RagDollAction, AIAction
                 AttackTarget(myPath, myTarget, filter);
                 break;
             case STATE.Search:
+                if (TrackSoundFailed(myPath)) LostTarget();
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
                 break;
