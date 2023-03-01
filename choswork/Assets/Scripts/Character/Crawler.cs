@@ -143,6 +143,7 @@ public class Crawler : RagDollAction, AIAction
     void SetCeilingOrFloor()
     {
         if (myPath.corners.Length < 3) return;
+        if (myPath.status != NavMeshPathStatus.PathComplete) return;
         Vector3 dir = myPath.corners[2] - myPath.corners[1];
         float dist = dir.magnitude;
         LayerMask mask;
