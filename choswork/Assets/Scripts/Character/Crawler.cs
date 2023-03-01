@@ -59,7 +59,8 @@ public class Crawler : RagDollAction, AIAction
                 AttackTarget(myPath, myTarget, filter);
                 break;
             case STATE.Search:
-                formerState = STATE.Search;
+                if (formerState == STATE.Search) RePath(myPath, myTarget.position, filter, () => LostTarget());
+                else formerState = STATE.Search;
                 if (TrackSoundFailed(myPath)) LostTarget();
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
@@ -80,7 +81,7 @@ public class Crawler : RagDollAction, AIAction
                 myReverser.localPosition = new Vector3(0f, 0.36f, 0f);
                 IsGround = false;
                 myRigid.useGravity = false;
-                ChangeState(STATE.Roaming);
+                ChangeState(formerState);
                 break;
             case STATE.RagDoll:
                 StopAllCoroutines();
@@ -143,7 +144,6 @@ public class Crawler : RagDollAction, AIAction
     void SetCeilingOrFloor()
     {
         if (myPath.corners.Length < 3) return;
-        if (myPath.status != NavMeshPathStatus.PathComplete) return;
         Vector3 dir = myPath.corners[2] - myPath.corners[1];
         float dist = dir.magnitude;
         LayerMask mask;
