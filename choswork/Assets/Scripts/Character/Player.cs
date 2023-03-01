@@ -97,6 +97,8 @@ public class Player : BattleSystem
         curCamset = myCameras.GetMyCamera();
         playerCamera = curCamset?.myCam;
         camShake = playerCamera?.GetComponent<CameraShake>();
+        if(!myAnim.GetBool("IsHit") && bloodEffect != null && bloodEffect.activeSelf == true) 
+            bloodEffect.SetActive(false);
     }
     public override void PlayerMove()
     {
