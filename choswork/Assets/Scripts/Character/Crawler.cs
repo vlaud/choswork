@@ -21,13 +21,6 @@ public class Crawler : RagDollAction, AIAction
     public bool IsStart = false;
     public int mobIndex;
 
-    //ai hearing
-    public Transform HearingTr; // 실제 추적 위치
-    public Vector3 hearingPos;
-    public Transform hearingObj; // 물건 위치
-    private bool aiHeardPlayer = false;
-    public float noiseTravelDistance = 10f;
-
     //ai path
     private NavMeshPath myPath;
     NavMeshQueryFilter filter;
@@ -38,6 +31,7 @@ public class Crawler : RagDollAction, AIAction
         RagDoll, StandUp, ResetBones, Death
     }
     public STATE myState = STATE.Create;
+    public STATE formerState = STATE.Create;
     void ChangeState(STATE s)
     {
         if (myState == s) return;
@@ -48,20 +42,26 @@ public class Crawler : RagDollAction, AIAction
             case STATE.Create:
                 break;
             case STATE.Idle: // 평상시
+                formerState = STATE.Idle;
                 IsStart = !IsStart;
                 myGamemanager.myMapManager.CrawlerChangePath(IsStart);
                 FindTarget(myGamemanager.myMapManager.GetCrDestination(IsStart), STATE.Idle);
                 StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
                 break;
             case STATE.Roaming:
+                formerState = STATE.Roaming;
                 RePath(myPath, myTarget.position, filter, () => LostTarget());
                 CorrectBaseHeight(myPath, myTarget, filter);
                 break;
             case STATE.Angry:
+                formerState = STATE.Angry;
                 myAnim.SetBool("IsMoving", false); // 움직임 비활성화
                 AttackTarget(myPath, myTarget, filter);
                 break;
             case STATE.Search:
+                if (formerState == STATE.Search) RePath(myPath, myTarget.position, filter, () => LostTarget());
+                else formerState = STATE.Search;
+                if (TrackSoundFailed(myPath)) LostTarget();
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
                 break;
@@ -81,7 +81,7 @@ public class Crawler : RagDollAction, AIAction
                 myReverser.localPosition = new Vector3(0f, 0.36f, 0f);
                 IsGround = false;
                 myRigid.useGravity = false;
-                ChangeState(STATE.Roaming);
+                ChangeState(formerState);
                 break;
             case STATE.RagDoll:
                 StopAllCoroutines();
@@ -206,48 +206,6 @@ public class Crawler : RagDollAction, AIAction
         ChangeState(s);
     }
     #region Mob Detect Sound
-    void SetSoundPos()
-    {
-        var player = GameManagement.Inst.myPlayer.myHips;
-
-        if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, 1 << NavMesh.GetAreaFromName("CrGround")))
-        {
-            if (player.position.y < hit.position.y) // 물건이 천장으로 to ceiling
-            {
-                if (Physics.Raycast(hearingPos, Vector3.down, out RaycastHit thit,
-                    20f, 1 << LayerMask.NameToLayer("Ground")))
-                {
-                    Debug.Log("천장" + thit.point);
-                    hearingPos = thit.point;
-                }
-            }
-            else  // 물건이 바닥으로 to floor
-            {
-                Debug.Log("바닥" + hit.position);
-                hearingPos = hit.position;
-            }
-        }
-        HearingTr.position = hearingPos;
-    }
-    void CheckSoundDist()
-    {
-        SetSoundPos();
-        float dist = Vector3.Distance(hearingPos, transform.position);
-        if (noiseTravelDistance >= dist)
-        {
-            Debug.Log("몹이 소리를 들었다.");
-            Debug.Log("듣는 위치: " + hearingPos);
-            Debug.Log("거리: " + dist);
-            aiHeardPlayer = true;
-            myTarget = HearingTr;
-            RePath(myPath, myTarget.position, filter, () => LostTarget(), "IsChasing");
-        }
-        else
-        {
-            Debug.Log("못 들었다.");
-            aiHeardPlayer = false;
-        }
-    }
     public void HearingSound()
     {
         if (myState == STATE.Death || myState == STATE.Angry || myState == STATE.RagDoll ||
@@ -266,8 +224,8 @@ public class Crawler : RagDollAction, AIAction
                 if (grab.IsSoundable)
                 {
                     hearingPos = grab.soundPos;
-                    CheckSoundDist();
-                    //grab.IsSoundable = false;
+                    CheckSoundDist(myPath, 1 << NavMesh.GetAreaFromName("CrGround"), 
+                        LayerMask.NameToLayer("Ground"), filter, () => LostTarget());
                 }
             }
         }
@@ -314,7 +272,7 @@ public class Crawler : RagDollAction, AIAction
                 ChangeState(STATE.StandUp);
                 break;
             case RagDollState.NoRagdoll:
-                ChangeState(STATE.Roaming);
+                ChangeState(formerState);
                 break;
         }
     }

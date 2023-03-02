@@ -13,13 +13,6 @@ public class Monster : RagDollAction, AIAction
     public bool IsStart = false;
     public int mobIndex;
 
-    //ai hearing
-    public Transform HearingTr; // 실제 추적 위치
-    public Vector3 hearingPos;
-    public Transform hearingObj; // 물건 위치
-    private bool aiHeardPlayer = false;
-    public float noiseTravelDistance = 10f;
-
     //ai path
     private NavMeshPath myPath;
     NavMeshQueryFilter filter;
@@ -54,9 +47,9 @@ public class Monster : RagDollAction, AIAction
                 AttackTarget(myPath, myTarget, filter);
                 break;
             case STATE.Search:
+                if (TrackSoundFailed(myPath)) LostTarget();
                 myAnim.SetBool("IsMoving", false);
                 myAnim.SetTrigger("Search");
-                //RePath(myPath, myTarget.position, () => LostTarget(), "IsChasing");
                 break;
             case STATE.RagDoll:
                 StopAllCoroutines();
@@ -138,48 +131,6 @@ public class Monster : RagDollAction, AIAction
         ChangeState(s);
     }
     #region Mob Detect Sound
-    void SetSoundPos()
-    {
-        var player = GameManagement.Inst.myPlayer.myHips;
-
-        if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, filter))
-        {
-            if (player.position.y < hit.position.y) // 물건이 천장으로 to ceiling
-            {
-                if (Physics.Raycast(hearingPos, Vector3.down, out RaycastHit thit,
-                    20f, 1 << LayerMask.NameToLayer("Ground")))
-                {
-                    Debug.Log("천장" + thit.point);
-                    hearingPos = thit.point;
-                }
-            }
-            else  // 물건이 바닥으로 to floor
-            {
-                Debug.Log("바닥" + hit.position);
-                hearingPos = hit.position;
-            }
-        }
-        HearingTr.position = hearingPos;
-    }
-    void CheckSoundDist()
-    {
-        SetSoundPos();
-        float dist = Vector3.Distance(hearingPos, transform.position);
-        if(noiseTravelDistance >= dist)
-        {
-            Debug.Log("몹이 소리를 들었다.");
-            Debug.Log("듣는 위치: " + hearingPos);
-            Debug.Log("거리: " + dist);
-            aiHeardPlayer = true;
-            myTarget = HearingTr;
-            RePath(myPath, myTarget.position, filter, () => LostTarget(), "IsChasing");
-        }
-        else
-        {
-            Debug.Log("못 들었다.");
-            aiHeardPlayer = false;
-        }
-    }
     public void HearingSound()
     {
         if (myState == STATE.Death || myState == STATE.Angry || myState == STATE.RagDoll ||
@@ -198,7 +149,8 @@ public class Monster : RagDollAction, AIAction
                 if (grab.IsSoundable)
                 {
                     hearingPos = grab.soundPos;
-                    CheckSoundDist();
+                    CheckSoundDist(myPath, filter.areaMask, 
+                        LayerMask.NameToLayer("Ground"), filter, () => LostTarget());
                     //grab.IsSoundable = false;
                 }
             }

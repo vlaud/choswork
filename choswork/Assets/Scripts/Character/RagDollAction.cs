@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum RagDollState
 {
     ResetBones, StandUp, NoRagdoll
 }
-public class RagDollAction : BattleSystem
+public class RagDollAction : AIDetectionMovement
 {
     protected class BoneTransform
     {
