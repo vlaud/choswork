@@ -10,7 +10,7 @@ public class GameManagement : MonoBehaviour
 {
     public enum GameState
     {
-        Create, Play, Pause, GameOver
+        Create, Play, FadeToLevel, Pause, GameOver
     }
     public GameState myGameState = GameState.Create;
     public static GameManagement Inst = null;
@@ -49,6 +49,9 @@ public class GameManagement : MonoBehaviour
                 if (curBulletTime > Mathf.Epsilon) SetBulletTime(desireScale, curBulletTime);
                 else GameTimeScale = 1f;
                 break;
+            case GameState.FadeToLevel:
+                myMainmenu?.FadeToLevel();
+                break;
             case GameState.Pause:
                 StopAllCoroutines();
                 GameTimeScale = 0.01f;
@@ -59,7 +62,7 @@ public class GameManagement : MonoBehaviour
                 {
                     myMainmenu.transform.parent.SetParent(null);
                     myMainmenu.newGameSceneName = "Title";
-                    myMainmenu?.FadeToLevel();
+                    ChangeState(GameState.FadeToLevel);
                 }
                 break;
         }
@@ -70,6 +73,8 @@ public class GameManagement : MonoBehaviour
         {
             case GameState.Play:
                 if (IsBulletTime) curBulletTime -= Time.unscaledDeltaTime;
+                break;
+            case GameState.FadeToLevel:
                 break;
             case GameState.Pause:
                 break;
@@ -117,8 +122,7 @@ public class GameManagement : MonoBehaviour
     }
     public void GameClear()
     {
-        if (IsGameClear)
-            myMainmenu?.FadeToLevel();
+        if (IsGameClear) ChangeState(GameState.FadeToLevel);
     }
     public void SetBulletTime(float SetScale, float Cooltime)
     {
