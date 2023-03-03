@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0fee0bab66892c41b3fb3ad81d62655, type: 3}
   m_Name: TestKey
   m_EditorClassIdentifier: 
+  itemCount: 01000000
   itemName: "\uD14C\uC2A4\uD2B8\uC5F4\uC1E0"
   itemType: 3
   itemImage: {fileID: 25741252262019946, guid: 0bcca8e97d4b0ab44855ffa8f69d310e, type: 3}

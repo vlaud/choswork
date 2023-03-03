@@ -69,6 +69,7 @@ public class Keypad : ObjectNotGrabbable
         switch (myState)
         {
             case State.Default:
+                Debug.Log(hintText.text);
                 myKeypadUI?.gameObject.SetActive(true);
                 Cursor.lockState = CursorLockMode.None;
                 break;

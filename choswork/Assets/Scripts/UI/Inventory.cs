@@ -36,14 +36,14 @@ public class Inventory : InputManager, ItemEvent
         if (InventoryBase.activeSelf == true) Cursor.lockState = CursorLockMode.None;
         else Cursor.lockState = CursorLockMode.Locked;
     }
-    public void AcquireItem(Item _item)
+    public void AcquireItem(Item _item, int _count = 1)
     {
         foreach (var slot in mySlots)
         {
             Item curitem = slot.GetItemValue();
             if (curitem == null) // ΩΩ∑‘¿Ã ∫ÒæÓ¿÷¥Ÿ
             {
-                slot.GetItem(_item); // æ∆¿Ã≈€ »πµÊ
+                slot.GetItem(_item, _count); // æ∆¿Ã≈€ »πµÊ
                 if (!itemTypeToSlotListMap.ContainsKey(_item))
                 {
                     itemTypeToSlotListMap[_item] = new List<ItemSlot>() { slot };
@@ -100,10 +100,7 @@ public class Inventory : InputManager, ItemEvent
             }
         }
     }
-    public void SetItemEvent()
-    {
-
-    }
+    public void SetItemEvent() { }
     public void SetItemTargetObj(Transform target)
     {
         myTargetObj = target;
