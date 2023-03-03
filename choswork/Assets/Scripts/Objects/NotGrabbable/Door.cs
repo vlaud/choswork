@@ -21,7 +21,6 @@ public class Door : ObjectNotGrabbable, ItemEvent
     {
         GameManagement.Inst.IsGameClear = true;
     }
-    public void SetItemTargetObj(Transform target) { }
     public override void SetText()
     {
         Inventory inv = myInventory.GetComponent<Inventory>();
@@ -42,6 +41,6 @@ public class Door : ObjectNotGrabbable, ItemEvent
     {
         actionText?.gameObject.SetActive(v);
         Inventory inv = myInventory.GetComponent<Inventory>();
-        inv.GetComponent<ItemEvent>()?.SetItemTargetObj(transform);
+        inv.GetComponent<ItemTargeting>()?.SetItemTargetObj(transform);
     }
 }

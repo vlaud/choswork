@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : BattleSystem
@@ -30,6 +28,9 @@ public class Player : BattleSystem
     [SerializeField] private GameObject bloodEffect;
     [SerializeField] private Transform bloodPos;
     [SerializeField] private GameObject timeStopEffect;
+    [Header("아이템 설정")]
+    public Item timeStopItem;
+    public bool IsTimtStopAvailable = false;
     public enum STATE
     {
         Create, Play, Pause, Death
@@ -87,6 +88,7 @@ public class Player : BattleSystem
         transform.position = myGamemanager.myMapManager.PlayerStart.position;
         transform.rotation = myGamemanager.myMapManager.PlayerStart.rotation;
         myStat.changeHP = (float v) => myHPBar.GetValue = v;
+        myInventory = GameManagement.Inst.myInventory.gameObject;
         ChangeState(STATE.Play);
     }
 
@@ -143,7 +145,18 @@ public class Player : BattleSystem
     }
     public override void TimeStop()
     {
-        GameManagement.Inst.SetBulletTime(0.3f, 5f);
+        if (GameManagement.Inst.GetIsBulletTime()) return;
+        Inventory inv = myInventory.GetComponent<Inventory>();
+
+        IsTimtStopAvailable = true;
+        if (!inv.IsItemExist(timeStopItem)) IsTimtStopAvailable = false;
+        
+        if (IsTimtStopAvailable)
+        {
+            GameManagement.Inst.SetBulletTime(0.3f, 5f);
+            inv.DestroyItem(timeStopItem);
+            if (!inv.IsItemExist(timeStopItem)) IsTimtStopAvailable = false;
+        }
     }
     public void TimeStopCheck(bool v)
     {

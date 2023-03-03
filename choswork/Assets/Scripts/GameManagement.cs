@@ -4,6 +4,9 @@ using UnityEngine;
 public interface ItemEvent
 {
     void SetItemEvent();
+}
+public interface ItemTargeting
+{
     void SetItemTargetObj(Transform target);
 }
 public class GameManagement : MonoBehaviour
@@ -154,5 +157,9 @@ public class GameManagement : MonoBehaviour
     public void GameOver()
     {
         ChangeState(GameState.GameOver);
+    }
+    public bool GetIsBulletTime()
+    {
+        return IsBulletTime;
     }
 }

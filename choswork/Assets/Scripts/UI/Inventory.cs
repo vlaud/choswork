@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Inventory : InputManager, ItemEvent
+public class Inventory : InputManager, ItemTargeting
 {
     [SerializeField] private GameObject InventoryBase;
     [SerializeField] private GameObject SlotParent;
@@ -88,7 +88,7 @@ public class Inventory : InputManager, ItemEvent
             if (itemSlot != null)
             {
                 itemSlot.SetSlotCount(-1);
-                myTargetObj?.GetComponent<ItemEvent>()?.SetItemEvent();
+                if(_item.itemType == Item.ItemType.ETC) myTargetObj?.GetComponent<ItemEvent>()?.SetItemEvent();
                 if(itemSlot.itemCount < 1) itemTypeToSlotListMap[_item].Remove(itemSlot);
             }
         }
@@ -109,7 +109,6 @@ public class Inventory : InputManager, ItemEvent
             }
         }
     }
-    public void SetItemEvent() { }
     public void SetItemTargetObj(Transform target)
     {
         myTargetObj = target;
