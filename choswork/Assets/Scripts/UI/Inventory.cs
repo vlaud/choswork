@@ -84,12 +84,11 @@ public class Inventory : InputManager, ItemTargeting
         if (itemTypeToSlotListMap.TryGetValue(_item, out var itemSlotList))
         {
             var itemSlot = itemSlotList.FindLast(s => s.GetItemValue() == _item);
-            Debug.Log(itemSlot);
             if (itemSlot != null)
             {
                 itemSlot.SetSlotCount(-1);
-                if(_item.itemType == Item.ItemType.ETC) myTargetObj?.GetComponent<ItemEvent>()?.SetItemEvent();
-                if(itemSlot.itemCount < 1) itemTypeToSlotListMap[_item].Remove(itemSlot);
+                if (_item.itemType == Item.ItemType.ETC) myTargetObj?.GetComponent<ItemEvent>()?.SetItemEvent();
+                if (itemSlot.itemCount < 1) itemTypeToSlotListMap[_item].Remove(itemSlot);
             }
         }
         else Debug.Log("아이템이 없습니다.");
@@ -105,7 +104,11 @@ public class Inventory : InputManager, ItemTargeting
             if (mySlots[i].GetItemValue() != null)
             {
                 mySlots[i].SwitchSlot(firstEmptySlot);
+                var tempslot = firstEmptySlot;
                 firstEmptySlot = mySlots[i];
+                Debug.Log(tempslot + "'s item: " + tempslot.GetItemValue());
+                itemTypeToSlotListMap[tempslot.GetItemValue()].Add(tempslot);
+                itemTypeToSlotListMap[tempslot.GetItemValue()].Remove(firstEmptySlot);
             }
         }
     }
@@ -117,6 +120,7 @@ public class Inventory : InputManager, ItemTargeting
     {
         if (itemTypeToSlotListMap.TryGetValue(item, out var itemSlotList))
         {
+            Debug.Log(item + ", " + itemSlotList.Count);
             if (itemSlotList.Count == 0) return false;
         }
         return itemTypeToSlotListMap.ContainsKey(item);
