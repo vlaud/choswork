@@ -116,6 +116,10 @@ public class Inventory : InputManager, ItemEvent
     }
     public bool IsItemExist(Item item)
     {
+        if (itemTypeToSlotListMap.TryGetValue(item, out var itemSlotList))
+        {
+            if (itemSlotList.Count == 0) return false;
+        }
         return itemTypeToSlotListMap.ContainsKey(item);
     }
     public bool IsInventoryEnabled()

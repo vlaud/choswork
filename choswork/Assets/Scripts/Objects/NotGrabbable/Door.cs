@@ -27,7 +27,10 @@ public class Door : ObjectNotGrabbable, ItemEvent
         Inventory inv = myInventory.GetComponent<Inventory>();
         
         if (!inv.IsItemExist(requiredItem))
+        {
+            ShowMessage = " 아이템 필요 ";
             actionText.text = transform.GetComponent<ItemPickUp>()?.item.itemName + ShowMessage;
+        }
         else
         {
             ShowMessage = " 열기 ";
