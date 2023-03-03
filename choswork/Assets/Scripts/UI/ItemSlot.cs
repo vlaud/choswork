@@ -18,17 +18,15 @@ public class ItemSlot : MonoBehaviour
             ItemImage.transform.SetAsLastSibling();
         }
        
-        if (myItem.itemType != Item.ItemType.Equipment)
-        {
-            go_CountImage.SetActive(true);
-            text_Count.text = itemCount.ToString();
-        }
-        else
-        {
-            text_Count.text = "0";
-            go_CountImage.SetActive(false);
-        }
+        if (myItem.itemType != Item.ItemType.Equipment) ShowItemCount(true);
+        else ShowItemCount(false);
+    }
+    public void ShowItemCount(bool IsActive)
+    {
+        go_CountImage.SetActive(IsActive);
 
+        if (IsActive) text_Count.text = itemCount.ToString();
+        else text_Count.text = "0";
     }
     public void SetSlotCount(int _count)
     {
@@ -36,17 +34,7 @@ public class ItemSlot : MonoBehaviour
         text_Count.text = itemCount.ToString();
 
         if (itemCount <= 0)
-            ClearSlot();
-    }
-
-    // 해당 슬롯 하나 삭제
-    private void ClearSlot()
-    {
-        myItem = null;
-        itemCount = 0;
-
-        text_Count.text = "0";
-        go_CountImage.SetActive(false);
+            DestroyItem();
     }
     public Item GetItemValue()
     {
@@ -57,8 +45,11 @@ public class ItemSlot : MonoBehaviour
         if(myItem != null)
         {
             Destroy(ItemImage);
+            ItemImage = null;
             Debug.Log(myItem + " 제거됨");
             myItem = null;
+            itemCount = 0;
+            ShowItemCount(false);
         }
     }
     public void SwitchSlot(ItemSlot slot)
@@ -67,9 +58,14 @@ public class ItemSlot : MonoBehaviour
         ItemImage.transform.SetAsLastSibling();
         slot.ItemImage = ItemImage;
         slot.myItem = myItem;
+        slot.itemCount = itemCount;
+        slot.ShowItemCount(true);
         ItemImage.transform.localPosition = Vector3.zero;
 
         ItemImage = null;
         myItem = null;
+        itemCount = 0;
+
+        ShowItemCount(false);
     }
 }

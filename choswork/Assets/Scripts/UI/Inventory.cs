@@ -84,11 +84,12 @@ public class Inventory : InputManager, ItemEvent
         if (itemTypeToSlotListMap.TryGetValue(_item, out var itemSlotList))
         {
             var itemSlot = itemSlotList.FindLast(s => s.GetItemValue() == _item);
+            Debug.Log(itemSlot);
             if (itemSlot != null)
             {
-                itemSlot.DestroyItem();
+                itemSlot.SetSlotCount(-1);
                 myTargetObj?.GetComponent<ItemEvent>()?.SetItemEvent();
-                itemTypeToSlotListMap[_item].Remove(itemSlot);
+                if(itemSlot.itemCount < 1) itemTypeToSlotListMap[_item].Remove(itemSlot);
             }
         }
         else Debug.Log("아이템이 없습니다.");

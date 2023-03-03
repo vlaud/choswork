@@ -12,6 +12,7 @@ public class Door : ObjectNotGrabbable, ItemEvent
     }
     public override void Interact() 
     {
+        Debug.Log("door key used");
         Inventory inv = myInventory.GetComponent<Inventory>();
         inv.DestroyItem(requiredItem);
         GameManagement.Inst.GameClear();
