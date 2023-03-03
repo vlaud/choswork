@@ -41,7 +41,15 @@ public class Inventory : InputManager, ItemEvent
         foreach (var slot in mySlots)
         {
             Item curitem = slot.GetItemValue();
-            if (curitem == null) // ΩΩ∑‘¿Ã ∫ÒæÓ¿÷¥Ÿ
+            if(curitem != null)
+            {
+                if(curitem.itemName == _item.itemName)
+                {
+                    slot.SetSlotCount(_count);
+                    return;
+                }
+            }
+            else if (curitem == null) // ΩΩ∑‘¿Ã ∫ÒæÓ¿÷¥Ÿ
             {
                 slot.GetItem(_item, _count); // æ∆¿Ã≈€ »πµÊ
                 if (!itemTypeToSlotListMap.ContainsKey(_item))

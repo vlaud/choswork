@@ -30,6 +30,24 @@ public class ItemSlot : MonoBehaviour
         }
 
     }
+    public void SetSlotCount(int _count)
+    {
+        itemCount += _count;
+        text_Count.text = itemCount.ToString();
+
+        if (itemCount <= 0)
+            ClearSlot();
+    }
+
+    // 해당 슬롯 하나 삭제
+    private void ClearSlot()
+    {
+        myItem = null;
+        itemCount = 0;
+
+        text_Count.text = "0";
+        go_CountImage.SetActive(false);
+    }
     public Item GetItemValue()
     {
         return myItem;
