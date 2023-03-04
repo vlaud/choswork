@@ -19,6 +19,7 @@ public class Mainmenu : Singleton<Mainmenu>
     public GameObject GfxPanel;
     public GameObject LoadGamePanel;
     public GameObject Fader;
+    public Button SkipButton;
     [Header("BGM ¼³Á¤")]
     public AudioClip titleBGM;
     public AudioClip InGameBGM;
@@ -91,41 +92,45 @@ public class Mainmenu : Singleton<Mainmenu>
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         print("Scene on scene");
-        if (scene.name == "Title")
+
+        switch(scene.name)
         {
-            newGameSceneName = "CutScene";
-            faderAnim?.SetTrigger("FadeIn");
-            ShowMenuAnim(true);
-            Cursor.lockState = CursorLockMode.None;
-            SoundManager.Inst.PlayBGM(titleBGM);
-        }
-        if (scene.name == "CutScene")
-        {
-            newGameSceneName = "GameStage";
-            faderAnim?.SetTrigger("FadeIn");
-            DisableUI();
-        }
-        if (scene.name == "GameStage")
-        {
-            ChangeState(State.Menu);
-            SoundManager.Inst.PlayBGM(InGameBGM);
-            GamePanel_Sliders[0].onValueChanged.AddListener((float v) => GraphicManager.Inst.fbrightness = v);
-            GamePanel_Sliders[1].onValueChanged.AddListener((float v) => GraphicManager.Inst.fconstrast = v);
-            GamePanel_Sliders[2].onValueChanged.AddListener((float v) => SoundManager.Inst.bgmVolume = v);
-            GamePanel_Sliders[3].onValueChanged.AddListener((float v) => SoundManager.Inst.effectVolume = v);
-            newGameSceneName = "testScene";
-            faderAnim?.SetTrigger("FadeIn");
-            DisableUI();
-        }
-        if (scene.name == "testScene")
-        {
-            newGameSceneName = "GameStage2";
-            faderAnim.SetTrigger("FadeIn");
-        }
-        if (scene.name == "GameStage2")
-        {
-            newGameSceneName = "Title";
-            faderAnim.SetTrigger("FadeIn");
+            case "Title":
+                newGameSceneName = "CutScene";
+                faderAnim?.SetTrigger("FadeIn");
+                SkipButton.gameObject.SetActive(false);
+                ShowMenuAnim(true);
+                Cursor.lockState = CursorLockMode.None;
+                SoundManager.Inst.PlayBGM(titleBGM);
+                break;
+            case "Loading":
+                SkipButton.gameObject.SetActive(false);
+                break;
+            case "CutScene":
+                newGameSceneName = "GameStage";
+                faderAnim?.SetTrigger("FadeIn");
+                SkipButton.gameObject.SetActive(true);
+                DisableUI();
+                break;
+            case "GameStage":
+                ChangeState(State.Menu);
+                SoundManager.Inst.PlayBGM(InGameBGM);
+                GamePanel_Sliders[0].onValueChanged.AddListener((float v) => GraphicManager.Inst.fbrightness = v);
+                GamePanel_Sliders[1].onValueChanged.AddListener((float v) => GraphicManager.Inst.fconstrast = v);
+                GamePanel_Sliders[2].onValueChanged.AddListener((float v) => SoundManager.Inst.bgmVolume = v);
+                GamePanel_Sliders[3].onValueChanged.AddListener((float v) => SoundManager.Inst.effectVolume = v);
+                newGameSceneName = "testScene";
+                faderAnim?.SetTrigger("FadeIn");
+                DisableUI();
+                break;
+            case "testScene":
+                newGameSceneName = "GameStage2";
+                faderAnim.SetTrigger("FadeIn");
+                break;
+            case "GameStage2":
+                newGameSceneName = "Title";
+                faderAnim.SetTrigger("FadeIn");
+                break;
         }
     }
     public void ShowMenuAnim(bool v)

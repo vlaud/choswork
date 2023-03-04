@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Door : ObjectNotGrabbable, ItemEvent
 {
     public Item requiredItem;
+    public int requiredCount;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +12,7 @@ public class Door : ObjectNotGrabbable, ItemEvent
     }
     public override void Interact() 
     {
+        Debug.Log("door key used");
         Inventory inv = myInventory.GetComponent<Inventory>();
         inv.DestroyItem(requiredItem);
         GameManagement.Inst.GameClear();
@@ -21,13 +21,15 @@ public class Door : ObjectNotGrabbable, ItemEvent
     {
         GameManagement.Inst.IsGameClear = true;
     }
-    public void SetItemTargetObj(Transform target) { }
     public override void SetText()
     {
         Inventory inv = myInventory.GetComponent<Inventory>();
         
         if (!inv.IsItemExist(requiredItem))
+        {
+            ShowMessage = " 아이템 필요 ";
             actionText.text = transform.GetComponent<ItemPickUp>()?.item.itemName + ShowMessage;
+        }
         else
         {
             ShowMessage = " 열기 ";
@@ -39,6 +41,6 @@ public class Door : ObjectNotGrabbable, ItemEvent
     {
         actionText?.gameObject.SetActive(v);
         Inventory inv = myInventory.GetComponent<Inventory>();
-        inv.GetComponent<ItemEvent>()?.SetItemTargetObj(transform);
+        inv.GetComponent<ItemTargeting>()?.SetItemTargetObj(transform);
     }
 }

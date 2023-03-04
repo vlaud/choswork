@@ -22,6 +22,7 @@ public class CutScenePlayer : MonoBehaviour
     }
     public void FadeToLevel()
     {
-        GameManagement.Inst.myMainmenu?.FadeToLevel();
+        GameManagement.Inst.IsGameClear = true;
+        GameManagement.Inst.GameClear();
     }
 }

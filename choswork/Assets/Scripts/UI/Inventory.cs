@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Inventory : InputManager, ItemEvent
+public class Inventory : InputManager, ItemTargeting
 {
     [SerializeField] private GameObject InventoryBase;
     [SerializeField] private GameObject SlotParent;
@@ -36,14 +36,22 @@ public class Inventory : InputManager, ItemEvent
         if (InventoryBase.activeSelf == true) Cursor.lockState = CursorLockMode.None;
         else Cursor.lockState = CursorLockMode.Locked;
     }
-    public void AcquireItem(Item _item)
+    public void AcquireItem(Item _item, int _count = 1)
     {
         foreach (var slot in mySlots)
         {
             Item curitem = slot.GetItemValue();
-            if (curitem == null) // 슬롯이 비어있다
+            if(curitem != null)
             {
-                slot.GetItem(_item); // 아이템 획득
+                if(curitem.itemName == _item.itemName)
+                {
+                    slot.SetSlotCount(_count);
+                    return;
+                }
+            }
+            else if (curitem == null) // 슬롯이 비어있다
+            {
+                slot.GetItem(_item, _count); // 아이템 획득
                 if (!itemTypeToSlotListMap.ContainsKey(_item))
                 {
                     itemTypeToSlotListMap[_item] = new List<ItemSlot>() { slot };
@@ -78,9 +86,9 @@ public class Inventory : InputManager, ItemEvent
             var itemSlot = itemSlotList.FindLast(s => s.GetItemValue() == _item);
             if (itemSlot != null)
             {
-                itemSlot.DestroyItem();
-                myTargetObj?.GetComponent<ItemEvent>()?.SetItemEvent();
-                itemTypeToSlotListMap[_item].Remove(itemSlot);
+                itemSlot.SetSlotCount(-1);
+                if (_item.itemType == Item.ItemType.ETC) myTargetObj?.GetComponent<ItemEvent>()?.SetItemEvent();
+                if (itemSlot.itemCount < 1) itemTypeToSlotListMap[_item].Remove(itemSlot);
             }
         }
         else Debug.Log("아이템이 없습니다.");
@@ -96,13 +104,13 @@ public class Inventory : InputManager, ItemEvent
             if (mySlots[i].GetItemValue() != null)
             {
                 mySlots[i].SwitchSlot(firstEmptySlot);
+                var tempslot = firstEmptySlot;
                 firstEmptySlot = mySlots[i];
+                Debug.Log(tempslot + "'s item: " + tempslot.GetItemValue());
+                itemTypeToSlotListMap[tempslot.GetItemValue()].Add(tempslot);
+                itemTypeToSlotListMap[tempslot.GetItemValue()].Remove(firstEmptySlot);
             }
         }
-    }
-    public void SetItemEvent()
-    {
-
     }
     public void SetItemTargetObj(Transform target)
     {
@@ -110,6 +118,11 @@ public class Inventory : InputManager, ItemEvent
     }
     public bool IsItemExist(Item item)
     {
+        if (itemTypeToSlotListMap.TryGetValue(item, out var itemSlotList))
+        {
+            Debug.Log(item + ", " + itemSlotList.Count);
+            if (itemSlotList.Count == 0) return false;
+        }
         return itemTypeToSlotListMap.ContainsKey(item);
     }
     public bool IsInventoryEnabled()

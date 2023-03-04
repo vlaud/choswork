@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Item/New item")]
@@ -13,6 +11,7 @@ public class Item : ScriptableObject
         ETC,
     }
 
+    public int[] itemCount; // 아이템 갯수
     public string itemName; // 아이템의 이름
     public ItemType itemType; // 아이템 유형
     public GameObject itemImage; // 아이템의 이미지(인벤 토리 안에서 띄울)
