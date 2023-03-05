@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1273174, g: 0.13414761, b: 0.12107885, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5381,6 +5381,8 @@ MonoBehaviour:
   bloodEffect: {fileID: 0}
   bloodPos: {fileID: 957149651}
   timeStopEffect: {fileID: 0}
+  timeStopItem: {fileID: 11400000, guid: eef8429e811cc12488f5fd63d9af01a9, type: 2}
+  IsTimtStopAvailable: 0
   myState: 0
 --- !u!4 &95975073
 Transform:

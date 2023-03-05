@@ -19660,6 +19660,8 @@ MonoBehaviour:
   bloodEffect: {fileID: 0}
   bloodPos: {fileID: 459200600}
   timeStopEffect: {fileID: 0}
+  timeStopItem: {fileID: 11400000, guid: eef8429e811cc12488f5fd63d9af01a9, type: 2}
+  IsTimtStopAvailable: 0
   myState: 0
 --- !u!114 &910030838
 MonoBehaviour:
