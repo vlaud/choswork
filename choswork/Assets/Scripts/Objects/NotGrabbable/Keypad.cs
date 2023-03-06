@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -74,7 +73,9 @@ public class Keypad : ObjectNotGrabbable
                 Cursor.lockState = CursorLockMode.None;
                 break;
             case State.Correct:
-                Instantiate(myKeypad.keyItem, myKeypad.keyItemPos.position, Quaternion.identity);
+                string name = myKeypad.keyItem.GetComponent<ItemPickUp>().item.itemName;
+                ObjectPool.Inst.GetObject<PickUpController>(myKeypad.keyItem, name, myKeypad.keyItemPos.position, Quaternion.identity).ReleaseObj();
+                //Instantiate(myKeypad.keyItem, myKeypad.keyItemPos.position, Quaternion.identity);
                 break;
         }
     }

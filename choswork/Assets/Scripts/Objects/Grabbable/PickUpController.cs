@@ -14,7 +14,8 @@ public class PickUpController : ObjectGrabbable
     {
         myItem = GetComponent<ItemPickUp>();
         Debug.Log(myItem.item.itemName + " 획득 했습니다.");  // 인벤토리 넣기
-        Destroy(gameObject);
+        ObjectPool.Inst.ReleaseObject<PickUpController>(gameObject, myItem.item.itemName);
+        //Destroy(gameObject);
         SetItemInfoAppear(false);
         myInventory?.GetComponent<Inventory>().AcquireItem(myItem.item);
     }
