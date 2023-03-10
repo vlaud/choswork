@@ -31,4 +31,38 @@ public class BehaviourTree : ScriptableObject
         AssetDatabase.RemoveObjectFromAsset(node);
         AssetDatabase.SaveAssets();
     }
+    public void AddChild(Node parent, Node child)
+    {
+        DecoratorNode decorator = parent as DecoratorNode;
+        if (decorator)
+            decorator.child = child;
+
+        CompositeNode coposite = parent as CompositeNode;
+        if (coposite)
+            coposite.children.Add(child);
+    }
+    public void RemoveChild(Node parent, Node child)
+    {
+        DecoratorNode decorator = parent as DecoratorNode;
+        if (decorator)
+            decorator.child = null;
+
+        CompositeNode coposite = parent as CompositeNode;
+        if (coposite)
+            coposite.children.Remove(child);
+    }
+    public List<Node> GetChildren(Node parent)
+    {
+        List<Node> children = new List<Node>();
+
+        DecoratorNode decorator = parent as DecoratorNode;
+        if (decorator && decorator.child != null)
+            children.Add(decorator.child);
+
+        CompositeNode coposite = parent as CompositeNode;
+        if (coposite)
+            return coposite.children;
+
+        return children;
+    }
 }
