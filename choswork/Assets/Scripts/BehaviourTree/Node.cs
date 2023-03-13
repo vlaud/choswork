@@ -27,6 +27,10 @@ public abstract class Node : ScriptableObject
         }
         return state;
     }
+    public virtual Node Clone()
+    {
+        return Instantiate(this);
+    }
     protected abstract void OnStart();
     protected abstract void OnStop();
     protected abstract State OnUpdate();
