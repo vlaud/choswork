@@ -56,7 +56,7 @@ MonoBehaviour:
   state: 0
   started: 0
   guid: 9c9c5a2cc36e49443b00747bfb9f5879
-  position: {x: -463.12982, y: 211.00003}
+  position: {x: -582.7233, y: 206.74158}
   message: Two
 --- !u!114 &1969319961504926926
 MonoBehaviour:
@@ -96,7 +96,7 @@ MonoBehaviour:
   state: 0
   started: 0
   guid: c2b854a724d43c743aa9ff0f10bf3d60
-  position: {x: -839.04596, y: 211.00006}
+  position: {x: -932.7234, y: 206.74158}
   message: One
 --- !u!114 &5086511526517614294
 MonoBehaviour:
@@ -113,7 +113,7 @@ MonoBehaviour:
   state: 0
   started: 0
   guid: 163e86eed258aa446a968067fae362ca
-  position: {x: -639.0001, y: 210.50005}
+  position: {x: -758.7234, y: 206.74158}
   duration: 1
 --- !u!114 &5201962461558325009
 MonoBehaviour:
@@ -130,7 +130,7 @@ MonoBehaviour:
   state: 0
   started: 0
   guid: 5f09e67124607244699b9bdb671d4f1c
-  position: {x: 70.00002, y: 219}
+  position: {x: -80.72338, y: 206.74158}
   duration: 1
 --- !u!114 &5408241131083882860
 MonoBehaviour:
@@ -147,7 +147,7 @@ MonoBehaviour:
   state: 0
   started: 0
   guid: bdc148bff9b382a469ae07c6244b6621
-  position: {x: -87.58752, y: 219}
+  position: {x: -230.72339, y: 210.7416}
   message: Three
 --- !u!114 &6101828933235243473
 MonoBehaviour:
@@ -181,5 +181,5 @@ MonoBehaviour:
   state: 0
   started: 0
   guid: f1991ec66ca1e5746bbf90b81d359367
-  position: {x: -274.99994, y: 215}
+  position: {x: -394.72336, y: 210.7416}
   duration: 1

@@ -21,7 +21,16 @@ public class BehaviourTreeView : GraphView
 
         var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/BehaviourTreeEditor.uss");
         styleSheets.Add(styleSheet);
+
+        Undo.undoRedoPerformed += OnUndoRedo;
     }
+
+    private void OnUndoRedo()
+    {
+        PopulateView(tree);
+        AssetDatabase.SaveAssets();
+    }
+
     NodeView FindNodeView(Node node)
     {
         return GetNodeByGuid(node.guid) as NodeView;
