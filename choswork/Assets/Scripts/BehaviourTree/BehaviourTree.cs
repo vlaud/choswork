@@ -14,6 +14,7 @@ public class BehaviourTree : ScriptableObject
         
         return treeState;
     }
+#if UNITY_EDITOR
     public Node CreateNode(System.Type type)
     {
         Node node = ScriptableObject.CreateInstance(type) as Node;
@@ -23,7 +24,10 @@ public class BehaviourTree : ScriptableObject
         Undo.RecordObject(this, "Behaviour Tree (CreateNode)");
         nodes.Add(node);
 
-        AssetDatabase.AddObjectToAsset(node, this);
+        if(!Application.isPlaying)
+        {
+            AssetDatabase.AddObjectToAsset(node, this);
+        }
         Undo.RegisterCreatedObjectUndo(node, "Behaviour Tree (CreateNode)");
 
         AssetDatabase.SaveAssets();
@@ -104,10 +108,25 @@ public class BehaviourTree : ScriptableObject
 
         return children;
     }
+#endif
+    public void Traverse(Node node, System.Action<Node> visiter)
+    {
+        if(node)
+        {
+            visiter.Invoke(node);
+            var children = GetChildren(node);
+            children.ForEach((n) => Traverse(n, visiter));
+        }
+    }
     public BehaviourTree Clone()
     {
         BehaviourTree tree = Instantiate(this);
         tree.rootNode = tree.rootNode.Clone();
+        tree.nodes = new List<Node>();
+        Traverse(tree.rootNode, (n) =>
+        {
+            tree.nodes.Add(n);
+        });
         return tree;
     }
 }
