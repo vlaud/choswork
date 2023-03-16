@@ -85,7 +85,7 @@ public class BehaviourTreeEditor : EditorWindow
         {
             if (tree)
             {
-                treeView.PopulateView(tree);
+                treeView?.PopulateView(tree);
             }
         }
         else
