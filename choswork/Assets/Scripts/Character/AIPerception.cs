@@ -39,6 +39,7 @@ public class AIPerception : MonoBehaviour
     public Transform myTarget;
     private GameManagement myGamemanager;
     private AIAction myMonster;
+    private WaitForSeconds delayCoroutine = new WaitForSeconds(0.2f);
 
     void ChangeState(State s)
     {
@@ -77,7 +78,7 @@ public class AIPerception : MonoBehaviour
                 FieldOfViewCheck();
             else if (myMonster.GetAIState() == AIState.Angry)
                 ChangeState(State.Chase);
-            yield return new WaitForSeconds(0.2f);
+            yield return delayCoroutine;
         }
     }
     IEnumerator CheckDist()
@@ -94,7 +95,7 @@ public class AIPerception : MonoBehaviour
                     ChangeState(State.Search);
                 }
             }
-            yield return new WaitForSeconds(0.2f);
+            yield return delayCoroutine;
         }
     }
     private void FieldOfViewCheck()

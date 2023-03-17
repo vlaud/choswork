@@ -46,22 +46,6 @@ public class ObjectGrabbable : ObjectInteractable
                 break;
         }
     }
-    void StateProcess()
-    {
-        switch (myState)
-        {
-            case STATE.Create:
-                break;
-            case STATE.Idle:
-                break;
-            case STATE.Grab:
-                break;
-            case STATE.Throw:
-                break;
-            case STATE.WallHit:
-                break;
-        }
-    }
     IEnumerator DelayState(STATE s)
     {
         yield return new WaitForSeconds(_changeStateTime);
@@ -92,15 +76,22 @@ public class ObjectGrabbable : ObjectInteractable
     }
     public void Throw(Vector3 dir, float strength, bool isGhost = false)
     {
+        FreeObj(isGhost);
+        Vector3 force;
+        force = dir * strength;
+        objectRigidbody.velocity += force * Time.fixedDeltaTime / (Time.timeScale * objectRigidbody.mass);
+        ChangeState(STATE.Throw);
+    }
+    public void ReleaseObj(bool isGhost = false, STATE state = STATE.Idle)
+    {
+        FreeObj(isGhost);
+        ChangeState(state);
+    }
+    void FreeObj(bool isGhost = false)
+    {
         _isGhost = isGhost;
         this.objectGrabPointTransform = null;
         SetObjectPhysics(true);
-        Vector3 force;
-        force = dir * strength;
-        //objectRigidbody.AddForce(force);
-        //objectRigidbody.velocity = force;
-        objectRigidbody.velocity += force * Time.fixedDeltaTime / (Time.timeScale * objectRigidbody.mass);
-        ChangeState(STATE.Throw);
     }
     public void SetObjectPhysics(bool v)
     {

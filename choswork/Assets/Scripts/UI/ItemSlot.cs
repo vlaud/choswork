@@ -14,7 +14,10 @@ public class ItemSlot : MonoBehaviour
         itemCount += _count;
         if (ItemImage == null)
         {
-            ItemImage = Instantiate(_item.itemImage, mySlotMask);
+            //ItemImage = Instantiate(_item.itemImage, mySlotMask);
+            string objName = _item.itemImage.GetComponent<ObjectType>().obj.ObjectName;
+            var image = ObjectPool.Inst.GetObject<ObjectType>(_item.itemImage, mySlotMask, objName);
+            ItemImage = image.gameObject;
             ItemImage.transform.SetAsLastSibling();
         }
        
@@ -44,7 +47,8 @@ public class ItemSlot : MonoBehaviour
     {
         if(myItem != null)
         {
-            Destroy(ItemImage);
+            //Destroy(ItemImage);
+            ObjectPool.Inst.ReleaseObject<ObjectType>(ItemImage, ItemImage.GetComponent<ObjectType>().obj.ObjectName);
             ItemImage = null;
             Debug.Log(myItem + " Á¦°ÅµÊ");
             myItem = null;
