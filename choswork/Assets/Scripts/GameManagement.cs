@@ -88,7 +88,8 @@ public class GameManagement : MonoBehaviour
     private void Awake()
     {
         Inst = this;
-        Physics.autoSimulation = IsCutscene;
+        Physics.simulationMode = SimulationMode.Script;
+        //Physics.autoSimulation = IsCutscene;
         myMonsters = FindObjectsOfType(typeof(AIPerception)) as AIPerception[];
         for(int i =0; i < myMonsters.Length; ++i)
         {
