@@ -16,16 +16,19 @@ MonoBehaviour:
     rid: 471191656346157057
   nodes:
   - rid: 471191656346157057
+  - rid: 471191656346157059
+  - rid: 471191656346157060
+  - rid: 471191674786938880
+  - rid: 471191674786938881
+  - rid: 471191674786938883
   treeState: 0
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
-  viewPosition: {x: 600, y: 300, z: 0}
-  viewScale: {x: 1, y: 1, z: 1}
+  viewPosition: {x: 99, y: -111, z: 0}
+  viewScale: {x: 0.65751624, y: 0.65751624, z: 1}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 471191656346157057
       type: {class: RootNode, ns: TheKiwiCoder, asm: Assembly-CSharp}
       data:
@@ -38,4 +41,70 @@ MonoBehaviour:
         description: 
         drawGizmos: 0
         child:
-          rid: -2
+          rid: 471191656346157059
+    - rid: 471191656346157059
+      type: {class: Repeat, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 74c9914e3c62acf44824cbbebabfe5fc
+        position: {x: -0.000076293945, y: 96.415504}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        drawGizmos: 0
+        child:
+          rid: 471191656346157060
+        restartOnSuccess: 1
+        restartOnFailure: 0
+    - rid: 471191656346157060
+      type: {class: InterruptSelector, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: f11ad30d5b07cb446a1a0e986f9c7729
+        position: {x: -0.00002002716, y: 285.12726}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        drawGizmos: 0
+        children:
+        - rid: 471191674786938880
+    - rid: 471191674786938880
+      type: {class: Sequencer, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 2b7b2b63c29403348b414e38ae4ee402
+        position: {x: 281.36188, y: 418.1869}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: Idle
+        drawGizmos: 0
+        children:
+        - rid: 471191674786938883
+        - rid: 471191674786938881
+    - rid: 471191674786938881
+      type: {class: Wait, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 47ab06ca891cb4f42b9db3ae1fda3d82
+        position: {x: 337.2068, y: 583.3539}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        drawGizmos: 0
+        duration: 1
+    - rid: 471191674786938883
+      type: {class: PlayAnimation, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 973f872438b634240a8bd5e3431953f2
+        position: {x: 75.000015, y: 583}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: Idle Animation
+        drawGizmos: 0
+        animationName: Idle
