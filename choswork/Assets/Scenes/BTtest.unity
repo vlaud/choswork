@@ -22923,6 +22923,7 @@ GameObject:
   - component: {fileID: 677943902}
   - component: {fileID: 677943901}
   - component: {fileID: 677943906}
+  - component: {fileID: 677943908}
   - component: {fileID: 677943907}
   m_Layer: 10
   m_Name: MobBT
@@ -23043,6 +23044,30 @@ MonoBehaviour:
   _standupName: 
   _standupClipName: 
   player: {fileID: 794418823}
+--- !u!114 &677943908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677943900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 897f9758846f867479ccc829506df69b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myState: 0
+  canSeePlayer: 0
+  fovAngle: 160
+  losRadius: 5
+  lostDist: 10
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 8
+  obstructionMask:
+    serializedVersion: 2
+    m_Bits: 41152
+  myTarget: {fileID: 0}
 --- !u!1 &680233872
 GameObject:
   m_ObjectHideFlags: 0

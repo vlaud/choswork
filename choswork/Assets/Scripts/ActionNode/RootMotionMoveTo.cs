@@ -7,12 +7,9 @@ using UnityEngine.AI;
 [System.Serializable]
 public class RootMotionMoveTo : ActionNode
 {
-    private NavMeshPath myPath;
-    private NavMeshQueryFilter filter;
+    Movement movement;
     protected override void OnStart() {
-        myPath = new NavMeshPath();
-        filter.areaMask = 1 << GameManagement.Inst.myMapManager.surfaces.defaultArea;
-        filter.agentTypeID = GameManagement.Inst.myMapManager.surfaces.agentTypeID;
+        movement = context.gameObject.GetComponent<Movement>();
         Debug.Log(context.characterMovement);
     }
 
@@ -20,7 +17,7 @@ public class RootMotionMoveTo : ActionNode
     }
 
     protected override State OnUpdate() {
-        context.characterMovement.RePath(myPath, blackboard.Target.position, filter);
-        return State.Running;
+        context.characterMovement.RePath(movement.myPath, blackboard.Target.position, movement.filter);
+        return State.Success;
     }
 }

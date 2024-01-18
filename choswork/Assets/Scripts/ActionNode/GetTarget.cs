@@ -6,6 +6,7 @@ using TheKiwiCoder;
 [System.Serializable]
 public class GetTarget : ActionNode
 {
+    Movement movement;
     protected override void OnStart() {
     }
 
@@ -13,8 +14,13 @@ public class GetTarget : ActionNode
     }
 
     protected override State OnUpdate() {
-        Movement movement = context.characterMovement as Movement;
-        blackboard.Target = movement.player;
-        return State.Success;
+        movement = context.gameObject.GetComponent<Movement>();
+        blackboard.Target = movement.target;
+        Debug.Log(movement.target);
+        if (movement.target != null)
+        {
+            return State.Success;
+        }
+        return State.Failure;
     }
 }

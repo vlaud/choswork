@@ -24,11 +24,12 @@ MonoBehaviour:
   - rid: 471191720529231872
   - rid: 471191720529231873
   - rid: 471191720529231876
+  - rid: 471191720529231877
   treeState: 0
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
     Target: {fileID: 0}
-  viewPosition: {x: 319, y: -10, z: 0}
+  viewPosition: {x: 456, y: 30, z: 0}
   viewScale: {x: 0.65751624, y: 0.65751624, z: 1}
   references:
     version: 2
@@ -53,7 +54,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 74c9914e3c62acf44824cbbebabfe5fc
-        position: {x: -0.000076293945, y: 96.415504}
+        position: {x: -0.000011444092, y: 152.00002}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           Target: {fileID: 0}
@@ -132,6 +133,7 @@ MonoBehaviour:
         description: Roaming
         drawGizmos: 0
         children:
+        - rid: 471191720529231877
         - rid: 471191720529231873
         - rid: 471191720529231876
     - rid: 471191720529231873
@@ -140,7 +142,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 8ef53cd6b17c7c843b095e147d8fc443
-        position: {x: -390.3062, y: 583}
+        position: {x: -358.99988, y: 583}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           Target: {fileID: 0}
@@ -154,6 +156,18 @@ MonoBehaviour:
         started: 0
         guid: 074352adf9e81fa4a8a5f350b17ea586
         position: {x: -175.9999, y: 583}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+    - rid: 471191720529231877
+      type: {class: GetTarget, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 8f678b8ec3d5e534680fdd532ea62d2e
+        position: {x: -541.36957, y: 583}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           Target: {fileID: 0}

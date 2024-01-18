@@ -5,54 +5,68 @@ using UnityEngine.AI;
 
 public class Movement : RagDollAction, AIAction
 {
-    public Transform player;
+    public Transform target;
+    public int mobIndex;
+    public AIState aiState;
+    //ai path
+    public NavMeshPath myPath;
+    public NavMeshQueryFilter filter;
+
+    private void Start()
+    {
+        myPath = new NavMeshPath();
+        filter.areaMask = 1 << GameManagement.Inst.myMapManager.surfaces.defaultArea;
+        filter.agentTypeID = GameManagement.Inst.myMapManager.surfaces.agentTypeID;
+    }
     public void FindPlayer(Transform target)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Å¸°Ù È®º¸");
+        aiState = AIState.Angry;
+        this.target = target;
     }
 
     public AIState GetAIState()
     {
-        throw new System.NotImplementedException();
+        return aiState;
     }
 
     public int GetMobIndex()
     {
-        throw new System.NotImplementedException();
+        return mobIndex;
     }
 
     public NavMeshPath GetMyPath()
     {
-        throw new System.NotImplementedException();
+        return myPath;
     }
 
     public Transform GetMyTarget()
     {
-        throw new System.NotImplementedException();
+        return target;
     }
 
     public void HearingSound()
     {
-        throw new System.NotImplementedException();
+
     }
 
     public bool IsSearchable()
     {
-        throw new System.NotImplementedException();
+        return aiState == AIState.Normal;
     }
 
-    public void LostTarget()
+    public virtual void LostTarget()
     {
-        throw new System.NotImplementedException();
+
     }
 
     public void SetAnimTrigger()
     {
-        throw new System.NotImplementedException();
+
     }
 
     public void SetMobIndex(int mobIndex)
     {
-        throw new System.NotImplementedException();
+        this.mobIndex = mobIndex;
     }
 }

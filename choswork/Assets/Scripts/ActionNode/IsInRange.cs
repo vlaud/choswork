@@ -6,7 +6,9 @@ using TheKiwiCoder;
 [System.Serializable]
 public class IsInRange : ActionNode
 {
+    Movement movement;
     protected override void OnStart() {
+        movement = context.gameObject.GetComponent<Movement>();
     }
 
     protected override void OnStop() {
