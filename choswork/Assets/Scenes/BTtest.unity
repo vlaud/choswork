@@ -22923,6 +22923,7 @@ GameObject:
   - component: {fileID: 677943902}
   - component: {fileID: 677943901}
   - component: {fileID: 677943906}
+  - component: {fileID: 677943907}
   m_Layer: 10
   m_Name: MobBT
   m_TagString: Untagged
@@ -22989,7 +22990,7 @@ Transform:
   m_GameObject: {fileID: 677943900}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.92, y: 0, z: 0}
+  m_LocalPosition: {x: -5.78, y: 0, z: 16.47}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -23009,6 +23010,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tree: {fileID: 11400000, guid: ab15a7dc4122f7c4585e5a2b64f59cba, type: 2}
+--- !u!114 &677943907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677943900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a9ce9a5c2e5e9e42ac9aa5ff0114848, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myStat:
+    hp: 0
+    maxHp: 0
+    moveSpeed: 0
+    rotSpeed: 360
+    ap: 0
+    attackRange: 0
+    attackDelay: 0
+  HearingTr: {fileID: 0}
+  hearingPos: {x: 0, y: 0, z: 0}
+  hearingObj: {fileID: 0}
+  aiHeardPlayer: 0
+  noiseTravelDistance: 10
+  myRagDolls: {fileID: 0}
+  _timetoWakeup: 3
+  _timeToResetBones: 0
+  _changeStateTime: 3
+  myHips: {fileID: 0}
+  _standupName: 
+  _standupClipName: 
+  player: {fileID: 794418823}
 --- !u!1 &680233872
 GameObject:
   m_ObjectHideFlags: 0

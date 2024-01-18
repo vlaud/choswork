@@ -21,6 +21,7 @@ namespace TheKiwiCoder {
         public BoxCollider boxCollider;
         public CapsuleCollider capsuleCollider;
         public CharacterController characterController;
+        public CharacterMovement characterMovement;
         // Add other game specific systems here
 
         public static Context CreateFromGameObject(GameObject gameObject) {
@@ -46,9 +47,10 @@ namespace TheKiwiCoder {
             context.myRagDolls = gameObject.GetComponent<RagDollPhysics>();
             if (context.myRagDolls == null)
             {
-                context.myRagDolls = context.gameObject.GetComponentInChildren<RagDollPhysics>();
+                context.myRagDolls = gameObject.GetComponentInChildren<RagDollPhysics>();
             }
             context.RagDollSet(false);
+            context.characterMovement = gameObject.GetComponent<CharacterMovement>();
             // Add whatever else you need here...
 
             return context;
