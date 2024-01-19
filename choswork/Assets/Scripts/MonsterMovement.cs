@@ -16,6 +16,7 @@ public class MonsterMovement : Movement
         if (myRagDolls.isRagdoll) return;
         Vector3 force;
         Debug.Log("kick");
+        StopAllCoroutines();
         RagDollSet(true);
         force = dir * strength;
         force.y = strength;
