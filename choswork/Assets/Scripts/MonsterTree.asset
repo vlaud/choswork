@@ -26,8 +26,10 @@ MonoBehaviour:
   - rid: 471191720529231876
   - rid: 471191720529231877
   - rid: 471191746436136964
-  - rid: 471191746436136968
-  - rid: 471191746436136969
+  - rid: 471191748928077824
+  - rid: 471191748928077826
+  - rid: 471191748928077828
+  - rid: 471191748928077829
   treeState: 0
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
@@ -35,7 +37,7 @@ MonoBehaviour:
     Target: {fileID: 0}
     aiState: 0
     rdState: 0
-  viewPosition: {x: 646, y: -51, z: 0}
+  viewPosition: {x: 728, y: -128, z: 0}
   viewScale: {x: 0.65751624, y: 0.65751624, z: 1}
   references:
     version: 2
@@ -93,7 +95,7 @@ MonoBehaviour:
         drawGizmos: 0
         children:
         - rid: 471191746436136964
-        - rid: 471191746436136968
+        - rid: 471191748928077824
         - rid: 471191720529231872
         - rid: 471191674786938880
     - rid: 471191674786938880
@@ -114,6 +116,7 @@ MonoBehaviour:
         children:
         - rid: 471191674786938883
         - rid: 471191674786938881
+        alwaysStartFirst: 0
     - rid: 471191674786938881
       type: {class: Wait, ns: TheKiwiCoder, asm: Assembly-CSharp}
       data:
@@ -152,7 +155,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 830b0ac506bfeed4fac379e4a16c8904
-        position: {x: -209.47911, y: 418}
+        position: {x: -283.99997, y: 418}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -165,6 +168,7 @@ MonoBehaviour:
         - rid: 471191720529231877
         - rid: 471191720529231873
         - rid: 471191720529231876
+        alwaysStartFirst: 0
     - rid: 471191720529231873
       type: {class: PlayAnimation, ns: , asm: Assembly-CSharp}
       data:
@@ -217,7 +221,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: f4390a5463db6c241aaff2fdcff9bda3
-        position: {x: -967.4243, y: 418}
+        position: {x: -1127.1786, y: 418}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -227,13 +231,13 @@ MonoBehaviour:
         description: 
         drawGizmos: 0
         value: {fileID: 0}
-    - rid: 471191746436136968
-      type: {class: InterruptSelector, ns: TheKiwiCoder, asm: Assembly-CSharp}
+    - rid: 471191748928077824
+      type: {class: Sequencer, ns: TheKiwiCoder, asm: Assembly-CSharp}
       data:
         state: 0
         started: 0
-        guid: 1f174de7831606c459954587eb9ae822
-        position: {x: -690.99994, y: 438.00003}
+        guid: e58bc286ca2cc554d87e9710786e27f4
+        position: {x: -766, y: 418}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -243,14 +247,47 @@ MonoBehaviour:
         description: 
         drawGizmos: 0
         children:
-        - rid: 471191746436136969
-    - rid: 471191746436136969
-      type: {class: GetRagdoll, ns: , asm: Assembly-CSharp}
+        - rid: 471191748928077829
+        - rid: 471191748928077826
+        - rid: 471191748928077828
+        alwaysStartFirst: 1
+    - rid: 471191748928077826
+      type: {class: ResetBones, ns: , asm: Assembly-CSharp}
       data:
         state: 0
         started: 0
-        guid: 2955c25f309e5ed4899a8039c65533ee
-        position: {x: -840.99994, y: 583}
+        guid: c19bde1a1b43aa14499747c909780b2b
+        position: {x: -750.79144, y: 745}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
+        description: 
+        drawGizmos: 0
+    - rid: 471191748928077828
+      type: {class: StandUp, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: bf6933684abecff45ab631f95027a4d3
+        position: {x: -583.83484, y: 745}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
+        description: 
+        drawGizmos: 0
+    - rid: 471191748928077829
+      type: {class: RagdollBehave, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 64601e4e2ac823e40b0006657a67fb8e
+        position: {x: -945.06165, y: 745}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}

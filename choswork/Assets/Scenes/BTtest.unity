@@ -23039,11 +23039,11 @@ MonoBehaviour:
   noiseTravelDistance: 10
   myRagDolls: {fileID: 1926243545}
   _timetoWakeup: 3
-  _timeToResetBones: 0
+  _timeToResetBones: 0.5
   _changeStateTime: 3
-  myHips: {fileID: 0}
-  _standupName: 
-  _standupClipName: 
+  myHips: {fileID: 1317541691}
+  _standupName: Stand Up
+  _standupClipName: Stand Up
   target: {fileID: 0}
   mobIndex: 0
   aiState: 0

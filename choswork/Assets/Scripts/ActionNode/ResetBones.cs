@@ -4,7 +4,7 @@ using UnityEngine;
 using TheKiwiCoder;
 
 [System.Serializable]
-public class GetRagdoll : ActionNode
+public class ResetBones : ActionNode
 {
     protected override void OnStart() {
     }
@@ -13,8 +13,17 @@ public class GetRagdoll : ActionNode
     }
 
     protected override State OnUpdate() {
-        if(context.myRagDolls.isRagdoll)
+        if (blackboard.rdState == RagDollState.StandUp)
+        {
             return State.Success;
+        }
+        if (blackboard.rdState == RagDollState.ResetBones)
+        {
+            blackboard.movement.ResetBonesBehaviour();
+            return State.Running;
+        }
+
+
         return State.Failure;
     }
 }

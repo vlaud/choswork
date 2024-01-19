@@ -13,9 +13,9 @@ public class MonsterMovement : Movement
     }
     public override void GetKick(Vector3 dir, float strength)
     {
+        if (myRagDolls.isRagdoll) return;
         Vector3 force;
         Debug.Log("kick");
-        StopAllCoroutines();
         RagDollSet(true);
         force = dir * strength;
         force.y = strength;

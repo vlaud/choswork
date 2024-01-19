@@ -64,7 +64,7 @@ public class RagDollAction : AIDetectionMovement
         }
         myHips.position = originHipPos;
     }
-    protected void RagdollBehaviour()
+    public void RagdollBehaviour()
     {
         _timetoWakeup -= Time.deltaTime;
 
@@ -85,7 +85,7 @@ public class RagDollAction : AIDetectionMovement
             ChangeRagDollState(RagDollState.NoRagdoll);
         }
     }
-    protected void ResetBonesBehaviour()
+    public void ResetBonesBehaviour()
     {
         _elapsedResetBonesTime += Time.deltaTime;
         float elapsedPercentage = _elapsedResetBonesTime / _timeToResetBones;

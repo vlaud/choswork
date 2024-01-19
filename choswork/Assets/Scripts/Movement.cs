@@ -17,6 +17,17 @@ public class Movement : RagDollAction, AIAction
     private void Awake()
     {
         cs = GetComponent<CapsuleCollider>();
+        _origintimetoWake = _timetoWakeup;
+        _bones = myHips.GetComponentsInChildren<Transform>();
+        _standupTransforms = new BoneTransform[_bones.Length];
+        _ragdollTransforms = new BoneTransform[_bones.Length];
+
+        for (int boneIndex = 0; boneIndex < _bones.Length; ++boneIndex)
+        {
+            _standupTransforms[boneIndex] = new BoneTransform();
+            _ragdollTransforms[boneIndex] = new BoneTransform();
+        }
+        PopulateAnimation(_standupClipName, _standupTransforms);
         RagDollSet(false);
     }
     private void Start()
@@ -80,7 +91,10 @@ public class Movement : RagDollAction, AIAction
 
     public override void ChangeRagDollState(RagDollState ragdoll)
     {
-        switch (ragdoll)
+        if (rdState == ragdoll) return;
+        rdState = ragdoll;
+
+        switch (rdState)
         {
             case RagDollState.ResetBones:
                 break;
