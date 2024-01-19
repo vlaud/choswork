@@ -5,11 +5,10 @@ using TheKiwiCoder;
 using UnityEngine.AI;
 
 [System.Serializable]
-public class RootMotionMoveTo : ActionNode
+public class RootMotionMoveTo : GenericTypeActionNode<Movement>
 {
-    Movement movement;
     protected override void OnStart() {
-        movement = context.gameObject.GetComponent<Movement>();
+        value = context.gameObject.GetComponent<Movement>();
         Debug.Log(context.characterMovement);
     }
 
@@ -17,7 +16,7 @@ public class RootMotionMoveTo : ActionNode
     }
 
     protected override State OnUpdate() {
-        context.characterMovement.RePath(movement.myPath, blackboard.Target.position, movement.filter);
+        context.characterMovement.RePath(value.myPath, blackboard.Target.position, value.filter);
         return State.Success;
     }
 }

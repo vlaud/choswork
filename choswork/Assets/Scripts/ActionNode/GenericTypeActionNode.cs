@@ -4,10 +4,10 @@ using UnityEngine;
 using TheKiwiCoder;
 
 [System.Serializable]
-public class IsInRange : GenericTypeActionNode<Movement>
+public class GenericTypeActionNode<T> : ActionNode where T : CharacterMovement
 {
+    public T value;
     protected override void OnStart() {
-        value = context.gameObject.GetComponent<Movement>();
     }
 
     protected override void OnStop() {

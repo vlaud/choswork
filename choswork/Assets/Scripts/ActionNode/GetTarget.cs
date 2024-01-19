@@ -4,9 +4,8 @@ using UnityEngine;
 using TheKiwiCoder;
 
 [System.Serializable]
-public class GetTarget : ActionNode
+public class GetTarget : GenericTypeActionNode<Movement>
 {
-    Movement movement;
     protected override void OnStart() {
     }
 
@@ -14,10 +13,10 @@ public class GetTarget : ActionNode
     }
 
     protected override State OnUpdate() {
-        movement = context.gameObject.GetComponent<Movement>();
-        blackboard.Target = movement.target;
-        Debug.Log(movement.target);
-        if (movement.target != null)
+        value = context.gameObject.GetComponent<Movement>();
+        blackboard.Target = value.target;
+        Debug.Log(value.target);
+        if (value.target != null)
         {
             return State.Success;
         }
