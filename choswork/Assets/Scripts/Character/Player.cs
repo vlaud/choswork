@@ -175,7 +175,7 @@ public class Player : BattleSystem
             Debug.Log(col);
             camShake?.OnShakeCamera(shake_duration, shake_magnitude, IsPosPerlin);
             camShake?.OnRotateCamera(shake_duration, shake_magnitude, IsRotPerlin);
-            col.GetComponent<Monster>().GetKick(myCameras.myRoot.transform.forward, KickStrength);
+            col.GetComponent<RagDollAction>().GetKick(myCameras.myRoot.transform.forward, KickStrength);
         }
     }
     public void KickCheck(bool v)

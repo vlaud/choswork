@@ -15,6 +15,8 @@ public class MonsterMovement : Movement
     {
         Vector3 force;
         Debug.Log("kick");
+        StopAllCoroutines();
+        RagDollSet(true);
         force = dir * strength;
         force.y = strength;
         myRagDolls.myRagDoll.spineRigidBody.velocity += force * Time.fixedDeltaTime / (Time.timeScale * myRagDolls.myRagDoll.spineRigidBody.mass);

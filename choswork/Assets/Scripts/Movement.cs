@@ -12,11 +12,19 @@ public class Movement : RagDollAction, AIAction
     public NavMeshPath myPath;
     public NavMeshQueryFilter filter;
 
+    public RagDollState rdState;
+
+    private void Awake()
+    {
+        cs = GetComponent<CapsuleCollider>();
+        RagDollSet(false);
+    }
     private void Start()
     {
         myPath = new NavMeshPath();
         filter.areaMask = 1 << GameManagement.Inst.myMapManager.surfaces.defaultArea;
         filter.agentTypeID = GameManagement.Inst.myMapManager.surfaces.agentTypeID;
+        rdState = RagDollState.NoRagdoll;
     }
     public void FindPlayer(Transform target)
     {
@@ -68,5 +76,20 @@ public class Movement : RagDollAction, AIAction
     public void SetMobIndex(int mobIndex)
     {
         this.mobIndex = mobIndex;
+    }
+
+    public override void ChangeRagDollState(RagDollState ragdoll)
+    {
+        switch (ragdoll)
+        {
+            case RagDollState.ResetBones:
+                break;
+            case RagDollState.StandUp:
+                myAnim.Play(_standupName, -1, 0.0f);
+                break;
+            case RagDollState.NoRagdoll:
+                //FindTarget(myGamemanager.myPlayer.transform, STATE.Angry);
+                break;
+        }
     }
 }

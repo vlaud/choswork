@@ -25,11 +25,17 @@ MonoBehaviour:
   - rid: 471191720529231873
   - rid: 471191720529231876
   - rid: 471191720529231877
+  - rid: 471191746436136964
+  - rid: 471191746436136968
+  - rid: 471191746436136969
   treeState: 0
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
+    movement: {fileID: 0}
     Target: {fileID: 0}
-  viewPosition: {x: 456, y: 30, z: 0}
+    aiState: 0
+    rdState: 0
+  viewPosition: {x: 646, y: -51, z: 0}
   viewScale: {x: 0.65751624, y: 0.65751624, z: 1}
   references:
     version: 2
@@ -43,7 +49,10 @@ MonoBehaviour:
         position: {x: 0, y: 0}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
           Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
         description: 
         drawGizmos: 0
         child:
@@ -57,7 +66,10 @@ MonoBehaviour:
         position: {x: -0.000011444092, y: 152.00002}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
           Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
         description: 
         drawGizmos: 0
         child:
@@ -73,10 +85,15 @@ MonoBehaviour:
         position: {x: -0.00002002716, y: 285.12726}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
           Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
         description: 
         drawGizmos: 0
         children:
+        - rid: 471191746436136964
+        - rid: 471191746436136968
         - rid: 471191720529231872
         - rid: 471191674786938880
     - rid: 471191674786938880
@@ -88,7 +105,10 @@ MonoBehaviour:
         position: {x: 281.36188, y: 418.1869}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
           Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
         description: Idle
         drawGizmos: 0
         children:
@@ -103,7 +123,10 @@ MonoBehaviour:
         position: {x: 337.2068, y: 583.3539}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
           Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
         description: 
         drawGizmos: 0
         duration: 1
@@ -116,7 +139,10 @@ MonoBehaviour:
         position: {x: 75.000015, y: 583}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
           Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
         description: Idle Animation
         drawGizmos: 0
         animationName: Idle
@@ -129,7 +155,10 @@ MonoBehaviour:
         position: {x: -209.47911, y: 418}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
           Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
         description: Roaming
         drawGizmos: 0
         children:
@@ -145,7 +174,10 @@ MonoBehaviour:
         position: {x: -358.99988, y: 583}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
           Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
         description: 
         drawGizmos: 0
         animationName: Injured Walk
@@ -158,7 +190,10 @@ MonoBehaviour:
         position: {x: -175.9999, y: 583}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
           Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
         description: 
         drawGizmos: 0
     - rid: 471191720529231877
@@ -170,6 +205,57 @@ MonoBehaviour:
         position: {x: -541.36957, y: 583}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
           Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
+        description: 
+        drawGizmos: 0
+    - rid: 471191746436136964
+      type: {class: SettingNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: f4390a5463db6c241aaff2fdcff9bda3
+        position: {x: -967.4243, y: 418}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
+        description: 
+        drawGizmos: 0
+        value: {fileID: 0}
+    - rid: 471191746436136968
+      type: {class: InterruptSelector, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 1f174de7831606c459954587eb9ae822
+        position: {x: -690.99994, y: 438.00003}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
+        description: 
+        drawGizmos: 0
+        children:
+        - rid: 471191746436136969
+    - rid: 471191746436136969
+      type: {class: GetRagdoll, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 2955c25f309e5ed4899a8039c65533ee
+        position: {x: -840.99994, y: 583}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+          aiState: 0
+          rdState: 0
         description: 
         drawGizmos: 0

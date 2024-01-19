@@ -4,7 +4,7 @@ using UnityEngine;
 using TheKiwiCoder;
 
 [System.Serializable]
-public class GetTarget : ActionNode
+public class GetRagdoll : ActionNode
 {
     protected override void OnStart() {
     }
@@ -13,11 +13,8 @@ public class GetTarget : ActionNode
     }
 
     protected override State OnUpdate() {
-        Debug.Log(blackboard.movement.target);
-        if (blackboard.movement.target != null)
-        {
+        if(context.myRagDolls.isRagdoll)
             return State.Success;
-        }
         return State.Failure;
     }
 }

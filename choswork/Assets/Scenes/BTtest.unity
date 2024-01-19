@@ -21680,6 +21680,7 @@ MonoBehaviour:
     rightArmRigidBody: {fileID: 394959565}
     rightForeArmRigidBody: {fileID: 692627787}
     headRigidBody: {fileID: 996020924}
+  isRagdoll: 0
 --- !u!1 &635312546
 GameObject:
   m_ObjectHideFlags: 0
@@ -23036,14 +23037,17 @@ MonoBehaviour:
   hearingObj: {fileID: 0}
   aiHeardPlayer: 0
   noiseTravelDistance: 10
-  myRagDolls: {fileID: 0}
+  myRagDolls: {fileID: 1926243545}
   _timetoWakeup: 3
   _timeToResetBones: 0
   _changeStateTime: 3
   myHips: {fileID: 0}
   _standupName: 
   _standupClipName: 
-  player: {fileID: 794418823}
+  target: {fileID: 0}
+  mobIndex: 0
+  aiState: 0
+  rdState: 0
 --- !u!114 &677943908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44734,6 +44738,7 @@ MonoBehaviour:
     rightArmRigidBody: {fileID: 266566826}
     rightForeArmRigidBody: {fileID: 306544068}
     headRigidBody: {fileID: 219930323}
+  isRagdoll: 0
 --- !u!1 &1412589347
 GameObject:
   m_ObjectHideFlags: 0
@@ -62978,6 +62983,7 @@ MonoBehaviour:
     rightArmRigidBody: {fileID: 1325761533}
     rightForeArmRigidBody: {fileID: 1567695144}
     headRigidBody: {fileID: 568227015}
+  isRagdoll: 0
 --- !u!1 &1932405579
 GameObject:
   m_ObjectHideFlags: 0

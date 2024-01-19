@@ -21,8 +21,10 @@ public struct RagDoll
 public class RagDollPhysics : MonoBehaviour
 {
     public RagDoll myRagDoll;
+    public bool isRagdoll;
     public void RagDollOnOff(bool v) //래그돌 온오프 함수
     {
+        isRagdoll = v;
         myRagDoll.headRigidBody.isKinematic = !v;
         myRagDoll.headRigidBody.GetComponent<Collider>().enabled = v;
         myRagDoll.hipsRigidBody.isKinematic = !v;
