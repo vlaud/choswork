@@ -13,8 +13,8 @@ public class GetTarget : ActionNode
     }
 
     protected override State OnUpdate() {
-        Debug.Log(blackboard.movement.target);
-        if (blackboard.movement.target != null)
+        Debug.Log(blackboard.Target);
+        if (blackboard.Target != null)
         {
             return State.Success;
         }

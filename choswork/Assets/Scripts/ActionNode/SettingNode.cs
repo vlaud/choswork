@@ -1,17 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TheKiwiCoder;
-
 [System.Serializable]
-public class SettingNode : GenericTypeActionNode<Movement>
+public class SettingNode : GenericTypeActionNode<IMovement>
 {
     protected override void OnStart() {
-        value = context.gameObject.GetComponent<Movement>();
+        value = context.gameObject.GetComponent<IMovement>();
         blackboard.movement = value;
-        blackboard.Target = blackboard.movement.target;
-        blackboard.aiState = blackboard.movement.aiState;
-        blackboard.rdState = blackboard.movement.rdState;
+        blackboard.Target = value.target;
+        blackboard.aiState = value.aiState;
+        blackboard.rdState = value.rdState;
     }
 
     protected override void OnStop() {

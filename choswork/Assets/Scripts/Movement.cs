@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Movement : RagDollAction, AIAction
+public class Movement : RagDollAction, AIAction, IMovement
 {
     public Transform target;
     public int mobIndex;
@@ -13,6 +13,16 @@ public class Movement : RagDollAction, AIAction
     public NavMeshQueryFilter filter;
 
     public RagDollState rdState;
+
+    AIState IMovement.aiState => aiState;
+
+    RagDollState IMovement.rdState => rdState;
+
+    NavMeshPath IMovement.myPath => myPath;
+
+    NavMeshQueryFilter IMovement.filter => filter;
+
+    Transform IMovement.target => target;
 
     private void Awake()
     {

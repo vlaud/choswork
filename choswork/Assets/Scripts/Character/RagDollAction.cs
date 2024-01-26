@@ -4,7 +4,7 @@ public enum RagDollState
 {
     ResetBones, StandUp, NoRagdoll
 }
-public class RagDollAction : AIDetectionMovement
+public class RagDollAction : AIDetectionMovement, IRagdoll
 {
     protected class BoneTransform
     {
