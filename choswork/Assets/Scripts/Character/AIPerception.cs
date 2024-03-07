@@ -113,15 +113,13 @@ public class AIPerception : MonoBehaviour
 
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
                 {
-                    {
-                        canSeePlayer = true;
-                        myTarget = target;
-                        //foundPlayer?.Invoke(myTarget, Monster.STATE.Angry);
-                        myMonster?.FindPlayer(myTarget);
-                        //myMonster.ReturnAnim().SetTrigger("Detect");
-                        myMonster?.SetAnimTrigger();
-                        Debug.Log("플레이어 발견!");
-                    }
+                    canSeePlayer = true;
+                    myTarget = target;
+                    //foundPlayer?.Invoke(myTarget, Monster.STATE.Angry);
+                    myMonster?.FindPlayer(myTarget);
+                    //myMonster.ReturnAnim().SetTrigger("Detect");
+                    myMonster?.SetAnimTrigger();
+                    Debug.Log("플레이어 발견!");
                 }
                 else
                     canSeePlayer = false;

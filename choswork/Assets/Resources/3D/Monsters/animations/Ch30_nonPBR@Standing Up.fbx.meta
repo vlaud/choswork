@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: bdcd924fb8e263d40b442b6d024a1024
+guid: 786f2d0ddb1da2c43a2104c94adf0292
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -14,7 +14,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
-    removeConstantScaleCurves: 1
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Stand Up
+      name: Standing Up
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 70
-      lastFrame: 248
+      firstFrame: 100
+      lastFrame: 342
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -881,7 +881,7 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 2
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
-  importBlendShapeDeformPercent: 0
+  importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 

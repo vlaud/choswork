@@ -19,15 +19,18 @@ public class Movement : RagDollAction, AIAction
         cs = GetComponent<CapsuleCollider>();
         _origintimetoWake = _timetoWakeup;
         _bones = myHips.GetComponentsInChildren<Transform>();
-        _standupTransforms = new BoneTransform[_bones.Length];
+        _faceUpStandUpBoneTransforms = new BoneTransform[_bones.Length];
+        _faceDownStandUpBoneTransforms = new BoneTransform[_bones.Length];
         _ragdollTransforms = new BoneTransform[_bones.Length];
 
         for (int boneIndex = 0; boneIndex < _bones.Length; ++boneIndex)
         {
-            _standupTransforms[boneIndex] = new BoneTransform();
+            _faceUpStandUpBoneTransforms[boneIndex] = new BoneTransform();
+            _faceDownStandUpBoneTransforms[boneIndex] = new BoneTransform();
             _ragdollTransforms[boneIndex] = new BoneTransform();
         }
-        PopulateAnimation(_standupClipName, _standupTransforms);
+        PopulateAnimation(_faceUpStandUpClipName, _faceUpStandUpBoneTransforms);
+        PopulateAnimation(_faceDownStandUpClipName, _faceDownStandUpBoneTransforms);
         RagDollSet(false);
     }
     private void Start()
@@ -99,7 +102,7 @@ public class Movement : RagDollAction, AIAction
             case RagDollState.ResetBones:
                 break;
             case RagDollState.StandUp:
-                myAnim.Play(_standupName, -1, 0.0f);
+                myAnim.Play(GetStandUpStateName(), -1, 0.0f);
                 break;
             case RagDollState.NoRagdoll:
                 //FindTarget(myGamemanager.myPlayer.transform, STATE.Angry);

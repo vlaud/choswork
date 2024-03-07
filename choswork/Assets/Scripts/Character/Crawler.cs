@@ -90,7 +90,7 @@ public class Crawler : RagDollAction, AIAction
                 RagDollSet(true);
                 break;
             case STATE.StandUp:
-                myAnim.Play(_standupName, -1, 0.0f);
+                myAnim.Play(_faceUpStandUpStateName, -1, 0.0f);
                 break;
             case STATE.ResetBones:
                 break;
@@ -172,15 +172,15 @@ public class Crawler : RagDollAction, AIAction
         cs = GetComponent<CapsuleCollider>();
         _origintimetoWake = _timetoWakeup;
         _bones = myHips.GetComponentsInChildren<Transform>();
-        _standupTransforms = new BoneTransform[_bones.Length];
+        _faceUpStandUpBoneTransforms = new BoneTransform[_bones.Length];
         _ragdollTransforms = new BoneTransform[_bones.Length];
 
         for (int boneIndex = 0; boneIndex < _bones.Length; ++boneIndex)
         {
-            _standupTransforms[boneIndex] = new BoneTransform();
+            _faceUpStandUpBoneTransforms[boneIndex] = new BoneTransform();
             _ragdollTransforms[boneIndex] = new BoneTransform();
         }
-        PopulateAnimation(_standupClipName, _standupTransforms);
+        PopulateAnimation(_faceUpStandUpClipName, _faceUpStandUpBoneTransforms);
         RagDollSet(false);
         transform.position = myGamemanager.myMapManager.GetCrDestination(false).position;
     }

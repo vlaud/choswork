@@ -37,7 +37,7 @@ MonoBehaviour:
     Target: {fileID: 0}
     aiState: 0
     rdState: 0
-  viewPosition: {x: 730, y: -144, z: 0}
+  viewPosition: {x: 734, y: -144, z: 0}
   viewScale: {x: 0.65751624, y: 0.65751624, z: 1}
   references:
     version: 2
@@ -220,7 +220,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: f4390a5463db6c241aaff2fdcff9bda3
-        position: {x: -1127.1786, y: 418}
+        position: {x: -1132.8402, y: 417.99997}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}

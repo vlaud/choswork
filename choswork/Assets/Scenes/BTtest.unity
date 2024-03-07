@@ -19723,7 +19723,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: -0.00000023454002, y: 0.34714526, z: 0.030761067}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -23042,8 +23042,10 @@ MonoBehaviour:
   _timeToResetBones: 0.5
   _changeStateTime: 3
   myHips: {fileID: 1317541691}
-  _standupName: Stand Up
-  _standupClipName: Stand Up
+  _faceUpStandUpStateName: Face Up Stand Up
+  _faceDownStandUpStateName: Face Down Stand Up
+  _faceUpStandUpClipName: Stand Up
+  _faceDownStandUpClipName: Standing Up
   target: {fileID: 0}
   mobIndex: 0
   aiState: 0
@@ -37592,8 +37594,10 @@ MonoBehaviour:
   _timeToResetBones: 0.3
   _changeStateTime: 3
   myHips: {fileID: 578573899}
-  _standupName: Getting Up
-  _standupClipName: Getting Up
+  _faceUpStandUpStateName: 
+  _faceDownStandUpStateName: 
+  _faceUpStandUpClipName: 
+  _faceDownStandUpClipName: 
   enemyMask:
     serializedVersion: 2
     m_Bits: 8
@@ -41650,7 +41654,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: 0.19573237, y: 0.23045379, z: -0.0061669163}
   serializedVersion: 2
   m_SwingAxis: {x: -1, y: 0, z: 0}
   m_TwistLimitSpring:
@@ -43293,7 +43297,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: -0.000000045169145, y: 0.42262927, z: -0.00000037810878}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -43892,7 +43896,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: -0.19573234, y: 0.23047572, z: -0.006365981}
   serializedVersion: 2
   m_SwingAxis: {x: 1, y: 0, z: 0}
   m_TwistLimitSpring:
@@ -50137,7 +50141,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: -0.0000006565824, y: 0.2695454, z: 0.00000010430813}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: -1}
   m_TwistLimitSpring:
@@ -56793,7 +56797,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: -0.000009438943, y: 0.2179009, z: -0.02427882}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -56943,7 +56947,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: -0.000000047963113, y: 0.4227719, z: 0.0000008121133}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -63258,7 +63262,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: 0.000000107102096, y: 0.26942205, z: 0.00000014901161}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: -1}
   m_TwistLimitSpring:
@@ -65746,7 +65750,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: -0.07949337, y: -0.055768203, z: -0.011018843}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -66457,8 +66461,10 @@ MonoBehaviour:
   _timeToResetBones: 0.5
   _changeStateTime: 3
   myHips: {fileID: 833393938}
-  _standupName: Stand Up
-  _standupClipName: Stand Up
+  _faceUpStandUpStateName: Face Up Stand Up
+  _faceDownStandUpStateName: Face Down Stand Up
+  _faceUpStandUpClipName: Stand Up
+  _faceDownStandUpClipName: Standing Up
   enemyMask:
     serializedVersion: 2
     m_Bits: 8
@@ -67336,7 +67342,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: 0.07949319, y: -0.0557682, z: -0.00895662}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
