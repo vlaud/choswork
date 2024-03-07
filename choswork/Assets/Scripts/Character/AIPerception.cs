@@ -40,6 +40,7 @@ public class AIPerception : MonoBehaviour
     private GameManagement myGamemanager;
     private AIAction myMonster;
     private WaitForSeconds delayCoroutine = new WaitForSeconds(0.2f);
+    NavMeshQueryFilter filter;
 
     void ChangeState(State s)
     {
@@ -147,9 +148,11 @@ public class AIPerception : MonoBehaviour
     }
     float CalcPathLength(NavMeshPath myPath, Vector3 _targetPos)
     {
-        NavMesh.CalculatePath(transform.position, _targetPos, NavMesh.AllAreas, myPath);
+        NavMesh.CalculatePath(transform.position, _targetPos, filter, myPath);
 
         Vector3[] _wayPoint = new Vector3[myPath.corners.Length + 2];
+
+        Debug.Log("myPath.corners.Length: " + myPath.corners.Length);
 
         _wayPoint[0] = transform.position;
         _wayPoint[myPath.corners.Length + 1] = _targetPos;
@@ -158,8 +161,10 @@ public class AIPerception : MonoBehaviour
         for (int i = 0; i < myPath.corners.Length; i++)
         {
             _wayPoint[i + 1] = myPath.corners[i];
+            Debug.Log("±æÀÌ: " + Vector3.Distance(_wayPoint[i], _wayPoint[i + 1]));
             _pathLength += Vector3.Distance(_wayPoint[i], _wayPoint[i + 1]);
         }
+        Debug.Log("ÇÕ: " + _pathLength);
 
         return _pathLength;
     }
@@ -168,6 +173,8 @@ public class AIPerception : MonoBehaviour
     {
         myGamemanager = GameManagement.Inst;
         myMonster = transform.GetComponent<AIAction>();
+        filter.areaMask = 1 << myGamemanager.myMapManager.surfaces.defaultArea;
+        filter.agentTypeID = myGamemanager.myMapManager.surfaces.agentTypeID;
         ChangeState(State.Search);
     }
 
