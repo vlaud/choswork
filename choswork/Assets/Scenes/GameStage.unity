@@ -9832,6 +9832,7 @@ MonoBehaviour:
     rightArmRigidBody: {fileID: 6000407479860278025}
     rightForeArmRigidBody: {fileID: 8932621591732851700}
     headRigidBody: {fileID: 7442015436819246955}
+  isRagdoll: 0
 --- !u!1 &459200599
 GameObject:
   m_ObjectHideFlags: 0
@@ -47546,8 +47547,10 @@ MonoBehaviour:
   _timeToResetBones: 0.5
   _changeStateTime: 3
   myHips: {fileID: 5465940246961711986}
-  _standupName: Stand Up
-  _standupClipName: Stand Up
+  _faceUpStandUpStateName: Face Up Stand Up
+  _faceDownStandUpStateName: Face Down Stand Up
+  _faceUpStandUpClipName: Stand Up
+  _faceDownStandUpClipName: Standing Up
   enemyMask:
     serializedVersion: 2
     m_Bits: 8

@@ -103,30 +103,32 @@ public class MapManager : MonoBehaviour
         PlayerSpawn();
         HintNoteSpawn();
     }
+
     // Start is called before the first frame update
     void Start()
     {
         myPath = new NavMeshPath();
-        surfaces.BuildNavMesh();
-
-        if(ceilingSurfParent != null && ceilingSurface != null)
-        {
-            ceilingSurface = ceilingSurfParent.GetComponentsInChildren<NavMeshSurface>();
-            foreach (var surf in ceilingSurface) surf?.BuildNavMesh();
-        }
+        BuildNavMeshes();
     }
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            surfaces.BuildNavMesh();
-            if (ceilingSurfParent != null && ceilingSurface != null)
-            {
-                ceilingSurface = ceilingSurfParent.GetComponentsInChildren<NavMeshSurface>();
-                foreach (var surf in ceilingSurface) surf?.BuildNavMesh();
-            }
+            BuildNavMeshes();
         }
     }
+
+    void BuildNavMeshes()
+    {
+        surfaces.BuildNavMesh();
+
+        if (ceilingSurfParent != null && ceilingSurface != null)
+        {
+            ceilingSurface = ceilingSurfParent.GetComponentsInChildren<NavMeshSurface>();
+            foreach (var surf in ceilingSurface) surf?.BuildNavMesh();
+        }
+    }
+
     #region ObjectSpawn
     void DoorSpawn()
     {
