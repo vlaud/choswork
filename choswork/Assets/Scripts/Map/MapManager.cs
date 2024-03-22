@@ -117,7 +117,7 @@ public class MapManager : MonoBehaviour
             BuildNavMeshes();
         }
     }
-
+    [ContextMenu("네비메쉬 생성")]
     void BuildNavMeshes()
     {
         surfaces.BuildNavMesh();

@@ -18,7 +18,7 @@ public class StandUp : ActionNode
             blackboard.movement.ChangeRagDollState(RagDollState.NoRagdoll);
             return State.Success;
         }
-        if (blackboard.rdState == RagDollState.StandUp)
+        if (blackboard.movement.rdState == RagDollState.StandUp)
         {
             return State.Running;
         }

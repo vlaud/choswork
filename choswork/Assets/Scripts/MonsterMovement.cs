@@ -7,9 +7,10 @@ public class MonsterMovement : Movement
 {
     public override void LostTarget()
     {
+        myTarget = null;
         aiState = AIState.Normal;
+        ChangeState(MovementState.Idle);
         Debug.Log("Å¸°Ù ³õÄ§");
-        target = null;
     }
     public override void GetKick(Vector3 dir, float strength)
     {

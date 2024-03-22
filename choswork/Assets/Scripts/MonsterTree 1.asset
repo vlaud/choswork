@@ -1,0 +1,266 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d285eb63c2cdd74180de7cfceaa96ad, type: 3}
+  m_Name: MonsterTree 1
+  m_EditorClassIdentifier: 
+  rootNode:
+    rid: 471191656346157057
+  nodes:
+  - rid: 471191656346157057
+  - rid: 471191656346157059
+  - rid: 471191656346157060
+  - rid: 471191748928077824
+  - rid: 471191748928077826
+  - rid: 471191748928077828
+  - rid: 471191748928077829
+  - rid: 4677955051211980823
+  - rid: 4677955051211980824
+  - rid: 4677955051211980825
+  - rid: 4677955051211980826
+  - rid: 4677955051211980827
+  - rid: 4677955051211980828
+  - rid: 4677955051211980829
+  - rid: 4677955054215102464
+  treeState: 0
+  blackboard:
+    moveToPosition: {x: 0, y: 0, z: 0}
+    movement: {fileID: 0}
+    Target: {fileID: 0}
+  viewPosition: {x: 358, y: -89, z: 0}
+  viewScale: {x: 0.49717674, y: 0.49717674, z: 1}
+  references:
+    version: 2
+    RefIds:
+    - rid: 471191656346157057
+      type: {class: RootNode, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 2dc3df72-f55f-45e0-88dd-0889c8fc91dc
+        position: {x: 0.000031471252, y: -124.63183}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+        child:
+          rid: 471191656346157059
+    - rid: 471191656346157059
+      type: {class: Repeat, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 74c9914e3c62acf44824cbbebabfe5fc
+        position: {x: -1.000057, y: 60.99994}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+        child:
+          rid: 471191656346157060
+        restartOnSuccess: 1
+        restartOnFailure: 0
+    - rid: 471191656346157060
+      type: {class: InterruptSelector, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: f11ad30d5b07cb446a1a0e986f9c7729
+        position: {x: -1.0000756, y: 313.68198}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+        children:
+        - rid: 4677955054215102464
+        - rid: 471191748928077829
+        - rid: 471191748928077824
+        - rid: 4677955051211980824
+        - rid: 4677955051211980823
+    - rid: 471191748928077824
+      type: {class: Sequencer, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: e58bc286ca2cc554d87e9710786e27f4
+        position: {x: -564.0358, y: 704.7842}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+        children:
+        - rid: 471191748928077826
+        - rid: 471191748928077828
+    - rid: 471191748928077826
+      type: {class: ResetBones, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: c19bde1a1b43aa14499747c909780b2b
+        position: {x: -596.03595, y: 1011.78424}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+    - rid: 471191748928077828
+      type: {class: StandUp, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: bf6933684abecff45ab631f95027a4d3
+        position: {x: -433.03595, y: 1011.78424}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+    - rid: 471191748928077829
+      type: {class: RagdollBehave, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 64601e4e2ac823e40b0006657a67fb8e
+        position: {x: -778.36334, y: 705}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+    - rid: 4677955051211980823
+      type: {class: Sequencer, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: bd91f512db647974f9c0544d61760e6a
+        position: {x: 533.6031, y: 573.3969}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+        children:
+        - rid: 4677955051211980825
+        - rid: 4677955051211980826
+    - rid: 4677955051211980824
+      type: {class: Sequencer, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: ce58ac9702012274eb49172096492005
+        position: {x: 22.1483, y: 599.3519}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+        children:
+        - rid: 4677955051211980828
+        - rid: 4677955051211980827
+        - rid: 4677955051211980829
+    - rid: 4677955051211980825
+      type: {class: PlayAnimation, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: e1c6ae37131cda647ac475bc2df621e5
+        position: {x: 431.0341, y: 736.99994}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+        animationName: Idle
+        SuccessAfterAnimation: 0
+    - rid: 4677955051211980826
+      type: {class: Wait, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 86a70c906ed91f649940a03fbb1a13f5
+        position: {x: 611.6031, y: 738.39685}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+        duration: 1
+    - rid: 4677955051211980827
+      type: {class: PlayAnimation, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 5cfacb78029c8ad4ea4ba40581805314
+        position: {x: 22.1483, y: 746.35187}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+        animationName: Injured Walk
+        SuccessAfterAnimation: 0
+    - rid: 4677955051211980828
+      type: {class: GetTarget, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 8205ff69c6464ab468c58af4f430552c
+        position: {x: -150.85173, y: 746.35187}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+    - rid: 4677955051211980829
+      type: {class: RootMotionMoveTo, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: d785c58112864ca4c855fc3942b74cf0
+        position: {x: 203.14822, y: 746.35187}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+        isKeepRunning: 1
+    - rid: 4677955054215102464
+      type: {class: SettingNode, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 9141f32ee1cb96845a8c4d2a7165a7a5
+        position: {x: -982.07935, y: 705}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+        description: 
+        drawGizmos: 0
+        value: {fileID: 0}

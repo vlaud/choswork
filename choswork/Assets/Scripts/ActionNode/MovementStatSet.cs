@@ -4,19 +4,17 @@ using UnityEngine;
 using TheKiwiCoder;
 
 [System.Serializable]
-public class GetTarget : ActionNode
+public class MovementStatSet : ActionNode
 {
     protected override void OnStart() {
+        blackboard.Target = blackboard.movement.GetMyTarget();
+        blackboard.State = blackboard.movement.state;
     }
 
     protected override void OnStop() {
     }
 
     protected override State OnUpdate() {
-        if (blackboard.movement.GetMyTarget() != null)
-        {
-            return State.Success;
-        }
-        return State.Failure;
+        return State.Success;
     }
 }

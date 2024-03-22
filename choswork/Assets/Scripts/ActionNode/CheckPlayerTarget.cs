@@ -4,7 +4,7 @@ using UnityEngine;
 using TheKiwiCoder;
 
 [System.Serializable]
-public class RagdollBehave : ActionNode
+public class CheckPlayerTarget : ActionNode
 {
     protected override void OnStart() {
     }
@@ -13,14 +13,9 @@ public class RagdollBehave : ActionNode
     }
 
     protected override State OnUpdate() {
-        if (blackboard.movement.rdState == RagDollState.ResetBones)
+        if (blackboard.movement.GetMyTarget() == blackboard.movement.Player)
         {
-            return State.Failure;
-        }
-        if (context.myRagDolls.isRagdoll)
-        {
-            blackboard.movement.RagdollBehaviour();
-            return State.Running;
+            return State.Success;
         }
         return State.Failure;
     }

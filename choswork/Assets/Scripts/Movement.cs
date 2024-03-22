@@ -3,16 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+public enum MovementState
+{
+    Idle, Roaming, Angry
+}
 public class Movement : RagDollAction, AIAction
 {
-    public Transform target;
+    public bool IsStart = false;
     public int mobIndex;
-    public AIState aiState;
+    public Transform Player;
+    public Transform target;
+   
     //ai path
     public NavMeshPath myPath;
     public NavMeshQueryFilter filter;
 
+    public AIState aiState;
     public RagDollState rdState;
+    public MovementState state;
 
     private void Awake()
     {
@@ -39,12 +47,32 @@ public class Movement : RagDollAction, AIAction
         filter.areaMask = 1 << GameManagement.Inst.myMapManager.surfaces.defaultArea;
         filter.agentTypeID = GameManagement.Inst.myMapManager.surfaces.agentTypeID;
         rdState = RagDollState.NoRagdoll;
+        ChangeState(MovementState.Idle);
     }
+
+    private void Update()
+    {
+        myAnim.speed = myStat.MoveSpeed;
+        target = myTarget;
+    }
+
+    public void ChangeState(MovementState state)
+    {
+        if (this.state == state) return;
+        this.state = state;
+    }
+
     public void FindPlayer(Transform target)
     {
         Debug.Log("Å¸°Ù È®º¸");
         aiState = AIState.Angry;
-        this.target = target;
+        FindTarget(target);
+    }
+
+    public void FindTarget(Transform target)
+    {
+        StopAllCoroutines();
+        myTarget = target;
     }
 
     public AIState GetAIState()
@@ -64,7 +92,7 @@ public class Movement : RagDollAction, AIAction
 
     public Transform GetMyTarget()
     {
-        return target;
+        return myTarget;
     }
 
     public void HearingSound()
@@ -79,7 +107,10 @@ public class Movement : RagDollAction, AIAction
 
     public virtual void LostTarget()
     {
-
+        myTarget = null;
+        aiHeardPlayer = false;
+        StopAllCoroutines();
+        state = MovementState.Idle;
     }
 
     public void SetAnimTrigger()

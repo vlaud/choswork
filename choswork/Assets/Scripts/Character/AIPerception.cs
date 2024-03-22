@@ -161,10 +161,10 @@ public class AIPerception : MonoBehaviour
         for (int i = 0; i < myPath.corners.Length; i++)
         {
             _wayPoint[i + 1] = myPath.corners[i];
-            Debug.Log("길이: " + Vector3.Distance(_wayPoint[i], _wayPoint[i + 1]));
+            //Debug.Log("길이: " + Vector3.Distance(_wayPoint[i], _wayPoint[i + 1]));
             _pathLength += Vector3.Distance(_wayPoint[i], _wayPoint[i + 1]);
         }
-        Debug.Log("합: " + _pathLength);
+        //Debug.Log("합: " + _pathLength);
 
         return _pathLength;
     }

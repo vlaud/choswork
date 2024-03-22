@@ -4,7 +4,7 @@ using UnityEngine;
 using TheKiwiCoder;
 
 [System.Serializable]
-public class GetTarget : ActionNode
+public class Running : ActionNode
 {
     protected override void OnStart() {
     }
@@ -13,10 +13,6 @@ public class GetTarget : ActionNode
     }
 
     protected override State OnUpdate() {
-        if (blackboard.movement.GetMyTarget() != null)
-        {
-            return State.Success;
-        }
-        return State.Failure;
+        return State.Running;
     }
 }

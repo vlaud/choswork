@@ -13,17 +13,15 @@ public class ResetBones : ActionNode
     }
 
     protected override State OnUpdate() {
-        if (blackboard.rdState == RagDollState.StandUp)
+        if (blackboard.movement.rdState == RagDollState.StandUp)
         {
             return State.Success;
         }
-        if (blackboard.rdState == RagDollState.ResetBones)
+        if (blackboard.movement.rdState == RagDollState.ResetBones)
         {
             blackboard.movement.ResetBonesBehaviour();
             return State.Running;
         }
-
-
         return State.Failure;
     }
 }

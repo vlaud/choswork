@@ -39,7 +39,7 @@ public class Monster : RagDollAction, AIAction
                 StartCoroutine(DelayState(STATE.Roaming, _changeStateTime));
                 break;
             case STATE.Roaming:
-                RePath(myPath, myTarget.position, filter, () => LostTarget());
+                RePath(myPath, myTarget, filter, () => LostTarget());
                 CorrectBaseHeight(myPath, myTarget, filter);
                 break;
             case STATE.Angry:

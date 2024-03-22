@@ -13,7 +13,6 @@ namespace TheKiwiCoder {
         public Vector3 moveToPosition;
         public Movement movement;
         public Transform Target;
-        public AIState aiState;
-        public RagDollState rdState;
+        public MovementState State;
     }
 }

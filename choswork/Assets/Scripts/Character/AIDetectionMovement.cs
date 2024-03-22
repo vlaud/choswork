@@ -51,7 +51,7 @@ public class AIDetectionMovement : BattleSystem
             else
             {
                 myTarget = HearingTr;
-                RePath(myPath, myTarget.position, filter, done, anim);
+                RePath(myPath, myTarget, filter, done, anim);
                 Debug.Log("몹이 소리를 들었다.");
                 Debug.Log("듣는 위치: " + hearingPos);
                 Debug.Log("거리: " + dist);

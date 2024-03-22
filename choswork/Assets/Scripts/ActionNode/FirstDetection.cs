@@ -4,7 +4,7 @@ using UnityEngine;
 using TheKiwiCoder;
 
 [System.Serializable]
-public class GetTarget : ActionNode
+public class FirstDetection : ActionNode
 {
     protected override void OnStart() {
     }
@@ -13,10 +13,9 @@ public class GetTarget : ActionNode
     }
 
     protected override State OnUpdate() {
-        if (blackboard.movement.GetMyTarget() != null)
-        {
+        if (blackboard.State != MovementState.Angry)
             return State.Success;
-        }
-        return State.Failure;
+        else
+            return State.Failure;
     }
 }

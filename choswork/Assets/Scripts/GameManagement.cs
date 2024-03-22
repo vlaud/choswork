@@ -91,13 +91,13 @@ public class GameManagement : MonoBehaviour
         Physics.simulationMode = SimulationMode.Script;
         //Physics.autoSimulation = IsCutscene;
         myMonsters = FindObjectsOfType(typeof(AIPerception)) as AIPerception[];
-        for(int i =0; i < myMonsters.Length; ++i)
+        for (int i = 0; i < myMonsters.Length; ++i)
         {
             myMonsters[i].GetComponent<AIAction>().SetMobIndex(i);
         }
         mySceneLoader = GameObject.Find("SceneLoader")?.GetComponent<SceneLoader>();
         myMainmenu = mySceneLoader?.gameObject.GetComponentInChildren<Mainmenu>();
-        if(myMainmenu != null && myCanvas != null)
+        if (myMainmenu != null && myCanvas != null)
         {
             myCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             myCanvas.worldCamera = myMainmenu.transform.parent.GetComponent<Camera>();
