@@ -21,8 +21,6 @@ public class CharacterMovement : CharacterProperty
         int cur = 1;
         NavMesh.CalculatePath(transform.position, target.position, filter, myPath);
         //NavMesh.CalculatePath(transform.position, pos, 1 << NavMesh.GetAreaFromName("Ground"), myPath);
-        Vector3[] list = myPath.corners;
-
         Vector3 dir = target.position - transform.position;
         float dist = dir.magnitude;
         dir.Normalize();
@@ -31,17 +29,16 @@ public class CharacterMovement : CharacterProperty
         {
             dir = target.position - transform.position;
             dist = dir.magnitude;
+            NavMesh.CalculatePath(transform.position, target.position, filter, myPath); // 실시간으로 네비메쉬 검사
 
-            if (cur < list.Length)
+            if (cur < myPath.corners.Length)
             {
-                NavMesh.CalculatePath(transform.position, target.position, filter, myPath); // 실시간으로 네비메쉬 검사
-                list = myPath.corners;
-                for (int i = 0; i < list.Length - 1; ++i)
+                for (int i = 0; i < myPath.corners.Length - 1; ++i)
                 {
-                    Debug.DrawLine(list[i], list[i + 1], Color.red);
+                    Debug.DrawLine(myPath.corners[i], myPath.corners[i + 1], Color.red);
                 }
                 //Debug.Log("현재 코너: " + cur + "번째: " + list[cur] + "총 코너: " + list.Length);
-                MoveToPosition(list[cur], anim, () => cur++);
+                MoveToPosition(myPath.corners[cur], anim, () => cur++);
             }
             yield return null;
         }

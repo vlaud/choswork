@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public enum MovementState
 {
-    Idle, Roaming, Angry
+    Idle, Roaming, Angry, Search
 }
 public class Movement : RagDollAction, AIAction
 {
@@ -97,7 +97,29 @@ public class Movement : RagDollAction, AIAction
 
     public void HearingSound()
     {
-
+        Transform tempTarget = GameManagement.Inst.myPlayer.transform;
+        if ((tempTarget != null && tempTarget.TryGetComponent<PlayerPickUpDrop>(out var target)))
+        {
+            if (target.GetObjectGrabbable() != null)
+            {
+                hearingObj = target.GetObjectGrabbable().transform;
+                Debug.Log("hearingObj: " + hearingObj);
+            }
+            else if (hearingObj != null && hearingObj.TryGetComponent<ObjectGrabbable>(out var grab))
+            {
+                if (grab.IsSoundable)
+                {
+                    hearingPos = grab.soundPos;
+                    CheckSoundDist(myPath, filter.areaMask,
+                        LayerMask.NameToLayer("Ground"), filter, () => LostTarget());
+                    //grab.IsSoundable = false;
+                }
+            }
+        }
+        if (aiHeardPlayer)
+        {
+            ChangeState(MovementState.Search);
+        }
     }
 
     public bool IsSearchable()

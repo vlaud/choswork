@@ -7,6 +7,7 @@ using TheKiwiCoder;
 public class PlayAnimation : ActionNode
 {
     public MovementState DesiredState;
+    public float crossFadeTime = 0.2f;
     public string animationName;
     public bool SuccessAfterAnimation = false;
     public bool PassPrevAnimationChecking = false;
@@ -18,7 +19,7 @@ public class PlayAnimation : ActionNode
         if (hasState)
         {
             blackboard.movement.ChangeState(DesiredState);
-            context.animator.CrossFade(animationName, 0.2f);
+            context.animator.CrossFade(animationName, crossFadeTime);
         }
     }
 
@@ -33,7 +34,6 @@ public class PlayAnimation : ActionNode
         }
         if (hasState)
         {
-            Debug.Log(animationName + ": " + AnimatorIsPlaying(animationName));
             if (!SuccessAfterAnimation)
                 return State.Success;
             

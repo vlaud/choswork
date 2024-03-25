@@ -10,7 +10,6 @@ public class RootMotionMoveTo : ActionNode
     public string DesiredAction;
 
     protected override void OnStart() {
-        Debug.Log(blackboard.movement.GetMyTarget());
         context.characterMovement.RePath(blackboard.movement.myPath, 
             blackboard.movement.GetMyTarget(), blackboard.movement.filter, () => DesiringMethod());
     }
@@ -26,7 +25,7 @@ public class RootMotionMoveTo : ActionNode
         {
             if (RotationEnabled)
             {
-                if(CheckRotation(blackboard.Target.position))
+                if(CheckRotation(blackboard.Target))
                     return State.Success;
 
                 return State.Running;
@@ -60,9 +59,9 @@ public class RootMotionMoveTo : ActionNode
         blackboard.movement.StartCoroutine(DesiredAction);
     }
 
-    bool CheckRotation(Vector3 pos)
+    bool CheckRotation(Transform target)
     {
-        Vector3 dir = (pos - context.transform.position).normalized;
+        Vector3 dir = (target.position - context.transform.position).normalized;
         dir.y = 0.0f;
         float Angle = Vector3.Angle(context.transform.forward, dir);
         

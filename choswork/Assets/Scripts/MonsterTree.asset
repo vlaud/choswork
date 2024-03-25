@@ -48,14 +48,16 @@ MonoBehaviour:
   - rid: 4677955092885012483
   - rid: 4677955092885012484
   - rid: 4677955122180128768
+  - rid: 4677955252971372544
+  - rid: 4677955252971372545
   treeState: 0
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
     movement: {fileID: 0}
     Target: {fileID: 0}
     State: 0
-  viewPosition: {x: 357, y: -154, z: 0}
-  viewScale: {x: 0.43232757, y: 0.43232757, z: 1}
+  viewPosition: {x: 540, y: -554, z: 0}
+  viewScale: {x: 0.65751624, y: 0.65751624, z: 1}
   references:
     version: 2
     RefIds:
@@ -126,6 +128,7 @@ MonoBehaviour:
         description: Idle Animation
         drawGizmos: 0
         DesiredState: 0
+        crossFadeTime: 0.2
         animationName: Idle
         SuccessAfterAnimation: 0
         PassPrevAnimationChecking: 0
@@ -144,6 +147,7 @@ MonoBehaviour:
         description: 
         drawGizmos: 0
         DesiredState: 1
+        crossFadeTime: 0.2
         animationName: Injured Walk
         SuccessAfterAnimation: 0
         PassPrevAnimationChecking: 1
@@ -327,7 +331,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 1fb3192d01de5934b8bd6a3d32cc6320
-        position: {x: 98.13062, y: 872}
+        position: {x: 123.000015, y: 815}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -358,7 +362,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 510e0cc8eeeecbb4b9266144f59f96e5
-        position: {x: -394, y: 960}
+        position: {x: -409, y: 960}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -367,6 +371,7 @@ MonoBehaviour:
         description: 
         drawGizmos: 0
         DesiredState: 2
+        crossFadeTime: 0.2
         animationName: Scream
         SuccessAfterAnimation: 1
         PassPrevAnimationChecking: 0
@@ -385,6 +390,7 @@ MonoBehaviour:
         description: 
         drawGizmos: 0
         DesiredState: 2
+        crossFadeTime: 0.2
         animationName: Run
         SuccessAfterAnimation: 0
         PassPrevAnimationChecking: 1
@@ -411,7 +417,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 93b9aae287a8a6e4baaaa247bbe69450
-        position: {x: -150.00003, y: 872.00006}
+        position: {x: -150.00002, y: 815}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -420,17 +426,17 @@ MonoBehaviour:
         description: 
         drawGizmos: 0
         children:
+        - rid: 4677955252971372544
         - rid: 4677955048218296323
         - rid: 4677955048218296324
         - rid: 4677955092885012480
-        - rid: 4677955122180128768
     - rid: 4677955048218296323
       type: {class: CheckDistance, ns: , asm: Assembly-CSharp}
       data:
         state: 0
         started: 0
         guid: 7be5d3e3daa57e84f9f1fbd6ad8d6577
-        position: {x: -501.74792, y: 1169}
+        position: {x: -327, y: 1169}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -444,7 +450,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: f79580f4976122a49b46ef577bf512cc
-        position: {x: -331.99988, y: 1169}
+        position: {x: -177.00014, y: 1169}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -453,6 +459,7 @@ MonoBehaviour:
         description: 
         drawGizmos: 0
         DesiredState: 2
+        crossFadeTime: 0.2
         animationName: Attack
         SuccessAfterAnimation: 1
         PassPrevAnimationChecking: 0
@@ -546,7 +553,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 532d06cdae67e114283766d4e0389d9d
-        position: {x: -181.99991, y: 1169.0002}
+        position: {x: -26.870758, y: 1169}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -555,6 +562,7 @@ MonoBehaviour:
         description: 
         drawGizmos: 0
         DesiredState: 2
+        crossFadeTime: 0.0001
         animationName: Idle
         SuccessAfterAnimation: 0
         PassPrevAnimationChecking: 1
@@ -564,7 +572,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 291d41ed2fdc61342b07092289099445
-        position: {x: -482.00018, y: 815}
+        position: {x: -497.00003, y: 815}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -581,7 +589,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 1a15e993e35e0d745bf82afdb2fa62a2
-        position: {x: -557.0001, y: 960}
+        position: {x: -572.00006, y: 960}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -595,7 +603,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: faaeeacb03cb0314db8d334bd72d00eb
-        position: {x: -31.999933, y: 1169}
+        position: {x: -464, y: 1252}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -606,3 +614,34 @@ MonoBehaviour:
         isKeepRunning: 1
         RotationEnabled: 1
         DesiredAction: 
+    - rid: 4677955252971372544
+      type: {class: Sequencer, ns: TheKiwiCoder, asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: c9a1067352782844ba4cf07941b43bfc
+        position: {x: -538.6899, y: 1125}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+          State: 0
+        description: 
+        drawGizmos: 0
+        children:
+        - rid: 4677955252971372545
+        - rid: 4677955122180128768
+    - rid: 4677955252971372545
+      type: {class: CheckDistance, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: bd946674c6ae68441ad12cf2d8d89f3f
+        position: {x: -659.4372, y: 1252}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+          State: 0
+        description: 
+        drawGizmos: 0
