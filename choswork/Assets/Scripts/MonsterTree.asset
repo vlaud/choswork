@@ -56,7 +56,7 @@ MonoBehaviour:
     movement: {fileID: 0}
     Target: {fileID: 0}
     State: 0
-  viewPosition: {x: 540, y: -554, z: 0}
+  viewPosition: {x: 466, y: -115, z: 0}
   viewScale: {x: 0.65751624, y: 0.65751624, z: 1}
   references:
     version: 2
