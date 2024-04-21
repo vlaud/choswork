@@ -80610,7 +80610,7 @@ MonoBehaviour:
   ceilingSurfParent: {fileID: 0}
   ceilingSurface:
   - {fileID: 0}
-  offset: {x: 9.9, y: 2.8, z: 9.9}
+  offset: {x: 10, y: 3.8, z: 10}
   map: {fileID: 1966132421049917062, guid: 6d6b18c0569e42e4e9d5aa19ac4f2787, type: 3}
   keyPad: {fileID: 1464459769152390406, guid: 2452adbee26be364daf34a6b11378427, type: 3}
   item: {fileID: 1172281752}
