@@ -56,7 +56,7 @@ MonoBehaviour:
     movement: {fileID: 0}
     Target: {fileID: 0}
     State: 0
-  viewPosition: {x: 466, y: -115, z: 0}
+  viewPosition: {x: 399, y: -396, z: 0}
   viewScale: {x: 0.65751624, y: 0.65751624, z: 1}
   references:
     version: 2
@@ -119,7 +119,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 973f872438b634240a8bd5e3431953f2
-        position: {x: 593.99994, y: 1002.0001}
+        position: {x: 597.5209, y: 1002}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -128,7 +128,7 @@ MonoBehaviour:
         description: Idle Animation
         drawGizmos: 0
         DesiredState: 0
-        crossFadeTime: 0.2
+        crossFadeTime: 0.05
         animationName: Idle
         SuccessAfterAnimation: 0
         PassPrevAnimationChecking: 0
@@ -282,7 +282,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: 5496cb4e5bc130040950feca6ab55494
-        position: {x: 397.99997, y: 1001.99994}
+        position: {x: 401.04175, y: 1002}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
