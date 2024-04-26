@@ -263,6 +263,8 @@ public class Monster : RagDollAction, AIAction
     }
     private void OnCollisionEnter(Collision collision)
     {
+        if (!enabled) return;
+
         if((enemyMask & 1 << collision.gameObject.layer) != 0)
         {
             if (IsSearchable())

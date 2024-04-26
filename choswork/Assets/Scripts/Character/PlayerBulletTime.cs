@@ -14,6 +14,7 @@ public class PlayerBulletTime : InputManager
     private PhysicsScene _physicsScene;
     [SerializeField] private Transform _map;
     [SerializeField] private Player _player;
+    private Dictionary<AIPerception, AIPerception> _spawnedMonsters = new Dictionary<AIPerception, AIPerception>();
     private Dictionary<Transform, Transform> _spawnedObjects = new Dictionary<Transform, Transform>();
     private Dictionary<ObjectNotGrabbable, ObjectNotGrabbable> _ghostInterables = new Dictionary<ObjectNotGrabbable, ObjectNotGrabbable>();
     [SerializeField] private Transform ghostPlayer;
@@ -78,6 +79,11 @@ public class PlayerBulletTime : InputManager
         _player.myCameras.myTPSCam.curRot = ghostCamera.myTPSCam.curRot;
         _player.myCameras.myUICam.curRot = ghostCamera.myUICam.curRot;
 
+        foreach (var mob in _spawnedMonsters)
+        {
+            mob.Value.transform.position = mob.Key.transform.position;
+            mob.Value.transform.rotation = mob.Key.transform.rotation;
+        }
         foreach (var item in _spawnedObjects)
         {
             //Debug.Log(_simulationScene + ", " + item.Value);
@@ -104,7 +110,7 @@ public class PlayerBulletTime : InputManager
     }
     void SetBulletTime()
     {
-        if (myState != State.Start)_physicsScene.Simulate(Time.fixedUnscaledDeltaTime);
+        if (myState != State.Start) _physicsScene.Simulate(Time.fixedUnscaledDeltaTime);
         else _physicsScene.Simulate(Time.fixedDeltaTime);
     }
     void CreatePhysicsScene()
@@ -133,6 +139,7 @@ public class PlayerBulletTime : InputManager
     }
     public void SimulateMovement()
     {
+        // GhostPlayer Setting
         var ghostPlayer = Instantiate(_player);
         var Renders = ghostPlayer.GetComponentsInChildren<Renderer>();
         var Camera = ghostPlayer.GetComponentsInChildren<Camera>();
@@ -148,6 +155,21 @@ public class PlayerBulletTime : InputManager
         foreach (var c in Camera) c.enabled = false;
         foreach (var c in AudioListner) c.enabled = false;
         foreach (var c in AnimEvent) c.noSoundandEffect = true;
+
+        // GhostMonsters Setting
+        foreach (var mob in GameManagement.Inst.myMonsters)
+        {
+            var ghostMob = Instantiate(mob);
+            Renders = ghostMob.GetComponentsInChildren<Renderer>();
+            var scripts = ghostMob.GetComponents<MonoBehaviour>();
+
+            foreach (var r in Renders) r.enabled = false;
+            foreach (var script in scripts) script.enabled = false;
+
+            SceneManager.MoveGameObjectToScene(ghostMob.gameObject, _simulationScene);
+            _spawnedMonsters.Add(mob, ghostMob);
+        }
+
         foreach (var item in _ghostInterables) item.Value.GhostBehaviour();
         
         SceneManager.MoveGameObjectToScene(ghostPlayer.gameObject, _simulationScene);
