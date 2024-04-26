@@ -84,14 +84,15 @@ public class SpringArms : CameraProperty
                 myFPSCam = SpringArmWork(myFPSCam);
                 break;
             case ViewState.TPS: // 3인칭
-                if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+                if (myPlayer.ReturnAnim().GetBool("IsMoving"))
                 {
                     RotatingRoot(mySpring); // 이동키 꾹 누를시 캐릭터 회전
-                }
-                if (myPlayer.ReturnAnim().GetBool("IsMoving") && !isFPSCamRotinTPS)
-                {
-                    StartCoroutine(RotatingDownUP());  //캐릭터가 움직일때 fps 카메라 상하값 정중앙으로
-                    isFPSCamRotinTPS = true;
+
+                    if (!isFPSCamRotinTPS)
+                    {
+                        StartCoroutine(RotatingDownUP());  //캐릭터가 움직일때 fps 카메라 상하값 정중앙으로
+                        isFPSCamRotinTPS = true;
+                    }
                 }
                 if (!myPlayer.ReturnAnim().GetBool("IsMoving"))
                     isFPSCamRotinTPS = false; //캐릭터가 안움직이면 고정 해제
@@ -204,7 +205,7 @@ public class SpringArms : CameraProperty
     IEnumerator UIRotating(Vector3 dir, bool IsUI, Space sp = Space.World)
     {
         UIkeyAvailable = false; // 잠깐 i키 안먹히게
-        
+
         //UI카메라 캐릭터 모델 돌리기
         float Angle = Vector3.Angle(myModel.forward, dir);
         float rotDir = 1.0f;
@@ -290,7 +291,7 @@ public class SpringArms : CameraProperty
         myInventory = GameManagement.Inst.myInventory.gameObject;
         camPos = myTPSCam.myCam.transform.localPosition;
         desireDistance = camPos.z;
-        myPlayer = GameManagement.Inst.myPlayer;
+        if (!isGhost) SetPlayer(GameManagement.Inst.myPlayer);
         myFPSCam = CameraSetting(myFPSCam);
         myTPSCam = CameraSetting(myTPSCam);
         myUICam = CameraSetting(myUICam);
@@ -323,7 +324,7 @@ public class SpringArms : CameraProperty
     }
     public override void ToggleCam(CamState cam)
     {
-        switch(cam)
+        switch (cam)
         {
             case CamState.FPS:
                 IsFps = !IsFps;
@@ -370,7 +371,7 @@ public class SpringArms : CameraProperty
             case ViewState.TPS:
                 return myTPSCam;
         }
-        return null; 
+        return null;
     }
     public void MouseWheelMove() // 3인칭 시야 거리
     {
@@ -436,6 +437,12 @@ public class SpringArms : CameraProperty
     {
         isGhost = vGhost;
     }
+
+    public void SetPlayer(Player player)
+    {
+        myPlayer = player;
+    }
+
     public override void ToggleEscapeEvent()
     {
         IsPaused = !IsPaused;

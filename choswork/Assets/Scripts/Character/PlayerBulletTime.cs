@@ -149,6 +149,7 @@ public class PlayerBulletTime : InputManager
         ghostPlayer.GetComponent<PlayerPickUpDrop>().enabled = false;
         ghostPlayer.myHPBar = null;
         ghostPlayer.myCameras.GhostSet(true);
+        ghostPlayer.myCameras.SetPlayer(ghostPlayer);
         var AnimEvent = ghostPlayer.GetComponentsInChildren<AnimEvent>();
 
         foreach (var r in Renders) r.enabled = false;
