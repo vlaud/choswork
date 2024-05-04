@@ -104,8 +104,8 @@ public interface InputManagement
 }
 public class InputManager : PlayerAction, InputManagement
 {
-    GameObject _inventory = null;
-    protected GameObject myInventory
+    Inventory _inventory = null;
+    protected Inventory myInventory
     {
         get => _inventory;
         set
@@ -147,7 +147,7 @@ public class InputManager : PlayerAction, InputManagement
         if (Input.GetKeyDown(KeyCode.I) && GetIsUI())
         {
             ToggleCam(CamState.UI);
-            myInventory?.GetComponent<InputManager>()?.ToggleInventory();
+            myInventory?.ToggleInventory();
         }
         if (Input.GetKeyDown(KeyCode.C))
         {

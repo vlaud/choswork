@@ -288,7 +288,7 @@ public class SpringArms : CameraProperty
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        myInventory = GameManagement.Inst.myInventory.gameObject;
+        myInventory = GameManagement.Inst.myInventory;
         camPos = myTPSCam.myCam.transform.localPosition;
         desireDistance = camPos.z;
         if (!isGhost) SetPlayer(GameManagement.Inst.myPlayer);

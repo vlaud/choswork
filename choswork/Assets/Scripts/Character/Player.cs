@@ -88,7 +88,7 @@ public class Player : BattleSystem
         transform.position = myGamemanager.myMapManager.PlayerStart.position;
         transform.rotation = myGamemanager.myMapManager.PlayerStart.rotation;
         myStat.changeHP = (float v) => myHPBar.GetValue = v;
-        myInventory = GameManagement.Inst.myInventory.gameObject;
+        myInventory = GameManagement.Inst.myInventory;
         ChangeState(STATE.Play);
     }
 
@@ -146,16 +146,15 @@ public class Player : BattleSystem
     public override void TimeStop()
     {
         if (GameManagement.Inst.GetIsBulletTime()) return;
-        Inventory inv = myInventory.GetComponent<Inventory>();
 
         IsTimtStopAvailable = true;
-        if (!inv.IsItemExist(timeStopItem)) IsTimtStopAvailable = false;
+        if (!myInventory.IsItemExist(timeStopItem)) IsTimtStopAvailable = false;
         
         if (IsTimtStopAvailable)
         {
             GameManagement.Inst.SetBulletTime(0.3f, 5f);
-            inv.DestroyItem(timeStopItem);
-            if (!inv.IsItemExist(timeStopItem)) IsTimtStopAvailable = false;
+            myInventory.DestroyItem(timeStopItem);
+            if (!myInventory.IsItemExist(timeStopItem)) IsTimtStopAvailable = false;
         }
     }
     public void TimeStopCheck(bool v)
