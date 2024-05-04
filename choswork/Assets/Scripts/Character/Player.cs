@@ -11,6 +11,7 @@ public class Player : BattleSystem
     public GameObject KickPoint; // 실제 발차기 효과 위치
     public Transform KickTransform; // 발차기 소리 위치
     public bool IsWall = false;
+    [SerializeField] private bool isGhost = false;
     public HPBar myHPBar;
     private float animOffset = 0.04f;
     private GameManagement myGamemanager;
@@ -145,6 +146,7 @@ public class Player : BattleSystem
     }
     public override void TimeStop()
     {
+        if (isGhost) return;
         if (GameManagement.Inst.GetIsBulletTime()) return;
 
         IsTimtStopAvailable = true;
@@ -212,5 +214,10 @@ public class Player : BattleSystem
             ChangeState(STATE.Pause);
         else
             ChangeState(STATE.Play);
+    }
+
+    public void SetGhost(bool v)
+    {
+        isGhost = v;
     }
 }

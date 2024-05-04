@@ -144,6 +144,7 @@ public class PlayerBulletTime : InputManager
         var Renders = ghostPlayer.GetComponentsInChildren<Renderer>();
         var Camera = ghostPlayer.GetComponentsInChildren<Camera>();
         var AudioListner = ghostPlayer.GetComponentsInChildren<AudioListener>();
+        ghostPlayer.SetGhost(true);
         ghostPlayer.GetComponent<PlayerBulletTime>().enabled = false;
         ghostPlayer.GetComponent<Projection>().enabled = false;
         ghostPlayer.GetComponent<PlayerPickUpDrop>().enabled = false;
