@@ -51,7 +51,7 @@ public class CutSceneCamera : MonoBehaviour
     }
     void CamMovement()
     {
-        CutsceneCam.myCam.transform.position = myEyes.position; // 1인칭 카메라 위치를 캐릭터 눈에 고정
+        CutsceneCam.realCam.transform.position = myEyes.position; // 1인칭 카메라 위치를 캐릭터 눈에 고정
         CutsceneCam.curRot.y = myEyes.rotation.eulerAngles.y;
         CutsceneCam.myRig.rotation = Quaternion.Euler(CutsceneCam.curRot);
     }

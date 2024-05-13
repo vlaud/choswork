@@ -79,7 +79,7 @@ public class Keypad : ObjectNotGrabbable
                 break;
         }
     }
-    public override void DisableUI()
+    public void DisableUI()
     {
         myKeypadUI?.gameObject.SetActive(false);
     }

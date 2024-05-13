@@ -2,62 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ICommand
-{
-    void Execute(Transform tr);
-    void Undo(Transform tr);
-}
-public class MoveLeft : ICommand
-{
-    public void Execute(Transform tr) // 나중에 다 수정해야함
-    {
-        tr.Translate(Vector3.left);
-    }
-    public void Undo(Transform tr)
-    {
-        tr.Translate(Vector3.right);
-    }
-}
-
-public class MoveRight : ICommand
-{
-    public void Execute(Transform tr)
-    {
-        tr.Translate(Vector3.right);
-    }
-    public void Undo(Transform tr)
-    {
-        tr.Translate(Vector3.left);
-    }
-}
-public class MoveForward : ICommand
-{
-    public void Execute(Transform tr)
-    {
-        tr.Translate(Vector3.forward);
-    }
-    public void Undo(Transform tr)
-    {
-        tr.Translate(Vector3.back);
-    }
-}
-public class MoveBack : ICommand
-{
-    public void Execute(Transform tr)
-    {
-        tr.Translate(Vector3.back);
-    }
-    public void Undo(Transform tr)
-    {
-        tr.Translate(Vector3.forward);
-    }
-}
 public class StudyCommandPattern : MonoBehaviour
 {
     static public StudyCommandPattern Inst = null;
-    Stack<ICommand> Commandlist = new Stack<ICommand>();
-    public Dictionary<KeyCode, ICommand> Keylist = new Dictionary<KeyCode, ICommand>(); //wasd 리스트
-    public GameObject orgBullet = null;
+    public Dictionary<KeyCode, iCommandBase> Keylist = new Dictionary<KeyCode, iCommandBase>(); //wasd 리스트
+
+    iCommandBase AKey = null;
+    iCommandBase DKey = null;
+    iCommandBase WKey = null;
+    iCommandBase SKey = null;
 
     private void Awake()
     {
@@ -66,22 +19,36 @@ public class StudyCommandPattern : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Keylist[KeyCode.A] = new MoveLeft();
-        Keylist[KeyCode.D] = new MoveRight();
-        Keylist[KeyCode.W] = new MoveForward();
-        Keylist[KeyCode.S] = new MoveBack();
+        Keylist[KeyCode.A] = AKey;
+        Keylist[KeyCode.D] = DKey;
+        Keylist[KeyCode.W] = WKey;
+        Keylist[KeyCode.S] = SKey;
     }
 
     // Update is called once per frame
     void Update()
     {
-        foreach(KeyCode key in Keylist.Keys)
+        foreach (KeyCode key in Keylist.Keys)
         {
-            if(Input.GetKeyDown(key))
+            if (Input.GetKeyDown(key))
             {
                 //Keylist[key].Execute(transform);
                 //Commandlist.Push(Keylist[key]);
             }
         }
+    }
+
+    public static bool IsMoveKeyPressed()
+    {
+        var myCamera = GameManagement.Inst.mySpringArms;
+        foreach (KeyCode key in Inst.Keylist.Keys)
+        {
+            if (myCamera.myCameraState == ViewState.UI) return false;
+            if (Input.GetKey(key))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

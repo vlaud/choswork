@@ -8,12 +8,12 @@ public class Door : ObjectNotGrabbable, ItemEvent
     void Start()
     {
         SetActionText();
-        myInventory = GameManagement.Inst.myInventory;
+        //myInventory = GameManagement.Inst.myInventory;
     }
     public override void Interact() 
     {
         Debug.Log("door key used");
-        Inventory inv = myInventory.GetComponent<Inventory>();
+        Inventory inv = GameManagement.Inst.myInventory.GetComponent<Inventory>();
         inv.DestroyItem(requiredItem);
         GameManagement.Inst.GameClear();
     }
@@ -23,7 +23,7 @@ public class Door : ObjectNotGrabbable, ItemEvent
     }
     public override void SetText()
     {
-        if (!myInventory.IsItemExist(requiredItem))
+        if (!GameManagement.Inst.myInventory.IsItemExist(requiredItem))
         {
             ShowMessage = " 아이템 필요 ";
             actionText.text = transform.GetComponent<ItemPickUp>()?.item.itemName + ShowMessage;
@@ -38,6 +38,6 @@ public class Door : ObjectNotGrabbable, ItemEvent
     public override void SetItemInfoAppear(bool v)
     {
         actionText?.gameObject.SetActive(v);
-        myInventory.GetComponent<ItemTargeting>()?.SetItemTargetObj(transform);
+        GameManagement.Inst.myInventory.GetComponent<ItemTargeting>()?.SetItemTargetObj(transform);
     }
 }

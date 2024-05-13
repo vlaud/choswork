@@ -5,7 +5,7 @@ public class PickUpController : ObjectGrabbable
     private ItemPickUp myItem;
     private void Start()
     {
-        myInventory = GameManagement.Inst.myInventory;
+        //myInventory = GameManagement.Inst.myInventory;
         for (int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
             hearings.Add(GameManagement.Inst.myMonsters[i].GetComponent<AIAction>().HearingSound);
         SetActionText();
@@ -17,6 +17,6 @@ public class PickUpController : ObjectGrabbable
         ObjectPool.Inst.ReleaseObject<PickUpController>(gameObject, myItem.item.itemName);
         //Destroy(gameObject);
         SetItemInfoAppear(false);
-        myInventory?.GetComponent<Inventory>().AcquireItem(myItem.item);
+        GameManagement.Inst.myInventory?.GetComponent<Inventory>().AcquireItem(myItem.item);
     }
 }

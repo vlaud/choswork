@@ -7,10 +7,28 @@ using UnityEngine;
 public struct CameraSet
 {
     public Transform myRig;
-    public GameObject myCam;
+    public Transform DesirePos;
+    public GameObject realCam;
     public Vector3 curRot;
+
+    public void SetCamPos()
+    {
+        realCam.transform.position = DesirePos.position;
+        realCam.transform.rotation = DesirePos.rotation;
+    }
 }
-public class CameraProperty : InputManager
+
+public enum CamState
+{
+    FPS, UI
+}
+
+public enum ViewState
+{
+    Create, FPS, TPS, UI, Turn,
+}
+
+public class CameraProperty : MonoBehaviour
 {
     [Header("fps ¼³Á¤")]
     public Transform myRoot;//fps ÁÂ¿ì°ª
@@ -34,5 +52,4 @@ public class CameraProperty : InputManager
     public float desireDistance = 0.0f;
     public float myRotSpeed;
     public bool IsFps = true;
-    public bool IsUI = false;
 }

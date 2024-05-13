@@ -1,86 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
+using Commands.Menu;
+using Commands.Camera;
 
-public enum CamState
+public class InputManager : MonoBehaviour
 {
-    FPS, UI
-}
-public interface ObjectHandler
-{
-    void ThrowObject();
-    void InteractObj();
-    void GetItem();
-    bool IsInteractKeyPressed();
-}
-public interface PlayerHandler
-{
-    void PlayerMove();
-    void TimeStop();
-    Vector2 GetMoveRaw();
-    bool IsKickKeyPressed();
-    bool IsDashKeyPressed();
-    bool IsMoveKeyPressed();
-    Animator ReturnAnim();
-}
-public interface CameraHandler
-{
-    void ToggleCam(CamState cam);
-    void DebugCamera();
-    bool GetIsUI();
-}
-public interface UIHandler
-{
-    void ToggleInventory();
-    void DisableUI();
-    void LeftMouseClickEvent();
-    void RightMouseClickEvent();
-}
-public class PlayerAction : MonoBehaviour, ObjectHandler, PlayerHandler, CameraHandler, UIHandler
-{
-    //ObjectHandler
-    public virtual void ThrowObject() { }
-    public virtual void InteractObj() { }
-    public virtual void GetItem() { }
-    public virtual bool IsInteractKeyPressed()
-    {
-        return Input.GetKeyDown(KeyCode.E);
-    }
-    //PlayerHandler
-    public virtual void PlayerMove() { }
-    public virtual void TimeStop() { }
-    public virtual Vector2 GetMoveRaw()
-    {
-        Vector2 targetDir = Vector2.zero;
-        targetDir.x = Input.GetAxisRaw("Horizontal");
-        targetDir.y = Input.GetAxisRaw("Vertical");
-        return targetDir;
-    }
-    public virtual bool IsKickKeyPressed()
-    {
-        return Input.GetKeyDown(KeyCode.F);
-    }
-    public virtual bool IsDashKeyPressed()
-    {
-        return Input.GetKey(KeyCode.LeftShift);
-    }
-    public virtual bool IsMoveKeyPressed()
-    {
-        var myCamera = GameManagement.Inst.mySpringArms;
-        foreach (KeyCode key in StudyCommandPattern.Inst.Keylist.Keys)
-        {
-            if (myCamera.myCameraState == SpringArms.ViewState.UI) return false;
-            if (Input.GetKey(key))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-    public virtual Animator ReturnAnim()
-    {
-        Animator myAnim = null;
-        return myAnim;
-    }
-    //CameraHandler
     public virtual void ToggleCam(CamState cam) { }
     public virtual void DebugCamera() { }
     public virtual bool GetIsUI() { return false; }
@@ -89,21 +13,7 @@ public class PlayerAction : MonoBehaviour, ObjectHandler, PlayerHandler, CameraH
     public virtual void DisableUI() { }
     public virtual void LeftMouseClickEvent() { }
     public virtual void RightMouseClickEvent() { }
-}
 
-public interface InputManagement
-{
-    void HandlePlayerMovement();
-    void HandleObjectPickupAndThrow();
-    void HandleCameraSwitching();
-    void HandleUI();
-    void HandleOtherInput();
-    void ToggleEscapeEvent();
-    void DesireCursorState(GameManagement.GameState state, CursorLockMode cursorState);
-
-}
-public class InputManager : PlayerAction, InputManagement
-{
     Inventory _inventory = null;
     protected Inventory myInventory
     {
@@ -113,54 +23,111 @@ public class InputManager : PlayerAction, InputManagement
             _inventory = value;
         }
     }
-    public virtual void HandlePlayerMovement()
+
+    private void Awake()
     {
-        // 플레이어 움직임
-        if (Input.GetKeyDown(KeyCode.T)) TimeStop();
-        if (IsKickKeyPressed() && !ReturnAnim().GetBool("IsKicking")) ReturnAnim().SetTrigger("Kick");
+        SetMenuCommands();
     }
 
-    public virtual void HandleObjectPickupAndThrow()
+    private void Update()
     {
-        if (GameManagement.Inst.myGameState == GameManagement.GameState.Pause) return;
+        PlayerMovement();
+        HandleObjectPickupAndThrow();
+        HandleCameraSwitching();
+        HandleUI();
+        HandleOtherInput();
+    }
+
+    private void SetMenuCommands()
+    {
+        MenuActions.SetKeys(GameManagement.Inst.myMainmenu);
+
+        if (GameManagement.Inst.myMainmenu?.CurrentSceneName == "Title")
+        {
+            MenuActions.SetCommandKey(MainMenuKeyType.PauseAction, null);
+            MenuActions.SetCommandKey(MainMenuKeyType.UnPauseAction, null);
+        }
+    }
+
+    /// <summary>
+    /// 플레이어 움직임
+    /// </summary>
+    private void PlayerMovement()
+    {
+        if (GameManagement.Inst.myGameState == GameState.Pause) return;
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            PlayerStatesEvent.Trigger(PlayerEventType.TimeStop);
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            PlayerStatesEvent.Trigger(PlayerEventType.PlayerKick);
+        }
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            PlayerStatesEvent.Trigger(PlayerEventType.Dash);
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            PlayerStatesEvent.Trigger(PlayerEventType.NormalSpeed);
+        }
+    }
+
+    /// <summary>
+    /// 오브젝트 상호작용
+    /// </summary>
+    private void HandleObjectPickupAndThrow()
+    {
+        if (GameManagement.Inst.myGameState == GameState.Pause) return;
+
         // 플레이어 오브젝트 집기 + 던지기
         if (Input.GetMouseButtonDown(0))
         {
-            ThrowObject();
+            ObjectStatesEvent.Trigger(ObjectEventType.ThrowObject);
         }
-        if (IsInteractKeyPressed())
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            InteractObj();
+            ObjectStatesEvent.Trigger(ObjectEventType.InteractObj);
         }
         if (Input.GetKeyUp(KeyCode.E))
         {
-            GetItem();
+            ObjectStatesEvent.Trigger(ObjectEventType.GetItem);
         }
     }
-    public virtual void HandleCameraSwitching()
+
+    /// <summary>
+    /// 수정 필요
+    /// </summary>
+    private void HandleCameraSwitching()
     {
+        if (GameManagement.Inst.myGameState == GameState.Pause) return;
+
         // 카메라
         if (Input.GetKeyDown(KeyCode.V))
         {
-            ToggleCam(CamState.FPS);
+            CameraActions.ExecuteVKey();
         }
-        if (Input.GetKeyDown(KeyCode.I) && GetIsUI())
+        if (Input.GetKeyDown(KeyCode.I))
         {
-            ToggleCam(CamState.UI);
+            CameraActions.ExecuteIKey();
             myInventory?.ToggleInventory();
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            DebugCamera();
+            CameraStatesEvent.Trigger(CameraEventType.Debug);
         }
     }
 
-    public virtual void HandleUI()
+    private void HandleUI()
     {
+        if (GameManagement.Inst.myMainmenu?.CurrentSceneName == "Title") return;
+        if (GameManagement.Inst.myGameState == GameState.Pause) return;
+
         // UI handling
-        if (IsMoveKeyPressed())
+        if (StudyCommandPattern.IsMoveKeyPressed())
         {
-            DesireCursorState(GameManagement.GameState.Play, CursorLockMode.Locked);
+            DesireCursorState(GameState.Play, CursorLockMode.Locked);
             DisableUI();
         }
         if (Input.GetKeyDown(KeyCode.I))
@@ -181,39 +148,49 @@ public class InputManager : PlayerAction, InputManagement
         }
     }
 
-    public virtual void HandleOtherInput()
+    private void HandleOtherInput()
     {
         // Any other input handling
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            var mainMenu = GameManagement.Inst.myMainmenu;
-            if (mainMenu != null)
-            {
-                if(mainMenu.myState == Mainmenu.State.Menu) ToggleEscapeEvent();
-                else return;
-            }
-            else if (mainMenu == null) ToggleEscapeEvent();
-            else return;
-                
-            if (GameManagement.Inst.myGameState == GameManagement.GameState.Pause)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                mainMenu?.ShowMenuAnim(true);
-            }
-            else
-            {
-                if(GameManagement.Inst.myInventory.IsInventoryEnabled())
-                    Cursor.lockState = CursorLockMode.None;
-                else
-                    Cursor.lockState = CursorLockMode.Locked;
-                mainMenu?.ShowMenuAnim(false);
-                mainMenu?.DisableUI();
-            }
+            MenuActions.Execute();
         }
     }
-    public virtual void ToggleEscapeEvent() { }
-    
-    public void DesireCursorState(GameManagement.GameState state, CursorLockMode cursorState)
+
+    void EscapeAction2()
+    {
+        // Any other input handling previous
+        var mainMenu = GameManagement.Inst.myMainmenu;
+        if (mainMenu != null)
+        {
+            if (mainMenu.myState == MenuState.Menu) ToggleEscapeEvent();
+            else return;
+        }
+        else if (mainMenu == null) ToggleEscapeEvent();
+        else return;
+
+        if (GameManagement.Inst.myGameState == GameState.Pause)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            mainMenu?.ShowMenuAnim(true);
+        }
+        else
+        {
+            if (GameManagement.Inst.myInventory.IsInventoryEnabled())
+                Cursor.lockState = CursorLockMode.None;
+            else
+                Cursor.lockState = CursorLockMode.Locked;
+            mainMenu?.ShowMenuAnim(false);
+            mainMenu?.DisableUI();
+        }
+    }
+
+    public void ToggleEscapeEvent()
+    {
+
+    }
+
+    public void DesireCursorState(GameState state, CursorLockMode cursorState)
     {
         if (GameManagement.Inst.myGameState == state)
             Cursor.lockState = cursorState;

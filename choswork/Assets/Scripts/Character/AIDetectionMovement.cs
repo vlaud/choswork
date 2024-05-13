@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 
-public class AIDetectionMovement : BattleSystem
+public class AIDetectionMovement : BaseGameEntity
 {
     //ai hearing
     public Transform HearingTr; // 실제 추적 위치
@@ -72,6 +72,16 @@ public class AIDetectionMovement : BattleSystem
             Debug.Log(transform + "'s status: " + myPath.status);
             return true;
         }
+        return false;
+    }
+
+    public override void Updated()
+    {
+
+    }
+
+    public override bool HandleMessage(Telegram telegram)
+    {
         return false;
     }
     #endregion

@@ -237,7 +237,7 @@ public class Monster : RagDollAction, AIAction
     {
         return myPath;
     }
-    public override Animator ReturnAnim()
+    public Animator ReturnAnim()
     {
         return myAnim;
     }

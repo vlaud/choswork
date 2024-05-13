@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 public interface ItemEvent
 {
@@ -9,16 +10,18 @@ public interface ItemTargeting
 {
     void SetItemTargetObj(Transform target);
 }
-public class GameManagement : MonoBehaviour
+public enum GameState
 {
-    public enum GameState
-    {
-        Create, Play, FadeToLevel, Pause, GameOver
-    }
+    Create, Play, FadeToLevel, Pause, GameOver
+}
+
+public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameStatesEvent>
+{
+    
     public GameState myGameState = GameState.Create;
-    public static GameManagement Inst = null;
+    private static GameManagement _inst = null;
+    public static GameManagement Inst => _inst;
     public Player myPlayer;
-    //public Monster myMonster;
     public AIPerception[] myMonsters;
     public SpringArms mySpringArms;
     public Inventory myInventory;
@@ -87,23 +90,34 @@ public class GameManagement : MonoBehaviour
     }
     private void Awake()
     {
-        Inst = this;
+        _inst = this;
         Physics.simulationMode = SimulationMode.Script;
-        //Physics.autoSimulation = IsCutscene;
         myMonsters = FindObjectsOfType(typeof(AIPerception)) as AIPerception[];
         for (int i = 0; i < myMonsters.Length; ++i)
         {
             myMonsters[i].GetComponent<AIAction>().SetMobIndex(i);
         }
         mySceneLoader = GameObject.Find("SceneLoader")?.GetComponent<SceneLoader>();
-        myMainmenu = mySceneLoader?.gameObject.GetComponentInChildren<Mainmenu>();
+
+        if (mySceneLoader?.gameObject.GetComponentInChildren<Mainmenu>() != null)
+            myMainmenu = mySceneLoader?.gameObject.GetComponentInChildren<Mainmenu>();
+        else
+            myMainmenu = FindObjectOfType(typeof(Mainmenu)) as Mainmenu;
+
         if (myMainmenu != null && myCanvas != null)
         {
             myCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             myCanvas.worldCamera = myMainmenu.transform.parent.GetComponent<Camera>();
         }
+       
         ChangeState(GameState.Play);
     }
+
+    private void Start()
+    {
+        Subscribe();
+    }
+
     private void Update()
     {
         if(!IsCutscene)
@@ -118,6 +132,39 @@ public class GameManagement : MonoBehaviour
             StateProcess();
         }
     }
+
+    private void OnDestroy()
+    {
+        Unsubscribe();
+    }
+
+    public void OnEvent(GameStatesEvent eventType)
+    {
+        switch (eventType.gameEventType)
+        {
+            case GameEventType.Pause:
+                ChangeState(GameState.Pause);
+                break;
+            case GameEventType.UnPause:
+                ChangeState(GameState.Play);
+                break;
+        }
+    }
+
+    public void Subscribe()
+    {
+        if (myMainmenu?.CurrentSceneName == "Title") return;
+        this.EventStartingListening<GameStatesEvent>();
+        //Debug.Log(myMainmenu?.CurrentSceneName + ": game Sub");
+    }
+
+    public void Unsubscribe()
+    {
+        if (myMainmenu?.CurrentSceneName == "Title") return;
+        this.EventStopListening<GameStatesEvent>();
+        //Debug.Log("game unSub");
+    }
+
     public void DoSlowmotion()
     {
         GameTimeScale = Mathf.Clamp(GameTimeScale, 0.01f, 1f);
@@ -147,18 +194,12 @@ public class GameManagement : MonoBehaviour
         IsBulletTime = false;
         myPlayer.TimeStopCheck(false);
     }
-    public void PauseGame()
-    {
-        ChangeState(GameState.Pause);
-    }
-    public void UnPauseGame()
-    {
-        ChangeState(GameState.Play);
-    }
+    
     public void GameOver()
     {
         ChangeState(GameState.GameOver);
     }
+
     public bool GetIsBulletTime()
     {
         return IsBulletTime;

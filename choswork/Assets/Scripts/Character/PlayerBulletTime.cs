@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public class PlayerBulletTime : InputManager
+
+public class PlayerBulletTime : MonoBehaviour, iSubscription, EventListener<GameStatesEvent>
 {
     public enum State
     {
@@ -50,19 +51,19 @@ public class PlayerBulletTime : InputManager
                 if (time_current > time_Max) ChangeState(State.Play);
                 break;
             case State.Play:
-                HandleOtherInput();
                 break;
             case State.Pause:
-                HandleOtherInput();
                 break;
         }
     }
+
     // Start is called before the first frame update
     void Start()
     {
         CreatePhysicsScene();
         SimulateMovement();
         time_start = Time.time;
+        Subscribe();
         ChangeState(State.Start);
     }
 
@@ -72,8 +73,8 @@ public class PlayerBulletTime : InputManager
         StateProcess();
         SetBulletTime();
 
-        transform.position = ghostPlayer.position;
-        transform.rotation = ghostPlayer.rotation;
+        //transform.position = ghostPlayer.position;
+        //transform.rotation = ghostPlayer.rotation;
 
         _player.myCameras.myFPSCam.curRot = ghostCamera.myFPSCam.curRot;
         _player.myCameras.myTPSCam.curRot = ghostCamera.myTPSCam.curRot;
@@ -95,13 +96,12 @@ public class PlayerBulletTime : InputManager
             item.Value.GhostBehaviour(item.Key);
         }
     }
-    public override void ToggleEscapeEvent()
+
+    private void OnDestroy()
     {
-        if(myState != State.Pause)
-            ChangeState(State.Pause);
-        else
-            ChangeState(State.Play);
+        Unsubscribe();
     }
+
     #region BulletTime
     void ChangeAnimUpdateMode(AnimatorUpdateMode mode)
     {
@@ -117,7 +117,7 @@ public class PlayerBulletTime : InputManager
     {
         _simulationScene = SceneManager.CreateScene("Physics", new CreateSceneParameters(LocalPhysicsMode.Physics3D));
         _physicsScene = _simulationScene.GetPhysicsScene();
-       
+
         foreach (Transform obj in _map)
         {
             var ghostObj = Instantiate(obj.gameObject, obj.position, obj.rotation);
@@ -139,8 +139,11 @@ public class PlayerBulletTime : InputManager
     }
     public void SimulateMovement()
     {
+        _player.myCameras.transform.SetParent(_player.transform);
         // GhostPlayer Setting
         var ghostPlayer = Instantiate(_player);
+        _player.myCameras.transform.SetParent(null);
+
         var Renders = ghostPlayer.GetComponentsInChildren<Renderer>();
         var Camera = ghostPlayer.GetComponentsInChildren<Camera>();
         var AudioListner = ghostPlayer.GetComponentsInChildren<AudioListener>();
@@ -173,15 +176,40 @@ public class PlayerBulletTime : InputManager
         }
 
         foreach (var item in _ghostInterables) item.Value.GhostBehaviour();
-        
+
         SceneManager.MoveGameObjectToScene(ghostPlayer.gameObject, _simulationScene);
         if (!ghostPlayer.gameObject.isStatic) _spawnedObjects.Add(_player.transform, ghostPlayer.transform);
         this.ghostPlayer = ghostPlayer.transform;
+
         ghostCamera = ghostPlayer.myCameras;
-        
+        ghostCamera.transform.SetParent(null);
+
         if (!ghostCamera.myRoot.gameObject.isStatic) _spawnedObjects.Add(_player.myCameras.myRoot, ghostCamera.myRoot);
         if (!ghostCamera.mySpring.gameObject.isStatic) _spawnedObjects.Add(_player.myCameras.mySpring, ghostCamera.mySpring);
         if (!ghostCamera.myUI_basePos.gameObject.isStatic) _spawnedObjects.Add(_player.myCameras.myUI_basePos, ghostCamera.myUI_basePos);
+    }
+
+    public void OnEvent(GameStatesEvent eventType)
+    {
+        switch (eventType.gameEventType)
+        {
+            case GameEventType.Pause:
+                ChangeState(State.Pause);
+                break;
+            case GameEventType.UnPause:
+                ChangeState(State.Play);
+                break;
+        }
+    }
+
+    public void Subscribe()
+    {
+        this.EventStartingListening<GameStatesEvent>();
+    }
+
+    public void Unsubscribe()
+    {
+        this.EventStopListening<GameStatesEvent>();
     }
     #endregion
 }

@@ -35,7 +35,7 @@ public class SoundManager : Singleton<SoundManager> // 사운드 매니저는 싱클톤 방
     private void Awake()
     {
         base.Initialize();
-        if(bgmPlayer != null)
+        if (bgmPlayer != null)
             bgmPlayer.volume = 1.0f - PlayerPrefs.GetFloat("Game_BGM_Volume");
         _effectvolume = 1.0f - PlayerPrefs.GetFloat("Game_Effect_Volume");
     }
@@ -66,5 +66,5 @@ public class SoundManager : Singleton<SoundManager> // 사운드 매니저는 싱클톤 방
         audio.volume = effectVolume;
         audio.PlayOneShot(clip);
     }
-    
+
 }

@@ -12,7 +12,7 @@ public class TitleCam : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        titleCam.myCam.transform.localPosition = camPos;
+        titleCam.realCam.transform.localPosition = camPos;
     }
 
     // Update is called once per frame
@@ -29,6 +29,6 @@ public class TitleCam : MonoBehaviour
             desireScreenPos.y = Mathf.Clamp(desireScreenPos.y, -_limit, _limit);
             camPos = Vector2.Lerp(camPos, desireScreenPos, Time.deltaTime * LookSpeed);
         }
-        titleCam.myCam.transform.localPosition = camPos;
+        titleCam.realCam.transform.localPosition = camPos;
     }
 }

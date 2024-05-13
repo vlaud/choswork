@@ -18,7 +18,7 @@ public class Projection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach(var item in _spawnedObjects)
+        foreach (var item in _spawnedObjects)
         {
             item.Value.position = item.Key.position;
             item.Value.rotation = item.Key.rotation;
@@ -28,7 +28,7 @@ public class Projection : MonoBehaviour
     {
         _simulationScene = SceneManager.CreateScene("Simulation", new CreateSceneParameters(LocalPhysicsMode.Physics3D));
         _physicsScene = _simulationScene.GetPhysicsScene();
-        foreach(Transform obj in _map)
+        foreach (Transform obj in _map)
         {
             var ghostObj = Instantiate(obj.gameObject, obj.position, obj.rotation);
             var Renders = ghostObj.GetComponentsInChildren<Renderer>();
@@ -92,7 +92,7 @@ public class Projection : MonoBehaviour
                 _line.SetPosition(i, _ghostobj.transform.position);
             }
             //Destroy(ghostObj.gameObject);
-            
+
             _ghostobj.SetActive(false);
             //IsSimulation = false;
             yield return null;

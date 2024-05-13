@@ -12,6 +12,6 @@ public class ObjectNotGrabbable : ObjectInteractable
     public virtual void GhostBehaviour() { }
     private void Update()
     {
-        HandleUI();
+        //HandleUI();
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Inventory : InputManager, ItemTargeting
+public class Inventory : MonoBehaviour, ItemTargeting
 {
     [SerializeField] private GameObject InventoryBase;
     [SerializeField] private GameObject SlotParent;
@@ -28,7 +28,7 @@ public class Inventory : InputManager, ItemTargeting
         InventoryBase.SetActive(false);
         mySlots = SlotParent?.GetComponentsInChildren<ItemSlot>();
     }
-    public override void ToggleInventory()
+    public void ToggleInventory()
     {
         isInventory = !isInventory;
         InventoryBase.SetActive(isInventory);

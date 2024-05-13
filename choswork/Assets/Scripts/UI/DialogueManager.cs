@@ -23,12 +23,18 @@ public class DialogueManager : ObjectNotGrabbable
         if (!isTalking) StartJournal();
         else DisableUI();
     }
-    public override void DisableUI()
+    public void DisableUI()
     {
         diaglogueUI.SetActive(false);
         isTalking = false;
-        DesireCursorState(GameManagement.GameState.Play, CursorLockMode.Locked);
+        DesireCursorState(GameState.Play, CursorLockMode.Locked);
     }
+    public void DesireCursorState(GameState state, CursorLockMode cursorState)
+    {
+        if (GameManagement.Inst.myGameState == state)
+            Cursor.lockState = cursorState;
+    }
+
     void StartJournal()
     {
         isTalking = true;
@@ -36,7 +42,7 @@ public class DialogueManager : ObjectNotGrabbable
         diaglogueUI.SetActive(true);
         journalText.text = "<color=#000000>" + _dialogue.dialogue[0] + "</color>";
     }
-    public override void LeftMouseClickEvent()
+    public void LeftMouseClickEvent()
     {
         curDialogueTracker--;
         if (curDialogueTracker < 0)
@@ -45,7 +51,7 @@ public class DialogueManager : ObjectNotGrabbable
         }
         journalText.text = "<color=#000000>" + _dialogue.dialogue[curDialogueTracker] + "</color>";
     }
-    public override void RightMouseClickEvent()
+    public void RightMouseClickEvent()
     {
         curDialogueTracker++;
         if (curDialogueTracker > _dialogue.dialogue.Length - 1)

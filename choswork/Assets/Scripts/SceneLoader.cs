@@ -5,18 +5,16 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class SceneLoader : Singleton<SceneLoader>
 {
-    //public static SceneLoader Inst = null;
     bool isChange = false;
     private void Awake()
     {
-        //Inst = this;
         base.Initialize();
         DontDestroyOnLoad(gameObject);
     }
 
     public void ChangeScene(int i)
     {
-        if(!isChange)
+        if (!isChange)
             StartCoroutine(Loading(i));
     }
     public void ChangeScene(string scene)
@@ -50,10 +48,10 @@ public class SceneLoader : Singleton<SceneLoader>
         // 씬로딩이 끝나기 전까진 씬을 활성화 시키지 않음
         ao.allowSceneActivation = false;
 
-        while(!ao.isDone)
+        while (!ao.isDone)
         {
             slider.value = ao.progress / 0.9f;
-            if(Mathf.Approximately(slider.value, 1.0f))
+            if (Mathf.Approximately(slider.value, 1.0f))
             {
                 // 씬로딩이 끝났으므로 씬 활성화
                 ao.allowSceneActivation = true;
