@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectInteractable : InputManager
+public class ObjectInteractable : MonoBehaviour
 {
     [SerializeField] protected TMPro.TMP_Text actionText;  // 행동을 보여 줄 텍스트
     public string ShowMessage = " 열기 ";

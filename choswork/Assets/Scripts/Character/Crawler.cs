@@ -24,6 +24,8 @@ public class Crawler : RagDollAction, AIAction
     //ai path
     private NavMeshPath myPath;
     NavMeshQueryFilter filter;
+
+    Vector3[] drawings = { Vector3.zero, Vector3.zero};
     public enum STATE
     {
         Create, Idle, Roaming, Search, Angry,
@@ -50,7 +52,7 @@ public class Crawler : RagDollAction, AIAction
                 break;
             case STATE.Roaming:
                 formerState = STATE.Roaming;
-                RePath(myPath, myTarget.position, filter, () => LostTarget());
+                RePath(myPath, myTarget, filter, () => LostTarget());
                 CorrectBaseHeight(myPath, myTarget, filter);
                 break;
             case STATE.Angry:
@@ -59,7 +61,7 @@ public class Crawler : RagDollAction, AIAction
                 AttackTarget(myPath, myTarget, filter);
                 break;
             case STATE.Search:
-                if (formerState == STATE.Search) RePath(myPath, myTarget.position, filter, () => LostTarget());
+                if (formerState == STATE.Search) RePath(myPath, myTarget, filter, () => LostTarget());
                 else formerState = STATE.Search;
                 if (TrackSoundFailed(myPath)) LostTarget();
                 myAnim.SetBool("IsMoving", false);
@@ -90,7 +92,7 @@ public class Crawler : RagDollAction, AIAction
                 RagDollSet(true);
                 break;
             case STATE.StandUp:
-                myAnim.Play(_standupName, -1, 0.0f);
+                myAnim.Play(_faceUpStandUpStateName, -1, 0.0f);
                 break;
             case STATE.ResetBones:
                 break;
@@ -148,6 +150,7 @@ public class Crawler : RagDollAction, AIAction
         float dist = dir.magnitude;
         LayerMask mask;
         STATE desireState;
+        Debug.DrawLine(myPath.corners[1], myPath.corners[2], Color.green);
         if (!IsGround)
         {
             mask = LayerMask.NameToLayer("Ground");
@@ -158,29 +161,60 @@ public class Crawler : RagDollAction, AIAction
             mask = LayerMask.NameToLayer("Ceiling");
             desireState = STATE.ToJump;
         }
+        Debug.Log(desireState.ToString());
+
         if (Physics.Raycast(myPath.corners[1], dir,
            out RaycastHit thit, dist + 1f, 1 << mask))
         {
-            Debug.DrawLine(myPath.corners[1], thit.point, Color.yellow);
-            Debug.Log(thit.transform.gameObject.layer);
+            Debug.Log(myPath.corners[1]);
+            Debug.Log(thit.point);
+            drawings[0] = myPath.corners[1];
+            drawings[1] = thit.point;
+            Debug.Log(LayerMask.LayerToName(thit.transform.gameObject.layer));
             ChangeState(desireState);
         }
     }
+
+    void DrawPath()
+    {
+        LayerMask mask = LayerMask.GetMask("Ceiling") | LayerMask.GetMask("Ground");
+        LayerMask formerMask = LayerMask.GetMask("Ceiling");
+
+        Debug.Log("ÃÑ ÄÚ³Ê: " + myPath.corners.Length);
+
+        for (int i = 0; i < myPath.corners.Length - 1; i++)
+        {
+            Vector3 dir = myPath.corners[i + 1] - myPath.corners[i];
+            float dist = dir.magnitude;
+            Debug.DrawLine(myPath.corners[i], myPath.corners[i + 1], Color.red);
+            if (Physics.Raycast(myPath.corners[i], dir,
+           out RaycastHit thit, dist + 1f, mask))
+            {
+                Debug.Log(LayerMask.LayerToName(thit.transform.gameObject.layer));
+               
+            }
+           
+        }
+    }
+
     private void Awake()
     {
         myGamemanager = GameManagement.Inst;
         cs = GetComponent<CapsuleCollider>();
         _origintimetoWake = _timetoWakeup;
         _bones = myHips.GetComponentsInChildren<Transform>();
-        _standupTransforms = new BoneTransform[_bones.Length];
+        _faceUpStandUpBoneTransforms = new BoneTransform[_bones.Length];
+        _faceDownStandUpBoneTransforms = new BoneTransform[_bones.Length];
         _ragdollTransforms = new BoneTransform[_bones.Length];
 
         for (int boneIndex = 0; boneIndex < _bones.Length; ++boneIndex)
         {
-            _standupTransforms[boneIndex] = new BoneTransform();
+            _faceUpStandUpBoneTransforms[boneIndex] = new BoneTransform();
+            _faceDownStandUpBoneTransforms[boneIndex] = new BoneTransform();
             _ragdollTransforms[boneIndex] = new BoneTransform();
         }
-        PopulateAnimation(_standupClipName, _standupTransforms);
+        PopulateAnimation(_faceUpStandUpClipName, _faceUpStandUpBoneTransforms);
+        PopulateAnimation(_faceDownStandUpClipName, _faceDownStandUpBoneTransforms);
         RagDollSet(false);
         transform.position = myGamemanager.myMapManager.GetCrDestination(false).position;
     }
@@ -199,6 +233,8 @@ public class Crawler : RagDollAction, AIAction
     {
         StateProcess();
         myAnim.speed = myStat.MoveSpeed;
+        Debug.DrawLine(drawings[0], drawings[1], Color.blue);
+        DrawPath();
     }
     IEnumerator DelayState(STATE s, float time)
     {
@@ -317,7 +353,7 @@ public class Crawler : RagDollAction, AIAction
     {
         return myPath;
     }
-    public override Animator ReturnAnim()
+    public Animator ReturnAnim()
     {
         return myAnim;
     }
@@ -372,7 +408,7 @@ public class Crawler : RagDollAction, AIAction
             {
                 ChangeState(STATE.ToAir);
             }
-            else if(myState == STATE.ToAir)
+            if(myState == STATE.ToAir)
             {
                 myRigid.AddForce(Vector3.up * JumpPower, ForceMode.Impulse);
             }

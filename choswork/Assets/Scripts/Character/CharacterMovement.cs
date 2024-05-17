@@ -10,49 +10,46 @@ public class CharacterMovement : CharacterProperty
     //Coroutine CoroutineLerp = null;
     Coroutine attackCo = null;
     Coroutine CoRoot = null;
-    public void RePath(NavMeshPath myPath, Vector3 pos, NavMeshQueryFilter filter, UnityAction done = null, string anim = "IsMoving")
+    public void RePath(NavMeshPath myPath, Transform target, NavMeshQueryFilter filter, UnityAction done = null, string anim = "IsMoving")
     {
         StopAllCoroutines();
-        Debug.Log("목표지점: " + pos);
-        StartCoroutine(MovingByPath(myPath, pos, filter, anim, done));
+        //Debug.Log("목표지점: " + pos);
+        StartCoroutine(MovingByPath(myPath, target, filter, anim, done));
     }
-    IEnumerator MovingByPath(NavMeshPath myPath, Vector3 pos, NavMeshQueryFilter filter, string anim, UnityAction done)
+    IEnumerator MovingByPath(NavMeshPath myPath, Transform target, NavMeshQueryFilter filter, string anim, UnityAction done)
     {
         int cur = 1;
-        NavMesh.CalculatePath(transform.position, pos, filter, myPath);
+        NavMesh.CalculatePath(transform.position, target.position, filter, myPath);
         //NavMesh.CalculatePath(transform.position, pos, 1 << NavMesh.GetAreaFromName("Ground"), myPath);
-        Vector3[] list = myPath.corners;
-
-        Vector3 dir = pos - transform.position;
+        Vector3 dir = target.position - transform.position;
         float dist = dir.magnitude;
         dir.Normalize();
 
         while (dist > 1.0f) // 도착 판정
         {
-            dir = pos - transform.position;
+            dir = target.position - transform.position;
             dist = dir.magnitude;
+            NavMesh.CalculatePath(transform.position, target.position, filter, myPath); // 실시간으로 네비메쉬 검사
 
-            if (cur < list.Length)
+            if (cur < myPath.corners.Length)
             {
-                NavMesh.CalculatePath(transform.position, pos, filter, myPath); // 실시간으로 네비메쉬 검사
-                list = myPath.corners;
-                for (int i = 0; i < list.Length - 1; ++i)
+                for (int i = 0; i < myPath.corners.Length - 1; ++i)
                 {
-                    Debug.DrawLine(list[i], list[i + 1], Color.red);
+                    Debug.DrawLine(myPath.corners[i], myPath.corners[i + 1], Color.red);
                 }
                 //Debug.Log("현재 코너: " + cur + "번째: " + list[cur] + "총 코너: " + list.Length);
-                MoveToPosition(list[cur], anim, () => cur++);
+                MoveToPosition(myPath.corners[cur], anim, () => cur++);
             }
             yield return null;
         }
         done?.Invoke();
     }
-    protected void AttackTarget(NavMeshPath myPath, Transform target, NavMeshQueryFilter filter)
+    public void AttackTarget(NavMeshPath myPath, Transform target, NavMeshQueryFilter filter)
     {
         StopAllCoroutines();
         attackCo = StartCoroutine(AttackRoot(myPath, target, filter, myStat.AttackRange, myStat.AttackDelay));
     }
-    protected void RotateToTarget(Vector3 pos, UnityAction done = null)
+    public void RotateToTarget(Vector3 pos, UnityAction done = null)
     {
         if (CoroutineAngle != null)
         {

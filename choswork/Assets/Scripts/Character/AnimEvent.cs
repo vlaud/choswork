@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Events;
 
-public class AnimEvent : InputManager
+public class AnimEvent : MonoBehaviour
 {
     public UnityEvent Attack = default;
     public UnityEvent Kick = default;
@@ -30,9 +30,10 @@ public class AnimEvent : InputManager
     public GameObject orgDustEff;
     public Player myPlayer;
     public bool noSoundandEffect = false;
+
     public void LeftFootEvent()
     {
-        if (!noSoundandEffect && IsMoveKeyPressed())
+        if (!noSoundandEffect && StudyCommandPattern.IsMoveKeyPressed())
         {
             SoundManager.Inst.PlayOneShot(mySoundSpeaker, leftFootSound);
         }
@@ -44,7 +45,7 @@ public class AnimEvent : InputManager
 
     public void RightFootEvent()
     {
-        if (!noSoundandEffect && IsMoveKeyPressed())
+        if (!noSoundandEffect && StudyCommandPattern.IsMoveKeyPressed())
         {
             SoundManager.Inst.PlayOneShot(mySoundSpeaker, rightFootSound);
         }

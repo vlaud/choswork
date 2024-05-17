@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerPickUpDrop : InputManager
+public class PlayerPickUpDrop : MonoBehaviour, iSubscription, EventListener<ObjectStatesEvent>
 {
     [SerializeField] private Transform playerCameraTransform;
     [SerializeField] private Transform objectGrabPointTransform;
@@ -21,10 +21,46 @@ public class PlayerPickUpDrop : InputManager
         curCamset = myPlayer.myCameras.GetMyCamera();
         playerCameraTransform = curCamset?.myRig;
     }
+
+    private void Start()
+    {
+        Subscribe();
+    }
     private void Update()
     {
         CheckItem();
     }
+    private void OnDestroy()
+    {
+        Unsubscribe();
+    }
+
+    public void OnEvent(ObjectStatesEvent eventType)
+    {
+        switch (eventType.objectEventType)
+        {
+            case ObjectEventType.ThrowObject:
+                ThrowObject();
+                break;
+            case ObjectEventType.InteractObj:
+                InteractObj();
+                break;
+            case ObjectEventType.GetItem:
+                GetItem();
+                break;
+        }
+    }
+
+    public void Subscribe()
+    {
+        this.EventStartingListening();
+    }
+
+    public void Unsubscribe()
+    {
+        this.EventStopListening();
+    }
+
     void CheckItem()
     {
         curCamset = myPlayer.myCameras.GetMyCamera();
@@ -32,9 +68,8 @@ public class PlayerPickUpDrop : InputManager
         if (playerCameraTransform == null) return;
 
         // Handle object pickup and throw
-        HandleObjectPickupAndThrow();
         ShowItemUI();
-        
+
         if (objectGrabbable != null)
         {
             _projection.SetSimulation(objectGrabbable, objectGrabPointTransform.position,
@@ -46,7 +81,7 @@ public class PlayerPickUpDrop : InputManager
             transform.GetComponent<LineRenderer>().positionCount = 0;
         }
     }
-    public override void GetItem()
+    public void GetItem()
     {
         if (objectGrabbable?.GetComponent<PickUpController>() == null) return;
         objectGrabbable?.GetComponent<PickUpController>()?.CanPickUp();
@@ -76,7 +111,7 @@ public class PlayerPickUpDrop : InputManager
             showObject?.SetItemInfoAppear(false);
         }
     }
-    public override void InteractObj()
+    public void InteractObj()
     {
         if (objectGrabbable == null)
         {
@@ -84,15 +119,15 @@ public class PlayerPickUpDrop : InputManager
             if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
             out RaycastHit hit, pickUpDistance, pickUpLayerMask | obstructionMask))
             {
-                if((obstructionMask & 1 << hit.transform.gameObject.layer) != 0) return;
-                
+                if ((obstructionMask & 1 << hit.transform.gameObject.layer) != 0) return;
+
                 if (hit.transform.TryGetComponent(out objectGrabbable))
                 {
                     objectGrabbable.Grab(objectGrabPointTransform);
                     objectGrabbable.SetItemInfoAppear(false);
                     Debug.Log(objectGrabbable);
                 }
-                else if(hit.transform.TryGetComponent(out Interactable))
+                else if (hit.transform.TryGetComponent(out Interactable))
                 {
                     Interactable.Interact();
                 }
@@ -105,7 +140,7 @@ public class PlayerPickUpDrop : InputManager
             objectGrabbable = null;
         }
     }
-    public override void ThrowObject()
+    public void ThrowObject()
     {
         if (objectGrabbable != null)
         {

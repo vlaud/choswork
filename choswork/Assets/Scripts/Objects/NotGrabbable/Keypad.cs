@@ -11,7 +11,7 @@ public struct KeypadStat
     public GameObject keyItem;
     public Transform keyItemPos;
 }
-public class Keypad : ObjectNotGrabbable
+public class Keypad : ObjectNotGrabbable, EventListener<UIStatesEvent>, iSubscription
 {
     [SerializeField] protected TMPro.TMP_Text hintText;
     [SerializeField] protected TMPro.TMP_Text passwordInput;
@@ -38,11 +38,12 @@ public class Keypad : ObjectNotGrabbable
             case State.Default:
                 break;
             case State.Correct:
-                DisableUI();
+                SetUI(false);
                 Cursor.lockState = CursorLockMode.Locked;
                 break;
         }
     }
+
     private void Awake()
     {
         SetActionText();
@@ -60,16 +61,23 @@ public class Keypad : ObjectNotGrabbable
         myButtons = myKeypadUI.GetComponentsInChildren<Button>();
         ButtonClick();
         hintText.text = Password;
-        DisableUI();
+        SetUI(false);
         ChangeState(State.Default);
+        Subscribe();
     }
+
+    private void OnDestroy()
+    {
+        Unsubscribe();
+    }
+
     public override void Interact()
     {
         switch (myState)
         {
             case State.Default:
                 Debug.Log(hintText.text);
-                myKeypadUI?.gameObject.SetActive(true);
+                SetUI(true);
                 Cursor.lockState = CursorLockMode.None;
                 break;
             case State.Correct:
@@ -79,10 +87,13 @@ public class Keypad : ObjectNotGrabbable
                 break;
         }
     }
-    public override void DisableUI()
+
+    public void SetUI(bool v)
     {
-        myKeypadUI?.gameObject.SetActive(false);
+        myKeypadUI?.gameObject.SetActive(v);
+        CursorManager.Instance.SetPopupOpen(v);
     }
+
     public void CodeFunction(string Number)
     {
         if (NrIndex > 3) DeleteNumber();
@@ -92,7 +103,7 @@ public class Keypad : ObjectNotGrabbable
     }
     void ButtonClick()
     {
-        for(int i = 0; i < 10; ++i)
+        for (int i = 0; i < 10; ++i)
         {
             int x = i; //원인 불명으로 i를 바로 쓰면 죄다 10으로 변함
             myButtons[x].onClick.AddListener(delegate { CodeFunction(x.ToString()); });
@@ -128,6 +139,26 @@ public class Keypad : ObjectNotGrabbable
             myKeypadUI = null;
             Destroy(myHintNote.gameObject);
             myHintNote = null;
+        }
+    }
+
+    public void Subscribe()
+    {
+        this.EventStartingListening<UIStatesEvent>();
+    }
+
+    public void Unsubscribe()
+    {
+        this.EventStopListening<UIStatesEvent>();
+    }
+
+    public void OnEvent(UIStatesEvent eventType)
+    {
+        switch (eventType.uIEventType)
+        {
+            case UIEventType.Disable:
+                SetUI(false);
+                break;
         }
     }
 }

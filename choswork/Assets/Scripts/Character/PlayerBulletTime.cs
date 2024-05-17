@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public class PlayerBulletTime : InputManager
+
+public class PlayerBulletTime : MonoBehaviour, iSubscription, EventListener<GameStatesEvent>
 {
     public enum State
     {
@@ -14,6 +15,7 @@ public class PlayerBulletTime : InputManager
     private PhysicsScene _physicsScene;
     [SerializeField] private Transform _map;
     [SerializeField] private Player _player;
+    private Dictionary<AIPerception, AIPerception> _spawnedMonsters = new Dictionary<AIPerception, AIPerception>();
     private Dictionary<Transform, Transform> _spawnedObjects = new Dictionary<Transform, Transform>();
     private Dictionary<ObjectNotGrabbable, ObjectNotGrabbable> _ghostInterables = new Dictionary<ObjectNotGrabbable, ObjectNotGrabbable>();
     [SerializeField] private Transform ghostPlayer;
@@ -49,19 +51,19 @@ public class PlayerBulletTime : InputManager
                 if (time_current > time_Max) ChangeState(State.Play);
                 break;
             case State.Play:
-                HandleOtherInput();
                 break;
             case State.Pause:
-                HandleOtherInput();
                 break;
         }
     }
+
     // Start is called before the first frame update
     void Start()
     {
         CreatePhysicsScene();
         SimulateMovement();
         time_start = Time.time;
+        Subscribe();
         ChangeState(State.Start);
     }
 
@@ -71,13 +73,18 @@ public class PlayerBulletTime : InputManager
         StateProcess();
         SetBulletTime();
 
-        transform.position = ghostPlayer.position;
-        transform.rotation = ghostPlayer.rotation;
+        //transform.position = ghostPlayer.position;
+        //transform.rotation = ghostPlayer.rotation;
 
         _player.myCameras.myFPSCam.curRot = ghostCamera.myFPSCam.curRot;
         _player.myCameras.myTPSCam.curRot = ghostCamera.myTPSCam.curRot;
         _player.myCameras.myUICam.curRot = ghostCamera.myUICam.curRot;
 
+        foreach (var mob in _spawnedMonsters)
+        {
+            mob.Value.transform.position = mob.Key.transform.position;
+            mob.Value.transform.rotation = mob.Key.transform.rotation;
+        }
         foreach (var item in _spawnedObjects)
         {
             //Debug.Log(_simulationScene + ", " + item.Value);
@@ -89,13 +96,12 @@ public class PlayerBulletTime : InputManager
             item.Value.GhostBehaviour(item.Key);
         }
     }
-    public override void ToggleEscapeEvent()
+
+    private void OnDestroy()
     {
-        if(myState != State.Pause)
-            ChangeState(State.Pause);
-        else
-            ChangeState(State.Play);
+        Unsubscribe();
     }
+
     #region BulletTime
     void ChangeAnimUpdateMode(AnimatorUpdateMode mode)
     {
@@ -104,14 +110,14 @@ public class PlayerBulletTime : InputManager
     }
     void SetBulletTime()
     {
-        if (myState != State.Start)_physicsScene.Simulate(Time.fixedUnscaledDeltaTime);
+        if (myState != State.Start) _physicsScene.Simulate(Time.fixedUnscaledDeltaTime);
         else _physicsScene.Simulate(Time.fixedDeltaTime);
     }
     void CreatePhysicsScene()
     {
         _simulationScene = SceneManager.CreateScene("Physics", new CreateSceneParameters(LocalPhysicsMode.Physics3D));
         _physicsScene = _simulationScene.GetPhysicsScene();
-       
+
         foreach (Transform obj in _map)
         {
             var ghostObj = Instantiate(obj.gameObject, obj.position, obj.rotation);
@@ -133,31 +139,77 @@ public class PlayerBulletTime : InputManager
     }
     public void SimulateMovement()
     {
+        _player.myCameras.transform.SetParent(_player.transform);
+        // GhostPlayer Setting
         var ghostPlayer = Instantiate(_player);
+        _player.myCameras.transform.SetParent(null);
+
         var Renders = ghostPlayer.GetComponentsInChildren<Renderer>();
         var Camera = ghostPlayer.GetComponentsInChildren<Camera>();
         var AudioListner = ghostPlayer.GetComponentsInChildren<AudioListener>();
+        ghostPlayer.SetGhost(true);
         ghostPlayer.GetComponent<PlayerBulletTime>().enabled = false;
         ghostPlayer.GetComponent<Projection>().enabled = false;
         ghostPlayer.GetComponent<PlayerPickUpDrop>().enabled = false;
         ghostPlayer.myHPBar = null;
         ghostPlayer.myCameras.GhostSet(true);
+        ghostPlayer.myCameras.SetPlayer(ghostPlayer);
         var AnimEvent = ghostPlayer.GetComponentsInChildren<AnimEvent>();
 
         foreach (var r in Renders) r.enabled = false;
         foreach (var c in Camera) c.enabled = false;
         foreach (var c in AudioListner) c.enabled = false;
         foreach (var c in AnimEvent) c.noSoundandEffect = true;
+
+        // GhostMonsters Setting
+        foreach (var mob in GameManagement.Inst.myMonsters)
+        {
+            var ghostMob = Instantiate(mob);
+            Renders = ghostMob.GetComponentsInChildren<Renderer>();
+            var scripts = ghostMob.GetComponents<MonoBehaviour>();
+
+            foreach (var r in Renders) r.enabled = false;
+            foreach (var script in scripts) script.enabled = false;
+
+            SceneManager.MoveGameObjectToScene(ghostMob.gameObject, _simulationScene);
+            _spawnedMonsters.Add(mob, ghostMob);
+        }
+
         foreach (var item in _ghostInterables) item.Value.GhostBehaviour();
-        
+
         SceneManager.MoveGameObjectToScene(ghostPlayer.gameObject, _simulationScene);
         if (!ghostPlayer.gameObject.isStatic) _spawnedObjects.Add(_player.transform, ghostPlayer.transform);
         this.ghostPlayer = ghostPlayer.transform;
+
         ghostCamera = ghostPlayer.myCameras;
-        
+        ghostCamera.transform.SetParent(null);
+
         if (!ghostCamera.myRoot.gameObject.isStatic) _spawnedObjects.Add(_player.myCameras.myRoot, ghostCamera.myRoot);
         if (!ghostCamera.mySpring.gameObject.isStatic) _spawnedObjects.Add(_player.myCameras.mySpring, ghostCamera.mySpring);
         if (!ghostCamera.myUI_basePos.gameObject.isStatic) _spawnedObjects.Add(_player.myCameras.myUI_basePos, ghostCamera.myUI_basePos);
+    }
+
+    public void OnEvent(GameStatesEvent eventType)
+    {
+        switch (eventType.gameEventType)
+        {
+            case GameEventType.Pause:
+                ChangeState(State.Pause);
+                break;
+            case GameEventType.UnPause:
+                ChangeState(State.Play);
+                break;
+        }
+    }
+
+    public void Subscribe()
+    {
+        this.EventStartingListening<GameStatesEvent>();
+    }
+
+    public void Unsubscribe()
+    {
+        this.EventStopListening<GameStatesEvent>();
     }
     #endregion
 }

@@ -30,7 +30,7 @@ public class TileBehaviour : MonoBehaviour
     }
     public void StairPlusOffset()
     {
-        Vector3 offset = new Vector3(0, -0.17f, 0);
+        Vector3 offset = new Vector3(0, 0, 0);
         stairsAndDoors[(int)StairsAndDoor.Stairs].transform.position += offset;
     }
 }

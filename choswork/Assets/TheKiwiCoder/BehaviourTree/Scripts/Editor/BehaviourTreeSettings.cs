@@ -12,6 +12,7 @@ class BehaviourTreeSettings : ScriptableObject {
     public StyleSheet behaviourTreeStyle;
     public VisualTreeAsset nodeXml;
     public TextAsset scriptTemplateActionNode;
+    public TextAsset scriptTemplateGenericActionNode;
     public TextAsset scriptTemplateCompositeNode;
     public TextAsset scriptTemplateDecoratorNode;
     public string newNodeBasePath = "Assets/";

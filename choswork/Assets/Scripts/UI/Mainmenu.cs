@@ -1,12 +1,20 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Commands.Menu;
+
+public enum MenuState
+{
+    Create, None, Menu, Options, SubOptions
+}
 
 public class Mainmenu : Singleton<Mainmenu>
 {
     Animator anim;
     Animator faderAnim;
 
+    private string currentSceneName;
+    public string CurrentSceneName => currentSceneName;
     public string newGameSceneName;
     public int quickSaveSlotID;
 
@@ -27,24 +35,27 @@ public class Mainmenu : Singleton<Mainmenu>
     [Header("슬라이더 목록")]
     public Slider[] GamePanel_Sliders;
 
-    public enum State
-    {
-        Create, Menu, Options, SubOptions
-    }
-    public State myState = State.Create;
 
-    public void ChangeState(State s)
+    public MenuState myState = MenuState.Create;
+
+    public void ChangeState(MenuState s)
     {
         if (myState == s) return;
         myState = s;
 
         switch (myState)
         {
-            case State.Menu:
+            case MenuState.None:
+                MenuActions.ChangeKey(MainMenuKeyType.PauseAction);
                 break;
-            case State.Options:
+            case MenuState.Menu:
+                MenuActions.ChangeKey(MainMenuKeyType.UnPauseAction);
                 break;
-            case State.SubOptions:
+            case MenuState.Options:
+                MenuActions.ChangeKey(MainMenuKeyType.BackToMenu);
+                break;
+            case MenuState.SubOptions:
+                MenuActions.ChangeKey(MainMenuKeyType.BackToOptions);
                 break;
         }
     }
@@ -64,13 +75,13 @@ public class Mainmenu : Singleton<Mainmenu>
         GamePanel_Sliders[1].value = GraphicManager.Inst.fconstrast;
         GamePanel_Sliders[2].value = SoundManager.Inst.bgmVolume;
         GamePanel_Sliders[3].value = SoundManager.Inst.effectVolume;
-        ChangeState(State.Menu);
     }
     #region Scene Change
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
         print("Scene has loaded");
+        currentSceneName = SceneManager.GetActiveScene().name;
     }
     private void OnDestroy()
     {
@@ -88,12 +99,14 @@ public class Mainmenu : Singleton<Mainmenu>
     public void FadeToLevel()
     {
         faderAnim.SetTrigger("FadeOut");
+        MenuActions.ChangeKey(MainMenuKeyType.None);
     }
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        print("Scene on scene");
-
-        switch(scene.name)
+        currentSceneName = SceneManager.GetActiveScene().name;
+        Debug.Log(currentSceneName);
+        CommandManager.ClearCommands();
+        switch (scene.name)
         {
             case "Title":
                 newGameSceneName = "CutScene";
@@ -113,8 +126,7 @@ public class Mainmenu : Singleton<Mainmenu>
                 DisableUI();
                 break;
             case "GameStage":
-                ChangeState(State.Menu);
-                SoundManager.Inst.PlayBGM(InGameBGM);
+                //SoundManager.Inst.PlayBGM(InGameBGM);
                 GamePanel_Sliders[0].onValueChanged.AddListener((float v) => GraphicManager.Inst.fbrightness = v);
                 GamePanel_Sliders[1].onValueChanged.AddListener((float v) => GraphicManager.Inst.fconstrast = v);
                 GamePanel_Sliders[2].onValueChanged.AddListener((float v) => SoundManager.Inst.bgmVolume = v);
@@ -135,8 +147,10 @@ public class Mainmenu : Singleton<Mainmenu>
     }
     public void ShowMenuAnim(bool v)
     {
-        if(v) anim?.Play("buttonTweenAnims_off");
+        if (v) anim?.Play("buttonTweenAnims_off");
         else anim?.Play("buttonTweenAnims_on");
+
+        ChangeState(v ? MenuState.Menu : MenuState.None);
     }
     public void DisableUI()
     {
@@ -147,6 +161,7 @@ public class Mainmenu : Singleton<Mainmenu>
         ControlsPanel.SetActive(false);
         GfxPanel.SetActive(false); ;
         LoadGamePanel.SetActive(false);
+        ChangeState(MenuState.None);
     }
     #endregion
 
@@ -166,7 +181,7 @@ public class Mainmenu : Singleton<Mainmenu>
 
         //enable BLUR
         //Camera.main.GetComponent<Animator>().Play("BlurOn");
-        ChangeState(State.Options);
+        ChangeState(MenuState.Options);
     }
 
     public void openStartGameOptions()
@@ -183,7 +198,7 @@ public class Mainmenu : Singleton<Mainmenu>
 
         //enable BLUR
         //Camera.main.GetComponent<Animator>().Play("BlurOn");
-        ChangeState(State.Options);
+        ChangeState(MenuState.Options);
     }
 
     public void openOptions_Game()
@@ -199,7 +214,7 @@ public class Mainmenu : Singleton<Mainmenu>
 
         //play click sfx
         playClickSound();
-        ChangeState(State.SubOptions);
+        ChangeState(MenuState.SubOptions);
     }
     public void openOptions_Controls()
     {
@@ -214,7 +229,7 @@ public class Mainmenu : Singleton<Mainmenu>
 
         //play click sfx
         playClickSound();
-        ChangeState(State.SubOptions);
+        ChangeState(MenuState.SubOptions);
     }
     public void openOptions_Gfx()
     {
@@ -229,7 +244,7 @@ public class Mainmenu : Singleton<Mainmenu>
 
         //play click sfx
         playClickSound();
-        ChangeState(State.SubOptions);
+        ChangeState(MenuState.SubOptions);
     }
 
     public void openContinue_Load()
@@ -245,7 +260,7 @@ public class Mainmenu : Singleton<Mainmenu>
 
         //play click sfx
         playClickSound();
-        ChangeState(State.SubOptions);
+        ChangeState(MenuState.SubOptions);
     }
 
     public void newGame()
@@ -274,7 +289,7 @@ public class Mainmenu : Singleton<Mainmenu>
 
         //play click sfx
         playClickSound();
-        ChangeState(State.Menu);
+        ChangeState(MenuState.Menu);
     }
 
     public void back_options_panels()
@@ -284,7 +299,7 @@ public class Mainmenu : Singleton<Mainmenu>
 
         //play click sfx
         playClickSound();
-        ChangeState(State.Options);
+        ChangeState(MenuState.Options);
     }
 
     public void Quit()

@@ -21,10 +21,14 @@ public class RagDollAction : AIDetectionMovement
     protected float _elapsedResetBonesTime;
     public Transform myHips;
     protected Transform[] _bones;
-    public string _standupName;
-    public string _standupClipName;
-    protected BoneTransform[] _standupTransforms;
+    public string _faceUpStandUpStateName;
+    public string _faceDownStandUpStateName;
+    public string _faceUpStandUpClipName;
+    public string _faceDownStandUpClipName;
+    protected BoneTransform[] _faceUpStandUpBoneTransforms;
+    protected BoneTransform[] _faceDownStandUpBoneTransforms;
     protected BoneTransform[] _ragdollTransforms;
+    private bool _isFacingUp;
     public virtual void GetKick(Vector3 dir, float strength) {}
 
     public void RagDollSet(bool v)
@@ -39,7 +43,13 @@ public class RagDollAction : AIDetectionMovement
         Vector3 originHipPos = myHips.position;
         Quaternion originHipRot = myHips.rotation;
 
-        Vector3 desireDir = myHips.up * -1.0f;
+        Vector3 desireDir = myHips.up;
+
+        if(_isFacingUp)
+        {
+            desireDir *= -1;
+        }
+
         desireDir.y = 0.0f;
         desireDir.Normalize();
 
@@ -53,7 +63,7 @@ public class RagDollAction : AIDetectionMovement
     {
         Vector3 originHipPos = myHips.position;
         transform.position = myHips.position;
-        Vector3 positionOffset = _standupTransforms[0].Position;
+        Vector3 positionOffset = GetStandUpBoneTransforms()[0].Position;
         positionOffset.y = 0.0f;
         positionOffset = transform.rotation * positionOffset;
         transform.position -= positionOffset;
@@ -64,12 +74,14 @@ public class RagDollAction : AIDetectionMovement
         }
         myHips.position = originHipPos;
     }
-    protected void RagdollBehaviour()
+    public void RagdollBehaviour()
     {
         _timetoWakeup -= Time.deltaTime;
 
         if (_timetoWakeup <= 0.0f)
         {
+            _isFacingUp = myHips.forward.y > 0;
+
             AlignRotationToHips();
             AlignPositonToHips();
 
@@ -80,26 +92,28 @@ public class RagDollAction : AIDetectionMovement
     }
     protected void StandingUpBehaviour()
     {
-        if (!myAnim.GetCurrentAnimatorStateInfo(0).IsName(_standupName))
+        if (!myAnim.GetCurrentAnimatorStateInfo(0).IsName(GetStandUpStateName()))
         {
             ChangeRagDollState(RagDollState.NoRagdoll);
         }
     }
-    protected void ResetBonesBehaviour()
+    public void ResetBonesBehaviour()
     {
         _elapsedResetBonesTime += Time.deltaTime;
         float elapsedPercentage = _elapsedResetBonesTime / _timeToResetBones;
+
+        BoneTransform[] standUpBoneTransform = GetStandUpBoneTransforms();
 
         for (int i = 0; i < _bones.Length; ++i)
         {
             _bones[i].localPosition = Vector3.Lerp(
                 _ragdollTransforms[i].Position,
-                _standupTransforms[i].Position,
+                standUpBoneTransform[i].Position,
                 elapsedPercentage);
 
             _bones[i].localRotation = Quaternion.Lerp(
                   _ragdollTransforms[i].Rotation,
-                    _standupTransforms[i].Rotation,
+                    standUpBoneTransform[i].Rotation,
                     elapsedPercentage);
         }
         if (elapsedPercentage >= 1.0f)
@@ -133,5 +147,16 @@ public class RagDollAction : AIDetectionMovement
         transform.position = positionBeforeSampling;
         transform.rotation = rotationBeforeSampling;
     }
+
+    protected string GetStandUpStateName()
+    {
+        return _isFacingUp ? _faceUpStandUpStateName : _faceDownStandUpStateName;
+    }
+
+    private BoneTransform[] GetStandUpBoneTransforms()
+    {
+        return _isFacingUp ? _faceUpStandUpBoneTransforms : _faceDownStandUpBoneTransforms;
+    }
+
     public virtual void ChangeRagDollState(RagDollState ragdoll) {}
 }

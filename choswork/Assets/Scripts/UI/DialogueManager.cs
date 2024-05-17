@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DialogueManager : ObjectNotGrabbable
+public class DialogueManager : ObjectNotGrabbable, EventListener<UIStatesEvent>, iSubscription
 {
     public Dialogue _dialogue;
     [SerializeField] private bool isTalking = false;
@@ -14,29 +14,40 @@ public class DialogueManager : ObjectNotGrabbable
     // Start is called before the first frame update
     void Start()
     {
+        Subscribe();
         SetActionText();
         DisableUI();
     }
+
+    private void OnDestroy()
+    {
+        Unsubscribe();
+    }
+
     public override void Interact()
     {
         Cursor.lockState = CursorLockMode.None;
         if (!isTalking) StartJournal();
         else DisableUI();
     }
-    public override void DisableUI()
+
+    public void DisableUI()
     {
+        CursorManager.Instance.SetPopupOpen(false);
         diaglogueUI.SetActive(false);
         isTalking = false;
-        DesireCursorState(GameManagement.GameState.Play, CursorLockMode.Locked);
     }
+
     void StartJournal()
     {
+        CursorManager.Instance.SetPopupOpen(true);
         isTalking = true;
         curDialogueTracker = 0;
         diaglogueUI.SetActive(true);
         journalText.text = "<color=#000000>" + _dialogue.dialogue[0] + "</color>";
     }
-    public override void LeftMouseClickEvent()
+
+    public void LeftMouseClickEvent()
     {
         curDialogueTracker--;
         if (curDialogueTracker < 0)
@@ -45,7 +56,8 @@ public class DialogueManager : ObjectNotGrabbable
         }
         journalText.text = "<color=#000000>" + _dialogue.dialogue[curDialogueTracker] + "</color>";
     }
-    public override void RightMouseClickEvent()
+
+    public void RightMouseClickEvent()
     {
         curDialogueTracker++;
         if (curDialogueTracker > _dialogue.dialogue.Length - 1)
@@ -53,5 +65,31 @@ public class DialogueManager : ObjectNotGrabbable
             curDialogueTracker = _dialogue.dialogue.Length - 1;
         }
         journalText.text = "<color=#000000>" + _dialogue.dialogue[curDialogueTracker] + "</color>";
+    }
+
+    public void Subscribe()
+    {
+        this.EventStartingListening<UIStatesEvent>();
+    }
+
+    public void Unsubscribe()
+    {
+        this.EventStopListening<UIStatesEvent>();
+    }
+
+    public void OnEvent(UIStatesEvent eventType)
+    {
+        switch (eventType.uIEventType)
+        {
+            case UIEventType.Disable:
+                DisableUI();
+                break;
+            case UIEventType.LeftClick:
+                LeftMouseClickEvent();
+                break;
+            case UIEventType.RightClick:
+                RightMouseClickEvent();
+                break;
+        }
     }
 }

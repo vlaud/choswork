@@ -25,6 +25,7 @@ namespace TheKiwiCoder {
         public ScriptTemplate[] scriptFileAssets = {
             
             new ScriptTemplate{ templateFile=BehaviourTreeSettings.GetOrCreateSettings().scriptTemplateActionNode, defaultFileName="NewActionNode.cs", subFolder="Actions" },
+            new ScriptTemplate{ templateFile=BehaviourTreeSettings.GetOrCreateSettings().scriptTemplateGenericActionNode, defaultFileName="NewGenericActionNode.cs", subFolder="GenericActions" },
             new ScriptTemplate{ templateFile=BehaviourTreeSettings.GetOrCreateSettings().scriptTemplateCompositeNode, defaultFileName="NewCompositeNode.cs", subFolder="Composites" },
             new ScriptTemplate{ templateFile=BehaviourTreeSettings.GetOrCreateSettings().scriptTemplateDecoratorNode, defaultFileName="NewDecoratorNode.cs", subFolder="Decorators" },
         };
@@ -135,9 +136,10 @@ namespace TheKiwiCoder {
             //base.BuildContextualMenu(evt);
 
             // New script functions
-            evt.menu.AppendAction($"Create Script.../New Action Node", (a) => CreateNewScript(scriptFileAssets[0]));
-            evt.menu.AppendAction($"Create Script.../New Composite Node", (a) => CreateNewScript(scriptFileAssets[1]));
-            evt.menu.AppendAction($"Create Script.../New Decorator Node", (a) => CreateNewScript(scriptFileAssets[2]));
+            evt.menu.AppendAction($"Create Script.../Action Node/New Action Node", (a) => CreateNewScript(scriptFileAssets[0]));
+            evt.menu.AppendAction($"Create Script.../Action Node/New Generic Action Node", (a) => CreateNewScript(scriptFileAssets[1]));
+            evt.menu.AppendAction($"Create Script.../New Composite Node", (a) => CreateNewScript(scriptFileAssets[2]));
+            evt.menu.AppendAction($"Create Script.../New Decorator Node", (a) => CreateNewScript(scriptFileAssets[3]));
             evt.menu.AppendSeparator();
 
             Vector2 nodePosition = this.ChangeCoordinatesTo(contentViewContainer, evt.localMousePosition);

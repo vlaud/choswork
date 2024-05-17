@@ -11,5 +11,8 @@ namespace TheKiwiCoder {
     public class Blackboard {
 
         public Vector3 moveToPosition;
+        public Movement movement;
+        public Transform Target;
+        public MovementState State;
     }
 }
