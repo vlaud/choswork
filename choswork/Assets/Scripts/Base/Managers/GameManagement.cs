@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 
-public interface ItemEvent
+public interface ItemDesireEvent
 {
     void SetItemEvent();
 }
@@ -17,8 +17,10 @@ public enum GameState
 
 public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameStatesEvent>
 {
-    
+
     public GameState myGameState = GameState.Create;
+    [SerializeField] private GameState prevGameState = GameState.Create;
+
     private static GameManagement _inst = null;
     public static GameManagement Inst => _inst;
     public Player myPlayer;
@@ -46,9 +48,15 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
     void ChangeState(GameState s)
     {
         if (myGameState == s) return;
+
+        if (myGameState != GameState.Pause)
+        {
+            prevGameState = myGameState;
+        }
+
         myGameState = s;
 
-        switch(myGameState)
+        switch (myGameState)
         {
             case GameState.Play:
                 IsBulletTime = false;
@@ -64,7 +72,7 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
                 break;
             case GameState.GameOver:
                 StopAllCoroutines();
-                if(myMainmenu != null)
+                if (myMainmenu != null)
                 {
                     myMainmenu.transform.parent.SetParent(null);
                     myMainmenu.newGameSceneName = "Title";
@@ -109,8 +117,9 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
             myCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             myCanvas.worldCamera = myMainmenu.transform.parent.GetComponent<Camera>();
         }
-       
+
         ChangeState(GameState.Play);
+        prevGameState = GameState.Play;
     }
 
     private void Start()
@@ -120,7 +129,7 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
 
     private void Update()
     {
-        if(!IsCutscene)
+        if (!IsCutscene)
         {
             timer += Time.deltaTime;
             while (timer >= Time.fixedDeltaTime)
@@ -143,10 +152,12 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
         switch (eventType.gameEventType)
         {
             case GameEventType.Pause:
+                CursorManager.Instance.SetPaused(true);
                 ChangeState(GameState.Pause);
                 break;
             case GameEventType.UnPause:
-                ChangeState(GameState.Play);
+                CursorManager.Instance.SetPaused(false);
+                ChangeState(prevGameState);
                 break;
         }
     }
@@ -194,7 +205,7 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
         IsBulletTime = false;
         myPlayer.TimeStopCheck(false);
     }
-    
+
     public void GameOver()
     {
         ChangeState(GameState.GameOver);

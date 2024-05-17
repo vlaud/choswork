@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour, ItemTargeting
+public class Inventory : MonoBehaviour, ItemTargeting, EventListener<CameraStatesEvent>, iSubscription
 {
     [SerializeField] private GameObject InventoryBase;
     [SerializeField] private GameObject SlotParent;
@@ -11,9 +11,13 @@ public class Inventory : MonoBehaviour, ItemTargeting
     [SerializeField] private ItemSlot[] mySlots;
     [SerializeField] private Transform myTargetObj;
     private Dictionary<Item, List<ItemSlot>> itemTypeToSlotListMap = new Dictionary<Item, List<ItemSlot>>();
+
+    public event Action<bool> OnInventoryToggled;
+
     // Start is called before the first frame update
     void Start()
     {
+        Subscribe();
         foreach (var slot in mySlots)
         {
             Item item = slot.GetItemValue();
@@ -28,22 +32,39 @@ public class Inventory : MonoBehaviour, ItemTargeting
         InventoryBase.SetActive(false);
         mySlots = SlotParent?.GetComponentsInChildren<ItemSlot>();
     }
-    public void ToggleInventory()
+
+    private void OnDestroy()
     {
-        isInventory = !isInventory;
+        Unsubscribe();
+    }
+
+    public void ToggleInventory(bool showInventory)
+    {
+        isInventory = showInventory;
         InventoryBase.SetActive(isInventory);
 
-        if (InventoryBase.activeSelf == true) Cursor.lockState = CursorLockMode.None;
-        else Cursor.lockState = CursorLockMode.Locked;
+        OnInventoryToggled?.Invoke(isInventory);
+
+        CursorManager.Instance.SetUIOpen(isInventory);
+
+        if (InventoryBase.activeSelf == true)
+        {
+            //Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            //Cursor.lockState = CursorLockMode.Locked;
+        }
     }
+
     public void AcquireItem(Item _item, int _count = 1)
     {
         foreach (var slot in mySlots)
         {
             Item curitem = slot.GetItemValue();
-            if(curitem != null)
+            if (curitem != null)
             {
-                if(curitem.itemName == _item.itemName)
+                if (curitem.itemName == _item.itemName)
                 {
                     slot.SetSlotCount(_count);
                     return;
@@ -65,7 +86,7 @@ public class Inventory : MonoBehaviour, ItemTargeting
                 return;
             }
         }
-        
+
     }
     public ItemSlot FindSlot(bool IsFirst, bool IsItem)
     {
@@ -87,7 +108,7 @@ public class Inventory : MonoBehaviour, ItemTargeting
             if (itemSlot != null)
             {
                 itemSlot.SetSlotCount(-1);
-                if (_item.itemType == Item.ItemType.ETC) myTargetObj?.GetComponent<ItemEvent>()?.SetItemEvent();
+                if (_item.itemType == Item.ItemType.ETC) myTargetObj?.GetComponent<ItemDesireEvent>()?.SetItemEvent();
                 if (itemSlot.itemCount < 1) itemTypeToSlotListMap[_item].Remove(itemSlot);
             }
         }
@@ -112,10 +133,12 @@ public class Inventory : MonoBehaviour, ItemTargeting
             }
         }
     }
+
     public void SetItemTargetObj(Transform target)
     {
         myTargetObj = target;
     }
+
     public bool IsItemExist(Item item)
     {
         if (itemTypeToSlotListMap.TryGetValue(item, out var itemSlotList))
@@ -125,8 +148,32 @@ public class Inventory : MonoBehaviour, ItemTargeting
         }
         return itemTypeToSlotListMap.ContainsKey(item);
     }
+
     public bool IsInventoryEnabled()
     {
         return isInventory;
+    }
+
+    public void Subscribe()
+    {
+        this.EventStartingListening<CameraStatesEvent>();
+    }
+
+    public void Unsubscribe()
+    {
+        this.EventStopListening<CameraStatesEvent>();
+    }
+
+    public void OnEvent(CameraStatesEvent eventType)
+    {
+        switch (eventType.cameraEventType)
+        {
+            case CameraEventType.UI:
+                ToggleInventory(true);
+                break;
+            case CameraEventType.NotUI:
+                ToggleInventory(false);
+                break;
+        }
     }
 }

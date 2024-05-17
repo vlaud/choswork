@@ -1,4 +1,6 @@
-public class StateMachine<T> where T : BaseGameEntity //class
+using UnityEngine;
+
+public class StateMachine<T> where T : MonoBehaviour
 {
     private T ownerEntity;  // StateMachine의 소유주
     private State<T> currentState;  // 현재 상태
@@ -56,21 +58,6 @@ public class StateMachine<T> where T : BaseGameEntity //class
     public void RevertToPreviousState()
     {
         ChangeState(previousState);
-    }
-
-    public bool HandleMessage(Telegram telegram)
-    {
-        if (globalState != null && globalState.OnMessage(ownerEntity, telegram))
-        {
-            return true;
-        }
-
-        if (currentState != null && currentState.OnMessage(ownerEntity, telegram))
-        {
-            return true;
-        }
-
-        return false;
     }
 }
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public enum PlayerStates { Play = 0, Pause, Death, Global }
 
-public class Player : BaseGameEntity, iSubscription, EventListener<PlayerStatesEvent>, EventListener<GameStatesEvent>
+public class Player : BattleSystem, iSubscription, EventListener<PlayerStatesEvent>, EventListener<GameStatesEvent>
 {
     Vector2 targetDir = Vector2.zero;
     [Header("플레이어 기본 설정")]
@@ -42,9 +42,6 @@ public class Player : BaseGameEntity, iSubscription, EventListener<PlayerStatesE
     public STATE myState = STATE.Create;
 
     private PlayerStates currentState;
-
-    private State<Player>[] states;
-    private StateMachine<Player> stateMachine;
 
     public PlayerStates CurrentState => currentState;
 
@@ -291,50 +288,5 @@ public class Player : BaseGameEntity, iSubscription, EventListener<PlayerStatesE
     public void SetGhost(bool v)
     {
         isGhost = v;
-    }
-
-    public override void Setup(string name)
-    {
-        // 기반 클래스의 Setup 메소드 호출 (ID, 이름, 색상 설정)
-        base.Setup(name);
-
-        states = new State<Player>[4];
-        states[(int)PlayerStates.Play] = new PlayerOwnedStates.Play();
-        states[(int)PlayerStates.Pause] = new PlayerOwnedStates.Pause();
-        states[(int)PlayerStates.Death] = new PlayerOwnedStates.Death();
-
-        stateMachine = new StateMachine<Player>();
-        stateMachine.Setup(this, states[(int)PlayerStates.Play]);
-        //stateMachine.SetGlobalState
-    }
-
-    public override void Updated()
-    {
-        stateMachine.Execute();
-    }
-
-    public void ChangeState(PlayerStates newState)
-    {
-        /*// 새로 바꾸려는 상태가 비어있으면 상태를 바꾸지 않는다
-		if ( states[(int)newState] == null ) return;
-
-		// 현재 재생중인 상태가 있으면 Exit() 메소드 호출
-		if ( currentState != null )
-		{
-			currentState.Exit(this);
-		}
-
-		// 새로운 상태로 변경하고, 새로 바뀐 상태의 Enter() 메소드 호출
-		currentState = states[(int)newState];
-		currentState.Enter(this);*/
-
-        currentState = newState;
-
-        stateMachine.ChangeState(states[(int)newState]);
-    }
-
-    public override bool HandleMessage(Telegram telegram)
-    {
-        return false;
     }
 }

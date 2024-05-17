@@ -16,11 +16,6 @@ namespace PlayerOwnedStates
         {
 
         }
-
-        public override bool OnMessage(Player entity, Telegram telegram)
-        {
-            return false;
-        }
     }
 
     public class Pause : State<Player>
@@ -39,11 +34,6 @@ namespace PlayerOwnedStates
         {
 
         }
-
-        public override bool OnMessage(Player entity, Telegram telegram)
-        {
-            return false;
-        }
     }
 
     public class Death : State<Player>
@@ -61,11 +51,6 @@ namespace PlayerOwnedStates
         public override void Exit(Player entity)
         {
 
-        }
-
-        public override bool OnMessage(Player entity, Telegram telegram)
-        {
-            return false;
         }
     }
 }

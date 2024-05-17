@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class BaseGameEntity : BattleSystem
+public abstract class BaseGameEntity : MonoBehaviour
 {
     // 정적 변수이기 때문에 1개만 존재
     private static int m_iNextValidID = 0;

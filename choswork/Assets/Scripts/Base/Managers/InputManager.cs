@@ -5,25 +5,6 @@ using Commands.Camera;
 
 public class InputManager : MonoBehaviour
 {
-    public virtual void ToggleCam(CamState cam) { }
-    public virtual void DebugCamera() { }
-    public virtual bool GetIsUI() { return false; }
-    //UIHandler
-    public virtual void ToggleInventory() { }
-    public virtual void DisableUI() { }
-    public virtual void LeftMouseClickEvent() { }
-    public virtual void RightMouseClickEvent() { }
-
-    Inventory _inventory = null;
-    protected Inventory myInventory
-    {
-        get => _inventory;
-        set
-        {
-            _inventory = value;
-        }
-    }
-
     private void Awake()
     {
         SetMenuCommands();
@@ -97,7 +78,7 @@ public class InputManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 수정 필요
+    /// 카메라
     /// </summary>
     private void HandleCameraSwitching()
     {
@@ -111,7 +92,6 @@ public class InputManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             CameraActions.ExecuteIKey();
-            myInventory?.ToggleInventory();
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
@@ -127,24 +107,21 @@ public class InputManager : MonoBehaviour
         // UI handling
         if (StudyCommandPattern.IsMoveKeyPressed())
         {
-            DesireCursorState(GameState.Play, CursorLockMode.Locked);
-            DisableUI();
+            UIStatesEvent.Trigger(UIEventType.Disable);
         }
-        if (Input.GetKeyDown(KeyCode.I))
+
+        if (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.Escape))
         {
-            DisableUI();
+            UIStatesEvent.Trigger(UIEventType.Disable);
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            DisableUI();
-        }
+
         if (Input.GetMouseButtonDown(1))
         {
-            RightMouseClickEvent();
+            UIStatesEvent.Trigger(UIEventType.RightClick);
         }
         if (Input.GetMouseButtonDown(0))
         {
-            LeftMouseClickEvent();
+            UIStatesEvent.Trigger(UIEventType.LeftClick);
         }
     }
 
@@ -155,44 +132,5 @@ public class InputManager : MonoBehaviour
         {
             MenuActions.Execute();
         }
-    }
-
-    void EscapeAction2()
-    {
-        // Any other input handling previous
-        var mainMenu = GameManagement.Inst.myMainmenu;
-        if (mainMenu != null)
-        {
-            if (mainMenu.myState == MenuState.Menu) ToggleEscapeEvent();
-            else return;
-        }
-        else if (mainMenu == null) ToggleEscapeEvent();
-        else return;
-
-        if (GameManagement.Inst.myGameState == GameState.Pause)
-        {
-            Cursor.lockState = CursorLockMode.None;
-            mainMenu?.ShowMenuAnim(true);
-        }
-        else
-        {
-            if (GameManagement.Inst.myInventory.IsInventoryEnabled())
-                Cursor.lockState = CursorLockMode.None;
-            else
-                Cursor.lockState = CursorLockMode.Locked;
-            mainMenu?.ShowMenuAnim(false);
-            mainMenu?.DisableUI();
-        }
-    }
-
-    public void ToggleEscapeEvent()
-    {
-
-    }
-
-    public void DesireCursorState(GameState state, CursorLockMode cursorState)
-    {
-        if (GameManagement.Inst.myGameState == state)
-            Cursor.lockState = cursorState;
     }
 }

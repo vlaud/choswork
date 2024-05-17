@@ -4825,7 +4825,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   titleCam:
     myRig: {fileID: 1417931565}
-    myCam: {fileID: 1475701897}
+    DesirePos: {fileID: 0}
+    realCam: {fileID: 1475701897}
     curRot: {x: 0, y: 0, z: 0}
   LookSpeed: 0.5
   _limit: 0.5
@@ -5786,7 +5787,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a3df81b884fc5149a06969bb655db6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Count: 0
 --- !u!1001 &1711038718
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7174,7 +7174,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893f96c0e2510db468352290250b83e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Count: 0
   bgmPlayer: {fileID: 2126859061}
 --- !u!114 &2126859064
 MonoBehaviour:
@@ -7254,7 +7253,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80fc0caf80ae8dc42b9b635aaf19b6bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Count: 0
   brightness: {fileID: 11400000, guid: 97e8537b532b56945ba96e19624acfa2, type: 2}
   constrast: {fileID: 11400000, guid: 97e8537b532b56945ba96e19624acfa2, type: 2}
   layer: {fileID: 314254261}
@@ -17387,7 +17385,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a9049418bb5eb40905f34352f66ef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Count: 0
   newGameSceneName: GameStage
   quickSaveSlotID: 6
   MainScreenPanel: {fileID: 4478286826061960671}

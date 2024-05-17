@@ -15609,6 +15609,7 @@ GameObject:
   - component: {fileID: 722393799}
   - component: {fileID: 722393795}
   - component: {fileID: 722393801}
+  - component: {fileID: 722393802}
   - component: {fileID: 722393796}
   - component: {fileID: 722393794}
   m_Layer: 3
@@ -15830,6 +15831,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a0dc5b856e3a12d4bbdde28b8c880331, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &722393802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722393791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42bafee4e8fc7ad4dbf0ad61d7457d74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &726129359
@@ -28788,6 +28801,7 @@ MonoBehaviour:
   myPlayer: {fileID: 0}
   UIkeyAvailable: 1
   isFPSCamRotinTPS: 0
+  _inventory: {fileID: 0}
 --- !u!1 &1198358864
 GameObject:
   m_ObjectHideFlags: 0

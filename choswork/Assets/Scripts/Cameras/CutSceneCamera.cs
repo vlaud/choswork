@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class CutSceneCamera : MonoBehaviour
 {
     public CameraSet CutsceneCam;
-    public Transform myEyes; //fpsÄ«¸Ş¶ó ´«¿¡ °íÁ¤
+    public Transform myEyes; //fpsì¹´ë©”ë¼ ëˆˆì— ê³ ì •
 
     public enum State
     {
@@ -16,16 +16,21 @@ public class CutSceneCamera : MonoBehaviour
         if (myState == s) return;
         myState = s;
 
-        switch(myState)
+        switch (myState)
         {
             case State.Car:
+                CutsceneCam.DesirePos.SetParent(myEyes);
+                CutsceneCam.DesirePos.localPosition = Vector3.zero;
                 break;
             case State.Outting:
+                CutsceneCam.DesirePos.SetParent(CutsceneCam.myRig);
+                CutsceneCam.DesirePos.localPosition = Vector3.zero;
                 break;
             case State.Out:
                 break;
         }
     }
+
     void StateProcess()
     {
         switch (myState)
@@ -33,12 +38,13 @@ public class CutSceneCamera : MonoBehaviour
             case State.Car:
                 break;
             case State.Outting:
-                CamMovement();
+                CarOutMovement();
                 break;
             case State.Out:
                 break;
         }
     }
+
     void Start()
     {
         ChangeState(State.Car);
@@ -48,13 +54,16 @@ public class CutSceneCamera : MonoBehaviour
     void Update()
     {
         StateProcess();
+        CutsceneCam.SetCamPos();
     }
-    void CamMovement()
+
+    void CarOutMovement()
     {
-        CutsceneCam.realCam.transform.position = myEyes.position; // 1ÀÎÄª Ä«¸Ş¶ó À§Ä¡¸¦ Ä³¸¯ÅÍ ´«¿¡ °íÁ¤
+        CutsceneCam.DesirePos.position = myEyes.position;
         CutsceneCam.curRot.y = myEyes.rotation.eulerAngles.y;
         CutsceneCam.myRig.rotation = Quaternion.Euler(CutsceneCam.curRot);
     }
+
     public void CarOut()
     {
         ChangeState(State.Outting);

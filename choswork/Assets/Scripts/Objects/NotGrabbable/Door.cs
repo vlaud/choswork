@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Door : ObjectNotGrabbable, ItemEvent
+public class Door : ObjectNotGrabbable, ItemDesireEvent
 {
     public Item requiredItem;
     public int requiredCount;
@@ -8,13 +8,11 @@ public class Door : ObjectNotGrabbable, ItemEvent
     void Start()
     {
         SetActionText();
-        //myInventory = GameManagement.Inst.myInventory;
     }
-    public override void Interact() 
+    public override void Interact()
     {
         Debug.Log("door key used");
-        Inventory inv = GameManagement.Inst.myInventory.GetComponent<Inventory>();
-        inv.DestroyItem(requiredItem);
+        GameManagement.Inst.myInventory.DestroyItem(requiredItem);
         GameManagement.Inst.GameClear();
     }
     public void SetItemEvent()

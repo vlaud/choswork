@@ -15,6 +15,9 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     public bool isFPSCamRotinTPS = false;
     private bool isGhost = false;
 
+    // 다른 클래스에서 Inventory 인스턴스에 접근
+    [SerializeField] Inventory _inventory;
+
     void ChangeState(ViewState s)
     {
         if (myCameraState == s) return;
@@ -25,7 +28,6 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
             case ViewState.Create:
                 break;
             case ViewState.FPS:
-                //if (isGhost) myInventory = null;
                 SelectCamera(myFPSCam);
                 myTPSCam = CopyPaste(myTPSCam, myFPSCam); // 3인칭에서 1인칭 전환시 3인칭 값을 1인칭 값으로
                 break;
@@ -57,13 +59,11 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
 
     void StateProcess()
     {
-        //HandleOtherInput();
         if (GameManagement.Inst.myGameState != GameState.Play) return;
 
         if (myCameraState != ViewState.UI)
             myTPSCam = SpringArmWork(myTPSCam); // 1인칭, 3인칭 카메라값을 같게 
 
-        //HandleCameraSwitching(); // 키설정
         MouseWheelMove(); // 3인칭 시야 거리
         switch (myCameraState)
         {
@@ -95,29 +95,6 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         }
     }
 
-    /*
-    void CameraCheck()
-    {
-        if (IsUI) // UI 카메라가 우선시, 켜지면 다른 카메라 비활성화
-            ChangeState(ViewState.UI);
-        else
-        {
-            if (myCameraState == ViewState.UI)
-                ChangeState(ViewState.Turn);
-            else
-            {
-                if (IsFps) // fps 활성화
-                {
-                    ChangeState(ViewState.FPS);
-                }
-                else // tps 활성화
-                {
-                    ChangeState(ViewState.TPS);
-                }
-            }
-        }
-    }*/
-
     float RotationSetTo_180(float angle)
     {
         // -180 ~ 180으로 고정
@@ -132,6 +109,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
 
         return angle;
     }
+
     IEnumerator RotatingDownUP()
     {
         //fps카메라 위아래 바꾸기
@@ -188,6 +166,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         }
         done?.Invoke();
     }
+
     IEnumerator UIRotating(Vector3 dir, bool IsUI, Space sp = Space.World)
     {
         UIkeyAvailable = false; // 잠깐 i키 안먹히게
@@ -261,6 +240,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
 
         return set;
     }
+
     public CameraSet CopyPaste(CameraSet origin, CameraSet copy) // 오일러를 쿼터니언으로 변환
     {
         CameraSet set = origin;
@@ -272,11 +252,25 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         return set;
     }
 
+    private void Awake()
+    {
+        if (!isGhost)
+            _inventory = FindObjectOfType<Inventory>();
+
+
+        if (_inventory != null)
+        {
+            // OnInventoryToggled 이벤트에 이벤트 핸들러 추가
+            _inventory.OnInventoryToggled += HandleInventoryToggled;
+
+            // OnInventoryToggled 이벤트에서 이벤트 핸들러 제거
+            // inventory.OnInventoryToggled -= HandleInventoryToggled;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        //Cursor.lockState = CursorLockMode.Locked;
-        //myInventory = GameManagement.Inst.myInventory;
         camPos = myTPSCam.DesirePos.localPosition;
         desireDistance = camPos.z;
 
@@ -292,6 +286,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         AllCameraOff();
         Subscribe();
         ChangeState(ViewState.FPS);
+        if (isGhost) _inventory = null;
     }
 
     // Update is called once per frame
@@ -331,11 +326,6 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         }
     }
 
-    public bool GetIsUI()
-    {
-        return UIkeyAvailable;
-    }
-
     void UICameraSetPos(CameraSet cam) // UI 카메라 위치 설정
     {
         myUICam.DesirePos.position = cam.DesirePos.position;
@@ -349,7 +339,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     public CameraSet SpringArmWork(CameraSet s) // 카메라 마우스
     {
         CameraSet set = s;
-        if (Cursor.lockState == CursorLockMode.Locked)
+        if (CursorManager.Instance.IsCurSorLocked())
         {
             set.curRot.x -= Input.GetAxisRaw("Mouse Y") * LookupSpeed;
             set.curRot.x = Mathf.Clamp(set.curRot.x, LookupRange.x, LookupRange.y);
@@ -425,6 +415,22 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         myPlayer = player;
     }
 
+    private void HandleInventoryToggled(bool isInventoryOpen)
+    {
+        if (!UIkeyAvailable) return;
+        // 인벤토리가 열려있는지 여부에 따라 처리
+        if (isInventoryOpen)
+        {
+            // 인벤토리가 열린 경우 처리할 내용
+            ChangeState(ViewState.UI);
+        }
+        else
+        {
+            // 인벤토리가 닫힌 경우 처리할 내용
+            ChangeState(ViewState.Turn);
+        }
+    }
+
     public void OnEvent(CameraStatesEvent eventType)
     {
         switch (eventType.cameraEventType)
@@ -434,12 +440,6 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
                 break;
             case CameraEventType.TPS:
                 ChangeState(ViewState.TPS);
-                break;
-            case CameraEventType.UI:
-                ChangeState(ViewState.UI);
-                break;
-            case CameraEventType.NotUI:
-                ChangeState(ViewState.Turn);
                 break;
             case CameraEventType.Debug:
                 DebugCamera();
