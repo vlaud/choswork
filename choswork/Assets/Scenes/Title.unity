@@ -7188,6 +7188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myGameState: 0
+  prevGameState: 0
   myPlayer: {fileID: 0}
   myMonsters: []
   mySpringArms: {fileID: 0}
@@ -19726,7 +19727,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '!! Import FPS script from Standard Assets'
+  m_Text: 
 --- !u!114 &4592017262988738301
 MonoBehaviour:
   m_ObjectHideFlags: 0

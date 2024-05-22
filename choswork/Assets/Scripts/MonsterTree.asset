@@ -50,14 +50,16 @@ MonoBehaviour:
   - rid: 4677955122180128768
   - rid: 4677955252971372544
   - rid: 4677955252971372545
+  - rid: 6976291836297478144
+  - rid: 6976291836297478145
   treeState: 0
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
     movement: {fileID: 0}
     Target: {fileID: 0}
     State: 0
-  viewPosition: {x: 399, y: -396, z: 0}
-  viewScale: {x: 0.65751624, y: 0.65751624, z: 1}
+  viewPosition: {x: 498, y: -127, z: 0}
+  viewScale: {x: 0.43232757, y: 0.43232757, z: 1}
   references:
     version: 2
     RefIds:
@@ -348,7 +350,7 @@ MonoBehaviour:
         state: 0
         started: 0
         guid: a934a92b4d41bd84e8437ef1192c406b
-        position: {x: -706.99994, y: 776.00006}
+        position: {x: -903.05524, y: 688}
         blackboard:
           moveToPosition: {x: 0, y: 0, z: 0}
           movement: {fileID: 0}
@@ -356,6 +358,9 @@ MonoBehaviour:
           State: 0
         description: 
         drawGizmos: 0
+        targetMask:
+          serializedVersion: 2
+          m_Bits: 8
     - rid: 4677955034588119045
       type: {class: PlayAnimation, ns: , asm: Assembly-CSharp}
       data:
@@ -581,6 +586,7 @@ MonoBehaviour:
         description: 
         drawGizmos: 0
         children:
+        - rid: 6976291836297478144
         - rid: 4677955092885012484
         - rid: 4677955034588119045
     - rid: 4677955092885012484
@@ -629,6 +635,7 @@ MonoBehaviour:
         description: 
         drawGizmos: 0
         children:
+        - rid: 6976291836297478145
         - rid: 4677955252971372545
         - rid: 4677955122180128768
     - rid: 4677955252971372545
@@ -645,3 +652,37 @@ MonoBehaviour:
           State: 0
         description: 
         drawGizmos: 0
+    - rid: 6976291836297478144
+      type: {class: CheckPlayerTarget, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: 290a6324c846faa4f8c8608dddaa585a
+        position: {x: -722.00006, y: 960.00006}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+          State: 0
+        description: 
+        drawGizmos: 0
+        targetMask:
+          serializedVersion: 2
+          m_Bits: 8
+    - rid: 6976291836297478145
+      type: {class: CheckPlayerTarget, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: bd94ce0c4cd717c469df9acf03cf8d95
+        position: {x: -827.99994, y: 1252}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+          movement: {fileID: 0}
+          Target: {fileID: 0}
+          State: 0
+        description: 
+        drawGizmos: 0
+        targetMask:
+          serializedVersion: 2
+          m_Bits: 8

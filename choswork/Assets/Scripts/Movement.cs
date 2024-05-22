@@ -11,9 +11,8 @@ public class Movement : RagDollAction, AIAction
 {
     public bool IsStart = false;
     public int mobIndex;
-    public Transform Player;
     public Transform target;
-   
+
     //ai path
     public NavMeshPath myPath;
     public NavMeshQueryFilter filter;
@@ -60,6 +59,8 @@ public class Movement : RagDollAction, AIAction
     {
         if (this.state == state) return;
         this.state = state;
+
+        Debug.Log(this.state);
     }
 
     public void FindPlayer(Transform target)
