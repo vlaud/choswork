@@ -374,12 +374,22 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         Debug.DrawRay(myTPSCam.DesirePos.position, -myTPSCam.myRig.forward * (Offset), Color.green);
         if (Physics.Raycast(myTPSCam.myRig.position, -myTPSCam.myRig.forward, out RaycastHit hit, -camPos.z + Offset, crashMask))
         {
-            camPos.z = -hit.distance + Offset;
+            if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            {
+                desireDistance = Mathf.Clamp(desireDistance, camPos.z, ZoomRange.y);
+                camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.unscaledDeltaTime * ZoomSpeed);
+            }
+            else
+            {
+                camPos.z = -hit.distance + Offset;
+            }
+
         }
         else if (Physics.Raycast(myTPSCam.DesirePos.position, -myTPSCam.myRig.forward, 0.01f + Offset, crashMask))
         {
             if (Input.GetAxis("Mouse ScrollWheel") > 0)
             {
+                desireDistance = Mathf.Clamp(desireDistance, camPos.z, ZoomRange.y);
                 camPos.z = Mathf.Lerp(camPos.z, desireDistance, Time.unscaledDeltaTime * ZoomSpeed);
             }
         }
