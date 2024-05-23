@@ -4,7 +4,7 @@ using UnityEngine;
 using TheKiwiCoder;
 
 [System.Serializable]
-public class CheckPlayerTarget : ActionNode
+public class IsPlayerTarget : DecoratorNode
 {
     public LayerMask targetMask;
     protected override void OnStart()
@@ -21,7 +21,7 @@ public class CheckPlayerTarget : ActionNode
 
         if ((targetMask & 1 << blackboard.movement.GetMyTarget()?.gameObject.layer) != 0)
         {
-            return State.Success;
+            return child.Update();
         }
         return State.Failure;
     }
