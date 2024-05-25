@@ -9,6 +9,8 @@ public class Projection : MonoBehaviour
     [SerializeField] private Transform _map;
     [SerializeField] private GameObject _ghostobj;
     private Dictionary<Transform, Transform> _spawnedObjects = new Dictionary<Transform, Transform>();
+    private Coroutine _simulate;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -52,10 +54,28 @@ public class Projection : MonoBehaviour
     [SerializeField] private float _timeOffset;
     public bool IsSimulation = false;
 
+    public void StopSimultationCoroutine()
+    {
+        if (_simulate != null)
+        {
+            StopCoroutine(_simulate);
+            _simulate = null;
+        }
+    }
+
+    public void StopSimultation()
+    {
+        StopSimultationCoroutine();
+        IsSimulation = false;
+    }
+
     public void SetSimulation(ObjectGrabbable objGrab, Vector3 pos, Vector3 dir, float strength)
     {
         if (IsSimulation) return;
-        StartCoroutine(SimulateTrajectory(objGrab, pos, dir, strength));
+
+        StopSimultationCoroutine();
+
+        _simulate = StartCoroutine(SimulateTrajectory(objGrab, pos, dir, strength));
     }
     IEnumerator SimulateTrajectory(ObjectGrabbable objGrab, Vector3 pos, Vector3 dir, float strength)
     {

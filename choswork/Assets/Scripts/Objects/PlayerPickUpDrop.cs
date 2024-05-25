@@ -77,7 +77,7 @@ public class PlayerPickUpDrop : MonoBehaviour, iSubscription, EventListener<Obje
         }
         else
         {
-            _projection.IsSimulation = false;
+            _projection.StopSimultation();
             transform.GetComponent<LineRenderer>().positionCount = 0;
         }
     }
