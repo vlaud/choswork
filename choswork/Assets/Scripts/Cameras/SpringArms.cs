@@ -15,6 +15,10 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     public bool isFPSCamRotinTPS = false;
     private bool isGhost = false;
 
+    private CoroutineRunner coroutineRunner;
+    private Coroutine currentUIRotatingCoroutine; // 현재 실행 중인 UI 회전 코루틴
+    private Coroutine currentUIMovingCoroutine; // 현재 실행 중인 UI 움직임 코루틴
+
     // 다른 클래스에서 Inventory 인스턴스에 접근
     [SerializeField] Inventory _inventory;
 
@@ -39,20 +43,43 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
                     UICameraSetPos(myFPSCam);
                 else
                     UICameraSetPos(myTPSCam);
-                StartCoroutine(UIMoving(myUI_basePos));
-                StartCoroutine(UIRotating(myModel_baseForward.forward, true)); // UI때 모델 회전
+
+                coroutineRunner.StartCurrentCoroutine(
+                    currentUIMovingCoroutine,
+                    out currentUIMovingCoroutine,
+                    UIMoving(myUI_basePos));
+
+                coroutineRunner.StartCurrentCoroutine(
+                    currentUIRotatingCoroutine, 
+                    out currentUIRotatingCoroutine, 
+                    UIRotating(myModel_baseForward.forward, true));
+
+                //StartCoroutine(UIMoving(myUI_basePos));
+                //StartCoroutine(UIRotating(myModel_baseForward.forward, true)); // UI때 모델 회전
                 SelectCamera(myUICam);
                 break;
             case ViewState.Turn:
                 if (IsFps) // fps 활성화
                 {
-                    StartCoroutine(UIMoving(myFPSCam.DesirePos, () => ChangeState(ViewState.FPS)));
+                    coroutineRunner.StartCurrentCoroutine(
+                    currentUIMovingCoroutine,
+                    out currentUIMovingCoroutine,
+                    UIMoving(myFPSCam.DesirePos, () => ChangeState(ViewState.FPS)));
+                    //StartCoroutine(UIMoving(myFPSCam.DesirePos, () => ChangeState(ViewState.FPS)));
                 }
                 else // tps 활성화
                 {
-                    StartCoroutine(UIMoving(myTPSCam.DesirePos, () => ChangeState(ViewState.TPS)));
+                    coroutineRunner.StartCurrentCoroutine(
+                    currentUIMovingCoroutine,
+                    out currentUIMovingCoroutine,
+                    UIMoving(myFPSCam.DesirePos, () => ChangeState(ViewState.TPS)));
+                    //StartCoroutine(UIMoving(myTPSCam.DesirePos, () => ChangeState(ViewState.TPS)));
                 }
-                StartCoroutine(UIRotating(myRoot.forward, false)); // 모델 회전값을 fps 회전값과 맞춘다
+                //StartCoroutine(UIRotating(myRoot.forward, false)); // 모델 회전값을 fps 회전값과 맞춘다
+                coroutineRunner.StartCurrentCoroutine(
+                   currentUIRotatingCoroutine,
+                   out currentUIRotatingCoroutine,
+                   UIRotating(myRoot.forward, false));
                 break;
         }
     }
@@ -169,7 +196,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
 
     IEnumerator UIRotating(Vector3 dir, bool IsUI, Space sp = Space.World)
     {
-        UIkeyAvailable = false; // 잠깐 i키 안먹히게
+        //UIkeyAvailable = false; // 잠깐 i키 안먹히게
 
         //UI카메라 캐릭터 모델 돌리기
         float Angle = Vector3.Angle(myModel.forward, dir);
@@ -196,7 +223,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
             myModel.Rotate(Vector3.up * delta * rotDir, sp);
             yield return null;
         }
-        UIkeyAvailable = true; // i키 다시 활성화
+        //UIkeyAvailable = true; // i키 다시 활성화
     }
     void RotatingRoot(Transform tr)
     {
@@ -266,6 +293,8 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
             // OnInventoryToggled 이벤트에서 이벤트 핸들러 제거
             // inventory.OnInventoryToggled -= HandleInventoryToggled;
         }
+
+        coroutineRunner = new CoroutineRunner(this);
     }
 
     // Start is called before the first frame update
