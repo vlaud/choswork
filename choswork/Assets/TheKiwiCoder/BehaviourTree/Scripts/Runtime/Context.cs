@@ -20,6 +20,7 @@ namespace TheKiwiCoder
         public CapsuleCollider capsuleCollider;
         public CharacterController characterController;
         public CharacterMovement characterMovement;
+        public Movement movement;
         // Add other game specific systems here
 
         public static Context CreateFromGameObject(GameObject gameObject) {
@@ -47,18 +48,11 @@ namespace TheKiwiCoder
             {
                 context.myRagDolls = gameObject.GetComponentInChildren<RagDollPhysics>();
             }
-            context.RagDollSet(false);
             context.characterMovement = gameObject.GetComponent<CharacterMovement>();
+            context.movement = gameObject.GetComponent<Movement>();
             // Add whatever else you need here...
 
             return context;
-        }
-        public void RagDollSet(bool v)
-        {
-            physics.isKinematic = v;
-            capsuleCollider.isTrigger = v;
-            animator.enabled = !v;
-            myRagDolls?.RagDollOnOff(v);
         }
     }
 }
