@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: AudioClips
+  m_EditorClassIdentifier: 
+  m_GroupName: AudioClips
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 99c2b412c2be2344aa38e03ca484e440
+  m_SerializeEntries:
+  - m_GUID: 877f511998a4e3549af1658cd09255ce
+    m_Address: Mobs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - AudioClip
+    - Mobs
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e10e4962d06e83043b100a08edc5975f
+    m_Address: BGMs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - AudioClip
+    - BGM
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e4446cd4f62d69641a63510a1f1dd58c
+    m_Address: Player
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - AudioClip
+    - Player
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b8adbdd80b1a7d24f8efea9d744eab4c
+    m_Address: Damage
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - AudioClip
+    - Player
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: da54747b6652e9b46870945c2879b5a9
+    m_Address: Footstep
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - AudioClip
+    - Player
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: cd3cea261b6a31443b03ae8cc46d447e, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 352dfe0e4c1d85749b8a085e0ebac268, type: 2}
+    - {fileID: 11400000, guid: 49bfce8fe83ac5a429e5ddf4f9e8edf4, type: 2}
