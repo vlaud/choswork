@@ -39,7 +39,6 @@ public class Keypad : ObjectNotGrabbable, EventListener<UIStatesEvent>, iSubscri
                 break;
             case State.Correct:
                 SetUI(false);
-                Cursor.lockState = CursorLockMode.Locked;
                 break;
         }
     }
@@ -52,7 +51,7 @@ public class Keypad : ObjectNotGrabbable, EventListener<UIStatesEvent>, iSubscri
         myHintNote = Instantiate(myKeypad.hintNote).transform;
         var canvas = myHintNote.GetComponentInChildren<Canvas>();
         if (hintText == null) hintText = canvas.transform.Find("passwordtext").GetComponent<TMPro.TMP_Text>();
-        List<int> passNums = GetRandomNumber.GetRanNum(1, 10, 4, false);
+        List<int> passNums = GetRandomNumber.GetRanNums(1, 10, 4);
         string Password = "";
         foreach (int num in passNums)
         {
@@ -78,7 +77,6 @@ public class Keypad : ObjectNotGrabbable, EventListener<UIStatesEvent>, iSubscri
             case State.Default:
                 Debug.Log(hintText.text);
                 SetUI(true);
-                Cursor.lockState = CursorLockMode.None;
                 break;
             case State.Correct:
                 string name = myKeypad.keyItem.GetComponent<ItemPickUp>().item.itemName;

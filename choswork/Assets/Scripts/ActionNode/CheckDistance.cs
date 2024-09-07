@@ -6,13 +6,16 @@ using TheKiwiCoder;
 [System.Serializable]
 public class CheckDistance : ActionNode
 {
-    protected override void OnStart() {
+    protected override void OnStart()
+    {
     }
 
-    protected override void OnStop() {
+    protected override void OnStop()
+    {
     }
 
-    protected override State OnUpdate() {
+    protected override State OnUpdate()
+    {
         if (CheckDist() <= blackboard.movement.myStat.AttackRange)
         {
             return State.Success;
@@ -22,7 +25,7 @@ public class CheckDistance : ActionNode
 
     float CheckDist()
     {
-        Vector3 dir = blackboard.movement.Player.position - context.transform.position;
+        Vector3 dir = blackboard.movement.GetMyTarget().position - context.transform.position;
         float dist = dir.magnitude;
         return dist;
     }

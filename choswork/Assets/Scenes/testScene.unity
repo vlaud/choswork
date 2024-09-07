@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5682,6 +5681,7 @@ MonoBehaviour:
   KickPoint: {fileID: 1533316672}
   KickTransform: {fileID: 1256101007}
   IsWall: 0
+  isGhost: 0
   myHPBar: {fileID: 191422121}
   myHips: {fileID: 1143161751}
   camShake: {fileID: 0}
@@ -11609,24 +11609,26 @@ MonoBehaviour:
   desireDistance: 0
   myRotSpeed: 360
   IsFps: 1
-  IsUI: 0
   myCameraState: 0
   myFPSCam:
     myRig: {fileID: 521284657}
-    myCam: {fileID: 183433090}
+    DesirePos: {fileID: 0}
+    realCam: {fileID: 0}
     curRot: {x: 0, y: 0, z: 0}
   myTPSCam:
     myRig: {fileID: 162250467}
-    myCam: {fileID: 474517006}
+    DesirePos: {fileID: 0}
+    realCam: {fileID: 0}
     curRot: {x: 0, y: 0, z: 0}
   myUICam:
     myRig: {fileID: 729273309}
-    myCam: {fileID: 420390908}
+    DesirePos: {fileID: 0}
+    realCam: {fileID: 0}
     curRot: {x: 0, y: 0, z: 0}
   myPlayer: {fileID: 0}
   UIkeyAvailable: 1
   isFPSCamRotinTPS: 0
-  IsPaused: 0
+  _inventory: {fileID: 0}
 --- !u!1 &208895969
 GameObject:
   m_ObjectHideFlags: 0
@@ -58928,14 +58930,6 @@ MonoBehaviour:
         m_CallState: 2
   leftFoot: {fileID: 1456059935}
   rightFoot: {fileID: 603997133}
-  leftFootSound: {fileID: 8300000, guid: 42e65e088b3f4374e851b8dbd38f3df9, type: 3}
-  rightFootSound: {fileID: 8300000, guid: 8bc94ec6ed537e743b481638bdcd503d, type: 3}
-  kickSound: {fileID: 8300000, guid: 482611fe6bc559142a00be6e726b4862, type: 3}
-  kickWallSound: {fileID: 8300000, guid: 74198389e177d0948b63ca9a3fb22801, type: 3}
-  MobAttackSound: {fileID: 8300000, guid: 1f53a5fc6bd934e46a5d8cfa8fd27b64, type: 3}
-  MobAttackYell: {fileID: 8300000, guid: 2d173c8646a322447b66b059a587f365, type: 3}
-  DamageSound: {fileID: 8300000, guid: 1f7b08cb617fb864fafcd46f45ebec2e, type: 3}
-  ScreamSound: {fileID: 8300000, guid: ddc650b445586454e9e4f5e74d58d0ed, type: 3}
   mySoundSpeaker: {fileID: 1237434695}
   KickBlock:
     serializedVersion: 2
@@ -58943,6 +58937,15 @@ MonoBehaviour:
   orgDustEff: {fileID: 0}
   myPlayer: {fileID: 95975072}
   noSoundandEffect: 0
+  footsteps:
+  - Player
+  - Footstep
+  kick_Whoosh_clip: Kick_whoosh
+  kick_WallBlock_clip: Kick_WallBlock
+  AttackedVoice: Man_Damage_4
+  AttackingVoice: Man_Damage_1
+  AttackedSound: face_hit_small_78
+  ScreamVoice: Man_Damage_Extreme_2
 --- !u!114 &1237434697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70377,14 +70380,6 @@ MonoBehaviour:
       m_Calls: []
   leftFoot: {fileID: 0}
   rightFoot: {fileID: 0}
-  leftFootSound: {fileID: 0}
-  rightFootSound: {fileID: 0}
-  kickSound: {fileID: 0}
-  kickWallSound: {fileID: 0}
-  MobAttackSound: {fileID: 0}
-  MobAttackYell: {fileID: 8300000, guid: 170c978187daf28498d8f2cdbe1dc3cb, type: 3}
-  DamageSound: {fileID: 0}
-  ScreamSound: {fileID: 8300000, guid: 4f99cc9880447d54f899cc448d1c1388, type: 3}
   mySoundSpeaker: {fileID: 1432349131}
   KickBlock:
     serializedVersion: 2
@@ -70392,6 +70387,15 @@ MonoBehaviour:
   orgDustEff: {fileID: 0}
   myPlayer: {fileID: 0}
   noSoundandEffect: 0
+  footsteps:
+  - Player
+  - Footstep
+  kick_Whoosh_clip: 
+  kick_WallBlock_clip: 
+  AttackedVoice: 
+  AttackingVoice: Zombie_Attack_5
+  AttackedSound: 
+  ScreamVoice: Monster_LongScream
 --- !u!95 &1432349133
 Animator:
   serializedVersion: 5
@@ -71138,14 +71142,6 @@ MonoBehaviour:
       m_Calls: []
   leftFoot: {fileID: 0}
   rightFoot: {fileID: 0}
-  leftFootSound: {fileID: 0}
-  rightFootSound: {fileID: 0}
-  kickSound: {fileID: 0}
-  kickWallSound: {fileID: 0}
-  MobAttackSound: {fileID: 0}
-  MobAttackYell: {fileID: 8300000, guid: 170c978187daf28498d8f2cdbe1dc3cb, type: 3}
-  DamageSound: {fileID: 0}
-  ScreamSound: {fileID: 8300000, guid: 4f99cc9880447d54f899cc448d1c1388, type: 3}
   mySoundSpeaker: {fileID: 1439315023}
   KickBlock:
     serializedVersion: 2
@@ -71153,6 +71149,15 @@ MonoBehaviour:
   orgDustEff: {fileID: 0}
   myPlayer: {fileID: 0}
   noSoundandEffect: 0
+  footsteps:
+  - Player
+  - Footstep
+  kick_Whoosh_clip: 
+  kick_WallBlock_clip: 
+  AttackedVoice: 
+  AttackingVoice: Zombie_Attack_5
+  AttackedSound: 
+  ScreamVoice: Monster_LongScream
 --- !u!95 &1439315025
 Animator:
   serializedVersion: 5
@@ -89212,7 +89217,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2b41b9d484512c4bab4bd7cf8d783f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orgBullet: {fileID: 0}
 --- !u!114 &1805826971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89225,7 +89229,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893f96c0e2510db468352290250b83e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Count: 0
   bgmPlayer: {fileID: 1805826969}
 --- !u!114 &1805826972
 MonoBehaviour:
@@ -89240,6 +89243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myGameState: 0
+  prevGameState: 0
   myPlayer: {fileID: 95975072}
   myMonsters: []
   mySpringArms: {fileID: 208552499}
@@ -89269,7 +89273,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80fc0caf80ae8dc42b9b635aaf19b6bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Count: 0
   brightness: {fileID: 11400000, guid: 97e8537b532b56945ba96e19624acfa2, type: 2}
   constrast: {fileID: 11400000, guid: 97e8537b532b56945ba96e19624acfa2, type: 2}
   layer: {fileID: 183433092}

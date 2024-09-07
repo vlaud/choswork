@@ -75,7 +75,7 @@ public class AIPerception : MonoBehaviour
     {
         while (myState == State.Search)
         {
-            if(myMonster.IsSearchable())
+            if (myMonster.IsSearchable())
                 FieldOfViewCheck();
             else if (myMonster.GetAIState() == AIState.Angry)
                 ChangeState(State.Chase);
@@ -86,7 +86,7 @@ public class AIPerception : MonoBehaviour
     {
         while (myState == State.Chase)
         {
-            if(myMonster.GetAIState() == AIState.Angry)
+            if (myMonster.GetAIState() == AIState.Angry)
             {
                 if (CalcPathLength(myMonster.GetMyPath(), myMonster.GetMyTarget().position) > lostDist)
                 {
@@ -107,7 +107,7 @@ public class AIPerception : MonoBehaviour
         {
             target = rangeChecks[0].transform;
             Vector3 directionToTarget = (target.position - transform.position).normalized;
-            
+
             if (Vector3.Angle(transform.forward, directionToTarget) < fovAngle * 0.5f)
             {
                 float distanceToTarget = Vector3.Distance(transform.position, target.position);

@@ -28,10 +28,7 @@ public class Mainmenu : Singleton<Mainmenu>
     public GameObject LoadGamePanel;
     public GameObject Fader;
     public Button SkipButton;
-    [Header("BGM 설정")]
-    public AudioClip titleBGM;
-    public AudioClip InGameBGM;
-    public AudioClip DangerBGM;
+
     [Header("슬라이더 목록")]
     public Slider[] GamePanel_Sliders;
 
@@ -80,7 +77,7 @@ public class Mainmenu : Singleton<Mainmenu>
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        print("Scene has loaded");
+        Debug.Log("Scene has loaded");
         currentSceneName = SceneManager.GetActiveScene().name;
     }
     private void OnDestroy()
@@ -90,11 +87,11 @@ public class Mainmenu : Singleton<Mainmenu>
     }
     public void PlayDangerMusic()
     {
-        SoundManager.Inst.PlayBGM(DangerBGM);
+        SoundManager.Inst.PlayBGM("DangerBGM");
     }
     public void PlayInGameMusic()
     {
-        SoundManager.Inst.PlayBGM(InGameBGM);
+        SoundManager.Inst.PlayBGM("InGameBGM");
     }
     public void FadeToLevel()
     {
@@ -114,7 +111,7 @@ public class Mainmenu : Singleton<Mainmenu>
                 SkipButton.gameObject.SetActive(false);
                 ShowMenuAnim(true);
                 Cursor.lockState = CursorLockMode.None;
-                SoundManager.Inst.PlayBGM(titleBGM);
+                SoundManager.Inst.PlayBGM("titleBGM");
                 break;
             case "Loading":
                 SkipButton.gameObject.SetActive(false);
@@ -126,7 +123,6 @@ public class Mainmenu : Singleton<Mainmenu>
                 DisableUI();
                 break;
             case "GameStage":
-                //SoundManager.Inst.PlayBGM(InGameBGM);
                 GamePanel_Sliders[0].onValueChanged.AddListener((float v) => GraphicManager.Inst.fbrightness = v);
                 GamePanel_Sliders[1].onValueChanged.AddListener((float v) => GraphicManager.Inst.fconstrast = v);
                 GamePanel_Sliders[2].onValueChanged.AddListener((float v) => SoundManager.Inst.bgmVolume = v);

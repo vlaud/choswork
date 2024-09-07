@@ -13,6 +13,7 @@ public class RagDollAction : AIDetectionMovement
         public Quaternion Rotation { get; set; }
     }
     protected CapsuleCollider cs;
+    protected CapsuleCollider ghostCS;
     public RagDollPhysics myRagDolls;
     public float _timetoWakeup = 3.0f;
     public float _timeToResetBones;
@@ -35,6 +36,10 @@ public class RagDollAction : AIDetectionMovement
     {
         myRigid.isKinematic = v;
         cs.isTrigger = v;
+
+        if(ghostCS != null)
+            ghostCS.isTrigger = v;
+
         myAnim.enabled = !v;
         myRagDolls.RagDollOnOff(v);
     }
@@ -159,4 +164,9 @@ public class RagDollAction : AIDetectionMovement
     }
 
     public virtual void ChangeRagDollState(RagDollState ragdoll) {}
+
+    public void SetGhostCS(CapsuleCollider cs)
+    {
+        ghostCS = cs;
+    }
 }

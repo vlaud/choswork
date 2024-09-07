@@ -23,4 +23,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameStage2.unity
     guid: 077ec43035b480441bfd6a017c87a1fa
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: fe4edfbd0ad419c41a91a03d2a1ce18e, type: 2}

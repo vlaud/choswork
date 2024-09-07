@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 using UnityEngine.Events;
 
 public class AnimEvent : MonoBehaviour
@@ -15,15 +13,7 @@ public class AnimEvent : MonoBehaviour
     // UnityEvent<bool, int> 파라미터 필요한 만큼 넣기
     public Transform leftFoot;
     public Transform rightFoot;
-    [Header("사운드")]
-    public AudioClip leftFootSound;// 왼발소리 
-    public AudioClip rightFootSound;// 오른발소리 
-    public AudioClip kickSound;// 발차기 소리
-    public AudioClip kickWallSound;// 닿는 발차기 소리
-    public AudioClip MobAttackSound;// 몹 공격 효과음
-    public AudioClip MobAttackYell;// 몹 공격 기합
-    public AudioClip DamageSound; // 데미지 신음
-    public AudioClip ScreamSound;// 닿는 발차기 소리
+
     public AudioSource mySoundSpeaker; // 발소리 오디오
     [Header("이펙트")]
     public LayerMask KickBlock; // 발차기 닿는 레이어
@@ -31,11 +21,20 @@ public class AnimEvent : MonoBehaviour
     public Player myPlayer;
     public bool noSoundandEffect = false;
 
+    [SerializeField] private List<string> footsteps = new List<string>() { "Player", "Footstep" };
+    [SerializeField] private string kick_Whoosh_clip = "Kick_whoosh";
+    [SerializeField] private string kick_WallBlock_clip = "Kick_WallBlock";
+    [SerializeField] private string AttackedVoice = "Man_Damage_4";
+
+    [SerializeField] private string AttackingVoice = "Man_Damage_1";
+    [SerializeField] private string AttackedSound = "face_hit_small_78";
+    [SerializeField] private string ScreamVoice = "Man_Damage_Extreme_2";
+
     public void LeftFootEvent()
     {
         if (!noSoundandEffect && StudyCommandPattern.IsMoveKeyPressed())
         {
-            SoundManager.Inst.PlayOneShot(mySoundSpeaker, leftFootSound);
+            SoundManager.Inst.PlayOneShotRandomClip(mySoundSpeaker, footsteps);
         }
         if (orgDustEff != null)
         {
@@ -47,7 +46,7 @@ public class AnimEvent : MonoBehaviour
     {
         if (!noSoundandEffect && StudyCommandPattern.IsMoveKeyPressed())
         {
-            SoundManager.Inst.PlayOneShot(mySoundSpeaker, rightFootSound);
+            SoundManager.Inst.PlayOneShotRandomClip(mySoundSpeaker, footsteps);
         }
         if (orgDustEff != null)
         {
@@ -59,10 +58,12 @@ public class AnimEvent : MonoBehaviour
     {
         Attack?.Invoke();
     }
+
     public void OnKick()
     {
         Kick?.Invoke();
     }
+
     public void PlayKickSound()
     {
         if (noSoundandEffect) return;
@@ -72,54 +73,64 @@ public class AnimEvent : MonoBehaviour
         // 발차기 소리 위치(KickTransform)에서 실행
         foreach (Collider col in list)
         {
-            if(col != null) SoundManager.Inst.PlayOneShot(mySoundSpeaker, kickWallSound);
-            else SoundManager.Inst.PlayOneShot(mySoundSpeaker, kickSound);
+            if(col != null) SoundManager.Inst.PlayOneShot(mySoundSpeaker, kick_WallBlock_clip);
+            else SoundManager.Inst.PlayOneShot(mySoundSpeaker, kick_Whoosh_clip);
         }
-        SoundManager.Inst.PlayOneShot(mySoundSpeaker, kickSound);
+        SoundManager.Inst.PlayOneShot(mySoundSpeaker, kick_Whoosh_clip);
     }
+
     public void KickCheckStart()
     {
         KickCheck?.Invoke(true);
         if (noSoundandEffect) return;
-        SoundManager.Inst.PlayOneShot(mySoundSpeaker, MobAttackYell);
+        SoundManager.Inst.PlayOneShot(mySoundSpeaker, AttackingVoice);
     }
+
     public void KickCheckEnd()
     {
         KickCheck?.Invoke(false);
     }
+
     public void Onskill()
     {
         Skill?.Invoke();
     }
+
     public void ComboCheckStart()
     {
         ComboCheck?.Invoke(true);
     }
+
     public void ComboCheckEnd()
     {
         ComboCheck?.Invoke(false);
     }
+
     public void PlayHit()
     {
         if (noSoundandEffect) return;
-        SoundManager.Inst.PlayOneShot(mySoundSpeaker, MobAttackSound);
+        SoundManager.Inst.PlayOneShot(mySoundSpeaker, AttackedSound);
     }
+
     public void PlayDamage()
     {
         if (noSoundandEffect) return;
-        SoundManager.Inst.PlayOneShot(mySoundSpeaker, DamageSound);
+        SoundManager.Inst.PlayOneShot(mySoundSpeaker, AttackedVoice);
     }
+
     public void StartBleed()
     {
         BleedCheck?.Invoke(true);
     }
+
     public void EndBleed()
     {
         BleedCheck?.Invoke(false);
     }
+
     public void PlayScream()
     {
         if (noSoundandEffect) return;
-        SoundManager.Inst.PlayOneShot(mySoundSpeaker, ScreamSound);
+        SoundManager.Inst.PlayOneShot(mySoundSpeaker, ScreamVoice);
     }
 }

@@ -171,6 +171,9 @@ public class PlayerBulletTime : MonoBehaviour, iSubscription, EventListener<Game
             foreach (var r in Renders) r.enabled = false;
             foreach (var script in scripts) script.enabled = false;
 
+            var collider = ghostMob.GetComponent<CapsuleCollider>();
+            mob.GetComponent<RagDollAction>().SetGhostCS(collider);
+
             SceneManager.MoveGameObjectToScene(ghostMob.gameObject, _simulationScene);
             _spawnedMonsters.Add(mob, ghostMob);
         }

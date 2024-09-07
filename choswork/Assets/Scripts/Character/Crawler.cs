@@ -217,6 +217,7 @@ public class Crawler : RagDollAction, AIAction
         PopulateAnimation(_faceDownStandUpClipName, _faceDownStandUpBoneTransforms);
         RagDollSet(false);
         transform.position = myGamemanager.myMapManager.GetCrDestination(false).position;
+        coroutineRunner = new CoroutineRunner(this);
     }
     // Start is called before the first frame update
     void Start()
