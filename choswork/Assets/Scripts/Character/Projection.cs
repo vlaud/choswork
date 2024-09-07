@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class Projection : MonoBehaviour
 {
     private Scene _simulationScene;
@@ -9,11 +10,14 @@ public class Projection : MonoBehaviour
     [SerializeField] private Transform _map;
     [SerializeField] private GameObject _ghostobj;
     private Dictionary<Transform, Transform> _spawnedObjects = new Dictionary<Transform, Transform>();
+
+    private CoroutineRunner coroutineRunner;
     private Coroutine _simulate;
 
     // Start is called before the first frame update
     void Start()
     {
+        coroutineRunner = new CoroutineRunner(this);
         CreatePhysicsScene();
     }
 
@@ -26,6 +30,7 @@ public class Projection : MonoBehaviour
             item.Value.rotation = item.Key.rotation;
         }
     }
+
     void CreatePhysicsScene()
     {
         _simulationScene = SceneManager.CreateScene("Simulation", new CreateSceneParameters(LocalPhysicsMode.Physics3D));
@@ -54,18 +59,11 @@ public class Projection : MonoBehaviour
     [SerializeField] private float _timeOffset;
     public bool IsSimulation = false;
 
-    public void StopSimultationCoroutine()
-    {
-        if (_simulate != null)
-        {
-            StopCoroutine(_simulate);
-            _simulate = null;
-        }
-    }
 
     public void StopSimultation()
     {
-        StopSimultationCoroutine();
+        coroutineRunner.StopCurrentCoroutine(_simulate, out _simulate);
+        Debug.Log($"_simulate: {_simulate}, _simulate is Null? : {_simulate == null }");
         IsSimulation = false;
     }
 
@@ -73,15 +71,17 @@ public class Projection : MonoBehaviour
     {
         if (IsSimulation) return;
 
-        StopSimultationCoroutine();
-
-        _simulate = StartCoroutine(SimulateTrajectory(objGrab, pos, dir, strength));
+        coroutineRunner.StartCurrentCoroutine(_simulate, out _simulate, SimulateTrajectory(objGrab, pos, dir, strength));
     }
+
     IEnumerator SimulateTrajectory(ObjectGrabbable objGrab, Vector3 pos, Vector3 dir, float strength)
     {
         IsSimulation = true;
-        while (IsSimulation)
+
+        while (IsSimulation && objGrab != null)
         {
+            if (objGrab == null) break;
+
             if (_ghostobj == null)
             {
                 _ghostobj = Instantiate(Resources.Load("Prefabs/Cup"), pos, Quaternion.identity) as GameObject;
@@ -95,26 +95,32 @@ public class Projection : MonoBehaviour
             }
 
             if (!_ghostobj.activeSelf) _ghostobj.SetActive(true);
+
+            //TODO: objGrab = null ¹æÁö
+            Debug.Log($"objGrab: {objGrab}");
+
             _ghostobj.transform.position = objGrab.transform.position;
             _ghostobj.transform.rotation = Quaternion.identity;
+
             if (transform.TryGetComponent<PlayerPickUpDrop>(out var pp))
             {
                 dir = pp.GetobjectGrabPointForward();
             }
+
             _ghostobj.GetComponent<ObjectGrabbable>().Throw(dir, strength, true);
             _line.positionCount = Mathf.CeilToInt(_maxPhysicsFrameIterations / _timeOffset) + 1;
             int i = 0;
             _line.SetPosition(i, _ghostobj.transform.position);
+
             for (float time = 0; time < _maxPhysicsFrameIterations; time += _timeOffset)
             {
                 i++;
                 _physicsScene.Simulate(Time.fixedDeltaTime);
                 _line.SetPosition(i, _ghostobj.transform.position);
             }
-            //Destroy(ghostObj.gameObject);
 
             _ghostobj.SetActive(false);
-            //IsSimulation = false;
+
             yield return null;
         }
     }

@@ -44,6 +44,7 @@ MonoBehaviour:
     m_SerializedLabels:
     - AudioClip
     - Player
+    - Damage
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: da54747b6652e9b46870945c2879b5a9
     m_Address: Footstep
@@ -51,6 +52,7 @@ MonoBehaviour:
     m_SerializedLabels:
     - AudioClip
     - Player
+    - Footstep
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: cd3cea261b6a31443b03ae8cc46d447e, type: 2}

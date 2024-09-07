@@ -14,8 +14,10 @@ public class CoroutineRunner
         this.currentMono = currentMono;
     }
 
-    public void StopCurrentCoroutine(Coroutine coroutine)
+    public void StopCurrentCoroutine(Coroutine currentCoroutine, out Coroutine coroutine)
     {
+        coroutine = currentCoroutine;
+
         if (coroutine != null)
         {
             currentMono.StopCoroutine(coroutine);
@@ -31,8 +33,7 @@ public class CoroutineRunner
             return;
         }
         
-        coroutine = currentCoroutine;
-        StopCurrentCoroutine(coroutine);
+        StopCurrentCoroutine(currentCoroutine, out coroutine);
         coroutine = currentMono.StartCoroutine(coAction);
     }
 

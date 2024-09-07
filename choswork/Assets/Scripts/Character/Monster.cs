@@ -114,6 +114,7 @@ public class Monster : RagDollAction, AIAction
 
         RagDollSet(false);
         transform.position = myGamemanager.myMapManager.GetDestination(false, mobIndex).position;
+        coroutineRunner = new CoroutineRunner(this);
     }
     // Start is called before the first frame update
     void Start()

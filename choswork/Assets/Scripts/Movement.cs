@@ -39,6 +39,7 @@ public class Movement : RagDollAction, AIAction
         PopulateAnimation(_faceUpStandUpClipName, _faceUpStandUpBoneTransforms);
         PopulateAnimation(_faceDownStandUpClipName, _faceDownStandUpBoneTransforms);
         RagDollSet(false);
+        coroutineRunner = new CoroutineRunner(this);
     }
     private void Start()
     {

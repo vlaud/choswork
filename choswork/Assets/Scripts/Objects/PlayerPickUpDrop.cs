@@ -26,10 +26,13 @@ public class PlayerPickUpDrop : MonoBehaviour, iSubscription, EventListener<Obje
     {
         Subscribe();
     }
+
     private void Update()
     {
         CheckItem();
+        ShowItemUI();
     }
+
     private void OnDestroy()
     {
         Unsubscribe();
@@ -61,34 +64,35 @@ public class PlayerPickUpDrop : MonoBehaviour, iSubscription, EventListener<Obje
         this.EventStopListening();
     }
 
-    void CheckItem()
+    private void CheckItem()
     {
-        curCamset = myPlayer.myCameras.GetMyCamera();
-        playerCameraTransform = curCamset?.myRig;
-        if (playerCameraTransform == null) return;
-
-        // Handle object pickup and throw
-        ShowItemUI();
-
         if (objectGrabbable != null)
         {
             _projection.SetSimulation(objectGrabbable, objectGrabPointTransform.position,
            objectGrabPointTransform.forward, Strength);
         }
-        else
-        {
-            _projection.StopSimultation();
-            transform.GetComponent<LineRenderer>().positionCount = 0;
-        }
     }
+
+    private void SetObjectToNullAction()
+    {
+        objectGrabbable = null;
+        _projection.StopSimultation();
+        transform.GetComponent<LineRenderer>().positionCount = 0;
+    }
+
     public void GetItem()
     {
         if (objectGrabbable?.GetComponent<PickUpController>() == null) return;
         objectGrabbable?.GetComponent<PickUpController>()?.CanPickUp();
-        objectGrabbable = null;
+        SetObjectToNullAction();
     }
+
     void ShowItemUI()
     {
+        curCamset = myPlayer.myCameras.GetMyCamera();
+        playerCameraTransform = curCamset?.myRig;
+        if (playerCameraTransform == null) return;
+
         if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward,
             out RaycastHit hit, pickUpDistance, obstructionMask | pickUpLayerMask))
         {
@@ -111,6 +115,7 @@ public class PlayerPickUpDrop : MonoBehaviour, iSubscription, EventListener<Obje
             showObject?.SetItemInfoAppear(false);
         }
     }
+
     public void InteractObj()
     {
         if (objectGrabbable == null)
@@ -137,21 +142,24 @@ public class PlayerPickUpDrop : MonoBehaviour, iSubscription, EventListener<Obje
         {
             // ¹°Ã¼ O
             objectGrabbable.Drop();
-            objectGrabbable = null;
+            SetObjectToNullAction();
         }
     }
+
     public void ThrowObject()
     {
         if (objectGrabbable != null)
         {
             objectGrabbable.Throw(objectGrabPointTransform.forward, Strength);
-            objectGrabbable = null;
+            SetObjectToNullAction();
         }
     }
+
     public ObjectGrabbable GetObjectGrabbable()
     {
         return objectGrabbable;
     }
+
     public Vector3 GetobjectGrabPointForward()
     {
         return objectGrabPointTransform.forward;

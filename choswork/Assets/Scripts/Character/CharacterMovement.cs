@@ -2,20 +2,22 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-//public delegate void MyAction();
 
 public class CharacterMovement : CharacterProperty
 {
     Coroutine CoroutineAngle = null;
-    //Coroutine CoroutineLerp = null;
     Coroutine attackCo = null;
     Coroutine CoRoot = null;
+
+    protected CoroutineRunner coroutineRunner;
+
     public void RePath(NavMeshPath myPath, Transform target, NavMeshQueryFilter filter, UnityAction done = null, string anim = "IsMoving")
     {
         StopAllCoroutines();
         //Debug.Log("목표지점: " + pos);
         StartCoroutine(MovingByPath(myPath, target, filter, anim, done));
     }
+
     IEnumerator MovingByPath(NavMeshPath myPath, Transform target, NavMeshQueryFilter filter, string anim, UnityAction done)
     {
         int cur = 1;
@@ -44,44 +46,36 @@ public class CharacterMovement : CharacterProperty
         }
         done?.Invoke();
     }
+
     public void AttackTarget(NavMeshPath myPath, Transform target, NavMeshQueryFilter filter)
     {
         StopAllCoroutines();
-        attackCo = StartCoroutine(AttackRoot(myPath, target, filter, myStat.AttackRange, myStat.AttackDelay));
+        coroutineRunner.StartCurrentCoroutine(attackCo,
+            out attackCo,
+            AttackRoot(myPath, target, filter, myStat.AttackRange, myStat.AttackDelay));
     }
+
     public void RotateToTarget(Vector3 pos, UnityAction done = null)
     {
-        if (CoroutineAngle != null)
-        {
-            StopCoroutine(CoroutineAngle);
-            CoroutineAngle = null;
-        }
-        CoroutineAngle = StartCoroutine(RotatingToPosition(pos));
+        coroutineRunner.StartCurrentCoroutine(CoroutineAngle, out CoroutineAngle, RotatingToPosition(pos));
     }
+
     protected void MoveToPosition(Vector3 pos, string anim, UnityAction done = null, bool Rot = true)
     {
-        if(attackCo != null)
-        {
-            StopCoroutine(attackCo);
-            attackCo = null;
-        }
-        if(CoRoot != null)
-        {
-            StopCoroutine(CoRoot);
-            CoRoot = null;
-        }
+        coroutineRunner.StopCurrentCoroutine(attackCo, out attackCo);
+
+        coroutineRunner.StartCurrentCoroutine(CoRoot, out CoRoot, RootMotionMoving(pos, done, anim));
         CoRoot = StartCoroutine(RootMotionMoving(pos, done, anim));
 
         if (Rot)
         {
-            if (CoroutineAngle != null)
-            {
-                StopCoroutine(CoroutineAngle);
-                CoroutineAngle = null;
-            }
+            //TODO: 코루틴 회전 테스트
+            //coroutineRunner.StopCurrentCoroutine(CoroutineAngle, out CoroutineAngle);
+            coroutineRunner.StartCurrentCoroutine(CoroutineAngle, out CoroutineAngle, RotatingToPosition(pos));
         }
-        CoroutineAngle = StartCoroutine(RotatingToPosition(pos));
+        //coroutineRunner.StartCurrentCoroutine(CoroutineAngle, out CoroutineAngle, RotatingToPosition(pos));
     }
+
     IEnumerator RotatingToPosition(Vector3 pos)
     {
         Vector3 dir = (pos - transform.position).normalized;
@@ -110,6 +104,7 @@ public class CharacterMovement : CharacterProperty
             yield return null;
         }
     }
+
     // 안씀
     IEnumerator LerpToPosition(Vector3 pos, Vector2 desireAnim, UnityAction done)
     {
@@ -146,6 +141,7 @@ public class CharacterMovement : CharacterProperty
         //myAnim.SetBool("IsMoving", false);
         done?.Invoke();
     }
+
     // 루트모션 움직임
     IEnumerator RootMotionMoving(Vector3 pos, UnityAction done, string anim)
     {
@@ -169,6 +165,7 @@ public class CharacterMovement : CharacterProperty
         Debug.Log("anim: " + anim);
         done?.Invoke();
     }
+
     // 안씀
     IEnumerator MovingToPosition(Vector3 pos, UnityAction done)
     {
@@ -197,14 +194,15 @@ public class CharacterMovement : CharacterProperty
         myAnim.SetBool("IsMoving", false);
         done?.Invoke();
     }
+
     // 안씀
     IEnumerator AttackT(Transform target, float AttackRange, float AttackDelay)
     {
         float playTime = 0.0f;
         float delta = 0.0f;
-        while(target != null)
+        while (target != null)
         {
-            if(!myAnim.GetBool("IsAttacking")) playTime += Time.deltaTime;
+            if (!myAnim.GetBool("IsAttacking")) playTime += Time.deltaTime;
             // 이동
             Vector3 dir = target.position - transform.position;
             float dist = dir.magnitude;
@@ -223,7 +221,7 @@ public class CharacterMovement : CharacterProperty
             else
             {
                 myAnim.SetBool("IsMoving", false);
-                if(playTime >= AttackDelay)
+                if (playTime >= AttackDelay)
                 {
                     //공격
                     playTime = 0.0f;
@@ -241,11 +239,12 @@ public class CharacterMovement : CharacterProperty
             if (delta > Angle)
                 delta = Angle;
             transform.Rotate(Vector3.up * delta * rotDir, Space.World);
-            
+
             yield return null;
         }
         myAnim.SetBool("IsMoving", false);
     }
+
     // 루트모션 공격
     IEnumerator AttackRoot(NavMeshPath myPath, Transform target, NavMeshQueryFilter filter, float AttackRange, float AttackDelay)
     {
@@ -302,6 +301,7 @@ public class CharacterMovement : CharacterProperty
         }
         myAnim.SetBool("IsRunning", false);
     }
+
     protected void CorrectBaseHeight(NavMeshPath myPath, Transform myTarget, NavMeshQueryFilter filter)
     {
         Vector3[] list = myPath.corners;

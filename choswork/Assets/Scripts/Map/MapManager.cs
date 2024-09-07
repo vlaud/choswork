@@ -164,7 +164,7 @@ public class MapManager : MonoBehaviour
         int floor = mapSize.x * mapSize.z; // 맨 위층에서만 소환
 
         // 중복 숫자 방지
-        List<int> spawnNums = GetRandomNumber.GetRanNum(transform.childCount - floor, transform.childCount, 2, false);
+        List<int> spawnNums = GetRandomNumber.GetRanNums(transform.childCount - floor, transform.childCount, 2);
         //시작 위치
         GameObject obj = Instantiate(StartObj);
         Cr_StartPoint = obj.transform;
@@ -183,7 +183,7 @@ public class MapManager : MonoBehaviour
         int floor = mapSize.x * mapSize.z; // 맨 위층에서만 소환
 
         int[] remove = { Cr_StartNum, Cr_EndNum };
-        List<int> spawnNums = GetRandomNumber.GetRanNum(transform.childCount - floor, transform.childCount, 2, true, remove);
+        List<int> spawnNums = GetRandomNumber.GetRanNums(transform.childCount - floor, transform.childCount, 2, remove);
 
         if (isStart)
         {
@@ -209,7 +209,7 @@ public class MapManager : MonoBehaviour
         for (int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
         {
             // 중복 숫자 방지
-            List<int> spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, false);
+            List<int> spawnNums = GetRandomNumber.GetRanNums(floor, transform.childCount, 2);
             //시작 위치
             GameObject obj = Instantiate(StartObj);
             StartPoint.Add(obj.transform);
@@ -229,7 +229,7 @@ public class MapManager : MonoBehaviour
         int floor = mapSize.x * mapSize.z; // 1층에선 소환 안되게끔
 
         int[] remove = { StartNum[mobindex], EndNum[mobindex] };
-        List<int> spawnNums = GetRandomNumber.GetRanNum(floor, transform.childCount, 2, true, remove);
+        List<int> spawnNums = GetRandomNumber.GetRanNums(floor, transform.childCount, 2, remove);
 
         if (isStart)
         {
