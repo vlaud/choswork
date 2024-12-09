@@ -176,7 +176,7 @@ public class Monster : RagDollAction, AIAction
         ChangeState(STATE.RagDoll);
         force = dir * strength;
         force.y = strength;
-        myRagDolls.myRagDoll.spineRigidBody.velocity += force * Time.fixedDeltaTime / (Time.timeScale * myRagDolls.myRagDoll.spineRigidBody.mass);
+        myRagDolls.myRagDoll.spineRigidBody.linearVelocity += force * Time.fixedDeltaTime / (Time.timeScale * myRagDolls.myRagDoll.spineRigidBody.mass);
     }
     public override void ChangeRagDollState(RagDollState ragdoll) 
     {

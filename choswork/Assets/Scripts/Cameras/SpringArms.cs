@@ -39,10 +39,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
                 SelectCamera(myTPSCam);
                 break;
             case ViewState.UI:
-                if (IsFps)
-                    UICameraSetPos(myFPSCam);
-                else
-                    UICameraSetPos(myTPSCam);
+                UICameraSetPos(IsFps ? myFPSCam : myTPSCam);
 
                 coroutineRunner.StartCurrentCoroutine(
                     currentUIMovingCoroutine,
@@ -54,28 +51,16 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
                     out currentUIRotatingCoroutine, 
                     UIRotating(myModel_baseForward.forward, true));
 
-                //StartCoroutine(UIMoving(myUI_basePos));
-                //StartCoroutine(UIRotating(myModel_baseForward.forward, true)); // UI때 모델 회전
                 SelectCamera(myUICam);
                 break;
             case ViewState.Turn:
-                if (IsFps) // fps 활성화
-                {
-                    coroutineRunner.StartCurrentCoroutine(
-                    currentUIMovingCoroutine,
-                    out currentUIMovingCoroutine,
-                    UIMoving(myFPSCam.DesirePos, () => ChangeState(ViewState.FPS)));
-                    //StartCoroutine(UIMoving(myFPSCam.DesirePos, () => ChangeState(ViewState.FPS)));
-                }
-                else // tps 활성화
-                {
-                    coroutineRunner.StartCurrentCoroutine(
-                    currentUIMovingCoroutine,
-                    out currentUIMovingCoroutine,
-                    UIMoving(myFPSCam.DesirePos, () => ChangeState(ViewState.TPS)));
-                    //StartCoroutine(UIMoving(myTPSCam.DesirePos, () => ChangeState(ViewState.TPS)));
-                }
-                //StartCoroutine(UIRotating(myRoot.forward, false)); // 모델 회전값을 fps 회전값과 맞춘다
+                ViewState viewState = IsFps ? ViewState.FPS : ViewState.TPS;
+                CameraSet cameraSet = IsFps ? myFPSCam : myTPSCam;
+                coroutineRunner.StartCurrentCoroutine(
+                currentUIMovingCoroutine,
+                out currentUIMovingCoroutine,
+                UIMoving(cameraSet.DesirePos, () => ChangeState(viewState)));
+
                 coroutineRunner.StartCurrentCoroutine(
                    currentUIRotatingCoroutine,
                    out currentUIRotatingCoroutine,
@@ -282,7 +267,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     private void Awake()
     {
         if (!isGhost)
-            _inventory = FindObjectOfType<Inventory>();
+            _inventory = FindFirstObjectByType<Inventory>();
 
 
         if (_inventory != null)

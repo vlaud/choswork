@@ -21,6 +21,6 @@ public class MonsterMovement : Movement
         RagDollSet(true);
         force = dir * strength;
         force.y = strength;
-        myRagDolls.myRagDoll.spineRigidBody.velocity += force * Time.fixedDeltaTime / (Time.timeScale * myRagDolls.myRagDoll.spineRigidBody.mass);
+        myRagDolls.myRagDoll.spineRigidBody.linearVelocity += force * Time.fixedDeltaTime / (Time.timeScale * myRagDolls.myRagDoll.spineRigidBody.mass);
     }
 }

@@ -79,7 +79,7 @@ public class ObjectGrabbable : ObjectInteractable
         FreeObj(isGhost);
         Vector3 force;
         force = dir * strength;
-        objectRigidbody.velocity += force * Time.fixedDeltaTime / (Time.timeScale * objectRigidbody.mass);
+        objectRigidbody.linearVelocity += force * Time.fixedDeltaTime / (Time.timeScale * objectRigidbody.mass);
         ChangeState(STATE.Throw);
     }
     public void ReleaseObj(bool isGhost = false, STATE state = STATE.Idle)

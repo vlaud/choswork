@@ -100,7 +100,7 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
     {
         _inst = this;
         Physics.simulationMode = SimulationMode.Script;
-        myMonsters = FindObjectsOfType(typeof(AIPerception)) as AIPerception[];
+        myMonsters = FindObjectsByType(typeof(AIPerception), FindObjectsSortMode.None) as AIPerception[];
         for (int i = 0; i < myMonsters.Length; ++i)
         {
             myMonsters[i].GetComponent<AIAction>().SetMobIndex(i);
@@ -110,7 +110,7 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
         if (mySceneLoader?.gameObject.GetComponentInChildren<Mainmenu>() != null)
             myMainmenu = mySceneLoader?.gameObject.GetComponentInChildren<Mainmenu>();
         else
-            myMainmenu = FindObjectOfType(typeof(Mainmenu)) as Mainmenu;
+            myMainmenu = FindFirstObjectByType(typeof(Mainmenu)) as Mainmenu;
 
         if (myMainmenu != null && myCanvas != null)
         {
