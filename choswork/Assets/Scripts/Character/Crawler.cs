@@ -281,7 +281,7 @@ public class Crawler : RagDollAction, AIAction
         ChangeState(STATE.RagDoll);
         force = dir * strength;
         force.y = strength;
-        myRagDolls.myRagDoll.spineRigidBody.linearVelocity += force * Time.fixedDeltaTime / (Time.timeScale * myRagDolls.myRagDoll.spineRigidBody.mass);
+        myRagDolls.myRagDoll.spineRigidBody.linearVelocity = force * Time.fixedUnscaledDeltaTime / myRagDolls.myRagDoll.spineRigidBody.mass;
     }
     protected override void AlignRotationToHips()
     {
