@@ -56,10 +56,26 @@ public class Mainmenu : Singleton<Mainmenu>
                 break;
         }
     }
+
+    private void SetMenuCommands()
+    {
+        MenuActions.SetKeys(GameManagement.Inst.myMainmenu);
+
+        if (currentSceneName == "Title")
+        {
+            MenuActions.SetCommandKey(MainMenuKeyType.PauseAction, null);
+            MenuActions.SetCommandKey(MainMenuKeyType.UnPauseAction, null);
+            Debug.Log($"{currentSceneName} <color=red>SetMenuCommands</color>");
+        }
+        else Debug.Log($"{currentSceneName} <color=yellow>SetMenuCommands</color>");
+
+    }
+
     private void Awake()
     {
         base.Initialize();
     }
+
     // Use this for initialization
     void Start()
     {
@@ -73,6 +89,7 @@ public class Mainmenu : Singleton<Mainmenu>
         GamePanel_Sliders[2].value = SoundManager.Inst.bgmVolume;
         GamePanel_Sliders[3].value = SoundManager.Inst.effectVolume;
     }
+
     #region Scene Change
     void OnEnable()
     {
@@ -85,32 +102,41 @@ public class Mainmenu : Singleton<Mainmenu>
         anim = null;
         faderAnim = null;
     }
+
     public void PlayDangerMusic()
     {
         SoundManager.Inst.PlayBGM("DangerBGM");
     }
+
     public void PlayInGameMusic()
     {
         SoundManager.Inst.PlayBGM("InGameBGM");
     }
+
     public void FadeToLevel()
     {
         faderAnim.SetTrigger("FadeOut");
         MenuActions.ChangeKey(MainMenuKeyType.None);
     }
+
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         currentSceneName = SceneManager.GetActiveScene().name;
         Debug.Log(currentSceneName);
+
+        // => 여기 currentSceneName name이 바뀌고 나서
+        // InputManger의 SetMenuCommands()를 실행해야 한다
         CommandManager.ClearCommands();
+        SetMenuCommands();
         switch (scene.name)
         {
             case "Title":
                 newGameSceneName = "CutScene";
                 faderAnim?.SetTrigger("FadeIn");
                 SkipButton.gameObject.SetActive(false);
+                // ShowMenuAnim(bool v) => ChangeState(MenuState s) => MenuActions.ChangeKey(MenuState s)가 발동
                 ShowMenuAnim(true);
-                Cursor.lockState = CursorLockMode.None;
+                CursorManager.Instance.SetSceneTitle(true);
                 SoundManager.Inst.PlayBGM("titleBGM");
                 break;
             case "Loading":
@@ -266,6 +292,7 @@ public class Mainmenu : Singleton<Mainmenu>
             GameObject obj = GameObject.Find("SceneLoader");
             transform.parent.SetParent(obj.transform);
             SceneLoader.Inst.ChangeScene(newGameSceneName);
+            Debug.Log($"{newGameSceneName} <color=red>loading</color>");
         }
         else
             Debug.Log("Please write a scene name in the 'newGameSceneName' field of the Main Menu Script and don't forget to " +

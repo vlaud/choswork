@@ -21,13 +21,17 @@ public class InputManager : MonoBehaviour
 
     private void SetMenuCommands()
     {
+        string sceneName = GameManagement.Inst.myMainmenu?.CurrentSceneName;
         MenuActions.SetKeys(GameManagement.Inst.myMainmenu);
 
-        if (GameManagement.Inst.myMainmenu?.CurrentSceneName == "Title")
+        if (sceneName == "Title")
         {
             MenuActions.SetCommandKey(MainMenuKeyType.PauseAction, null);
             MenuActions.SetCommandKey(MainMenuKeyType.UnPauseAction, null);
+            Debug.Log($"{sceneName} <color=red>SetMenuCommands</color>");
         }
+        else Debug.Log($"{sceneName} <color=yellow>SetMenuCommands</color>");
+
     }
 
     /// <summary>

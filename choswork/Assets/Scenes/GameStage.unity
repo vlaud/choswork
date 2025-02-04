@@ -16125,8 +16125,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myGameState: 0
   prevGameState: 0
+  IsGameClear: 0
+  IsCutscene: 0
   myPlayer: {fileID: 910030837}
   myMonsters: []
+  rigidbodies: []
   mySpringArms: {fileID: 1196819678}
   myInventory: {fileID: 26305676}
   mySound: {fileID: 722393795}
@@ -16135,10 +16138,9 @@ MonoBehaviour:
   myMainmenu: {fileID: 0}
   myCanvas: {fileID: 1962123511}
   myActionText: {fileID: 1563748614}
+  pauseTime: 0
   GameTimeScale: 1
   GameFixedTimeScale: 0.02
-  IsGameClear: 0
-  IsCutscene: 0
   IsBulletTime: 0
   curBulletTime: 0
   desireScale: 0
@@ -21663,7 +21665,7 @@ MonoBehaviour:
     attackDelay: 0
   smoothMoveSpeed: 10
   myMoveSpeed: 1
-  KickStrength: 12000
+  KickStrength: 250
   myCameras: {fileID: 1196819678}
   KickPoint: {fileID: 56026811}
   KickTransform: {fileID: 2107175146}
@@ -49006,7 +49008,7 @@ MonoBehaviour:
     maxHp: 100
     moveSpeed: 1
     rotSpeed: 360
-    ap: 1
+    ap: 80
     attackRange: 1.5
     attackDelay: 1
   HearingTr: {fileID: 922377815}

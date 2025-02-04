@@ -9,6 +9,7 @@ public class CursorManager : MonoBehaviour
     public bool IsUIOpen { get; private set; }
     public bool IsPaused { get; private set; }
     public bool IsPopupOpen { get; private set; }
+    public bool IsSceneTitle { get; private set; }
 
     private void Awake()
     {
@@ -34,9 +35,15 @@ public class CursorManager : MonoBehaviour
         UpdateCursorState();
     }
 
+    public void SetSceneTitle(bool isTitle)
+    {
+        IsSceneTitle = isTitle;
+        UpdateCursorState();
+    }
+
     private void UpdateCursorState()
     {
-        if (IsUIOpen || IsPaused || IsPopupOpen)
+        if (IsUIOpen || IsPaused || IsPopupOpen || IsSceneTitle)
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
