@@ -8,8 +8,8 @@ using System;
 using System.Linq;
 
 namespace TheKiwiCoder {
-    public class BehaviourTreeView : GraphView {
-        public new class UxmlFactory : UxmlFactory<BehaviourTreeView, GraphView.UxmlTraits> { }
+    [UxmlElement]
+    public partial class BehaviourTreeView : GraphView {
 
         public Action<NodeView> OnNodeSelected;
 

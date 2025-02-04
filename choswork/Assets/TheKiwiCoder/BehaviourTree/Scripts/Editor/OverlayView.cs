@@ -4,9 +4,11 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor;
 
-namespace TheKiwiCoder {
-    public class OverlayView : VisualElement {
-        public new class UxmlFactory : UxmlFactory<OverlayView, UxmlTraits> { }
+namespace TheKiwiCoder
+{
+    [UxmlElement]
+    public partial class OverlayView : VisualElement
+    {
 
         public System.Action<BehaviourTree> OnTreeSelected;
 
@@ -16,7 +18,8 @@ namespace TheKiwiCoder {
         TextField treeNameField;
         TextField locationPathField;
 
-        public void Show() {
+        public void Show()
+        {
             // Hidden in UIBuilder while editing..
             style.visibility = Visibility.Visible;
 
@@ -30,7 +33,8 @@ namespace TheKiwiCoder {
             // Configure asset selection dropdown menu
             var behaviourTrees = EditorUtility.GetAssetPaths<BehaviourTree>();
             assetSelector.choices = new List<string>();
-            behaviourTrees.ForEach(treePath => {
+            behaviourTrees.ForEach(treePath =>
+            {
                 assetSelector.choices.Add(ToMenuFormat(treePath));
             });
 
@@ -43,38 +47,46 @@ namespace TheKiwiCoder {
             createButton.clicked += OnCreateAsset;
         }
 
-        public void Hide() {
+        public void Hide()
+        {
             style.visibility = Visibility.Hidden;
         }
 
-        public string ToMenuFormat(string one) {
+        public string ToMenuFormat(string one)
+        {
             // Using the slash creates submenus...
             return one.Replace("/", "|");
         }
 
-        public string ToAssetFormat(string one) {
+        public string ToAssetFormat(string one)
+        {
             // Using the slash creates submenus...
             return one.Replace("|", "/");
         }
 
-        void OnOpenAsset() {
+        void OnOpenAsset()
+        {
             string path = ToAssetFormat(assetSelector.text);
             BehaviourTree tree = AssetDatabase.LoadAssetAtPath<BehaviourTree>(path);
-            if (tree) {
+            if (tree)
+            {
                 TreeSelected(tree);
                 style.visibility = Visibility.Hidden;
             }
         }
 
-        void OnCreateAsset() {
+        void OnCreateAsset()
+        {
             BehaviourTree tree = EditorUtility.CreateNewTree(treeNameField.text, locationPathField.text);
-            if (tree) {
+            if (tree)
+            {
                 TreeSelected(tree);
                 style.visibility = Visibility.Hidden;
             }
         }
 
-        void TreeSelected(BehaviourTree tree) {
+        void TreeSelected(BehaviourTree tree)
+        {
             OnTreeSelected.Invoke(tree);
         }
     }
