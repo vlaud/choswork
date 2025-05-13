@@ -23,5 +23,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameStage2.unity
     guid: 077ec43035b480441bfd6a017c87a1fa
+  - enabled: 1
+    path: Assets/Scenes/ClearMessage.unity
+    guid: c5496db8db4769d4eaa1e4b6469a4648
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: fe4edfbd0ad419c41a91a03d2a1ce18e, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: a6701fe3985470d499fbd4ebe39933a7, type: 2}
+  m_UseUCBPForAssetBundles: 0
