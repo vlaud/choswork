@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -45,7 +44,7 @@ public class SceneLoader : Singleton<SceneLoader>
     IEnumerator LoadingTarget(Slider slider, int i)
     {
         AsyncOperation ao = SceneManager.LoadSceneAsync(i);
-        // ¾À·ÎµùÀÌ ³¡³ª±â Àü±îÁø ¾ÀÀ» È°¼ºÈ­ ½ÃÅ°Áö ¾ÊÀ½
+        // ì”¬ë¡œë”©ì´ ëë‚˜ê¸° ì „ê¹Œì§„ ì”¬ì„ í™œì„±í™” ì‹œí‚¤ì§€ ì•ŠìŒ
         ao.allowSceneActivation = false;
 
         while (!ao.isDone)
@@ -53,7 +52,7 @@ public class SceneLoader : Singleton<SceneLoader>
             slider.value = ao.progress / 0.9f;
             if (Mathf.Approximately(slider.value, 1.0f))
             {
-                // ¾À·ÎµùÀÌ ³¡³µÀ¸¹Ç·Î ¾À È°¼ºÈ­
+                // ì”¬ë¡œë”©ì´ ëë‚¬ìœ¼ë¯€ë¡œ ì”¬ í™œì„±í™”
                 ao.allowSceneActivation = true;
             }
             yield return null;
@@ -62,7 +61,7 @@ public class SceneLoader : Singleton<SceneLoader>
     IEnumerator LoadingTarget(Slider slider, string scene)
     {
         AsyncOperation ao = SceneManager.LoadSceneAsync(scene);
-        // ¾À·ÎµùÀÌ ³¡³ª±â Àü±îÁø ¾ÀÀ» È°¼ºÈ­ ½ÃÅ°Áö ¾ÊÀ½
+        // ì”¬ë¡œë”©ì´ ëë‚˜ê¸° ì „ê¹Œì§„ ì”¬ì„ í™œì„±í™” ì‹œí‚¤ì§€ ì•ŠìŒ
         ao.allowSceneActivation = false;
 
         while (!ao.isDone)
@@ -70,7 +69,7 @@ public class SceneLoader : Singleton<SceneLoader>
             slider.value = ao.progress / 0.9f;
             if (Mathf.Approximately(slider.value, 1.0f))
             {
-                // ¾À·ÎµùÀÌ ³¡³µÀ¸¹Ç·Î ¾À È°¼ºÈ­
+                // ì”¬ë¡œë”©ì´ ëë‚¬ìœ¼ë¯€ë¡œ ì”¬ í™œì„±í™”
                 ao.allowSceneActivation = true;
             }
             yield return null;

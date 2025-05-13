@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
-public class GraphicManager : Singleton<GraphicManager> // »ç¿îµå ¸Å´ÏÀú´Â ½ÌÅ¬Åæ ¹æ½ÄÀ¸·Î
+public class GraphicManager : Singleton<GraphicManager> // ì‚¬ìš´ë“œ ë§¤ë‹ˆì €ëŠ” ì‹±í´í†¤ ë°©ì‹ìœ¼ë¡œ
 {
     public PostProcessProfile brightness;
     public PostProcessProfile constrast;

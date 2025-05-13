@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    //½Ì±ÛÅæ ÆĞÅÏ - ÇÁ·Î±×·¥»ó¿¡ ´Ü ÇÏ³ªÀÇ À¯ÀÏÇÑ ÀÎ½ºÅÏ½º¸¦ ¸¸µç´Ù.
+    //ì‹±ê¸€í†¤ íŒ¨í„´ - í”„ë¡œê·¸ë¨ìƒì— ë‹¨ í•˜ë‚˜ì˜ ìœ ì¼í•œ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ë§Œë“ ë‹¤.
     static T _inst = null;
     public static T Inst
     {

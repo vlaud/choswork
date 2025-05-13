@@ -1,11 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class StudyCommandPattern : MonoBehaviour
 {
     static public StudyCommandPattern Inst = null;
-    public Dictionary<KeyCode, iCommandBase> Keylist = new Dictionary<KeyCode, iCommandBase>(); //wasd ¸®½ºÆ®
+    public Dictionary<KeyCode, iCommandBase> Keylist = new Dictionary<KeyCode, iCommandBase>(); //wasd ë¦¬ìŠ¤íŠ¸
 
     iCommandBase AKey = null;
     iCommandBase DKey = null;

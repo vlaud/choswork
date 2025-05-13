@@ -1,7 +1,6 @@
-using System.Collections.Generic;
-using UnityEngine;
-using Commands.Menu;
 using Commands.Camera;
+using Commands.Menu;
+using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
@@ -35,7 +34,7 @@ public class InputManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ
+    /// í”Œë ˆì´ì–´ ì›€ì§ì„
     /// </summary>
     private void PlayerMovement()
     {
@@ -60,13 +59,13 @@ public class InputManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ¿ÀºêÁ§Æ® »óÈ£ÀÛ¿ë
+    /// ì˜¤ë¸Œì íŠ¸ ìƒí˜¸ì‘ìš©
     /// </summary>
     private void HandleObjectPickupAndThrow()
     {
         if (GameManagement.Inst.myGameState == GameState.Pause) return;
 
-        // ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ® Áı±â + ´øÁö±â
+        // í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸ ì§‘ê¸° + ë˜ì§€ê¸°
         if (Input.GetMouseButtonDown(0))
         {
             ObjectStatesEvent.Trigger(ObjectEventType.ThrowObject);
@@ -82,13 +81,13 @@ public class InputManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Ä«¸Ş¶ó
+    /// ì¹´ë©”ë¼
     /// </summary>
     private void HandleCameraSwitching()
     {
         if (GameManagement.Inst.myGameState == GameState.Pause) return;
 
-        // Ä«¸Ş¶ó
+        // ì¹´ë©”ë¼
         if (Input.GetKeyDown(KeyCode.V))
         {
             CameraActions.ExecuteVKey();

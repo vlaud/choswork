@@ -5,8 +5,8 @@ using UnityEngine.Events;
 
 public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSubscription
 {
-    [Header("Ä«¸Ş¶ó »óÅÂ ¼³Á¤")]
-    public ViewState myCameraState = ViewState.Create; // Ä«¸Ş¶ó »óÅÂ±â°è
+    [Header("ì¹´ë©”ë¼ ìƒíƒœ ì„¤ì •")]
+    public ViewState myCameraState = ViewState.Create; // ì¹´ë©”ë¼ ìƒíƒœê¸°ê³„
     public CameraSet myFPSCam;
     public CameraSet myTPSCam;
     public CameraSet myUICam;
@@ -16,10 +16,10 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     private bool isGhost = false;
 
     private CoroutineRunner coroutineRunner;
-    private Coroutine currentUIRotatingCoroutine; // ÇöÀç ½ÇÇà ÁßÀÎ UI È¸Àü ÄÚ·çÆ¾
-    private Coroutine currentUIMovingCoroutine; // ÇöÀç ½ÇÇà ÁßÀÎ UI ¿òÁ÷ÀÓ ÄÚ·çÆ¾
+    private Coroutine currentUIRotatingCoroutine; // í˜„ì¬ ì‹¤í–‰ ì¤‘ì¸ UI íšŒì „ ì½”ë£¨í‹´
+    private Coroutine currentUIMovingCoroutine; // í˜„ì¬ ì‹¤í–‰ ì¤‘ì¸ UI ì›€ì§ì„ ì½”ë£¨í‹´
 
-    // ´Ù¸¥ Å¬·¡½º¿¡¼­ Inventory ÀÎ½ºÅÏ½º¿¡ Á¢±Ù
+    // ë‹¤ë¥¸ í´ë˜ìŠ¤ì—ì„œ Inventory ì¸ìŠ¤í„´ìŠ¤ì— ì ‘ê·¼
     [SerializeField] Inventory _inventory;
 
     public GameObject[] GetAllCams()
@@ -44,7 +44,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
                 break;
             case ViewState.FPS:
                 SelectCamera(myFPSCam);
-                myTPSCam = CopyPaste(myTPSCam, myFPSCam); // 3ÀÎÄª¿¡¼­ 1ÀÎÄª ÀüÈ¯½Ã 3ÀÎÄª °ªÀ» 1ÀÎÄª °ªÀ¸·Î
+                myTPSCam = CopyPaste(myTPSCam, myFPSCam); // 3ì¸ì¹­ì—ì„œ 1ì¸ì¹­ ì „í™˜ì‹œ 3ì¸ì¹­ ê°’ì„ 1ì¸ì¹­ ê°’ìœ¼ë¡œ
                 break;
             case ViewState.TPS:
                 SelectCamera(myTPSCam);
@@ -85,9 +85,9 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         if (GameManagement.Inst.myGameState != GameState.Play) return;
 
         if (myCameraState != ViewState.UI)
-            myTPSCam = SpringArmWork(myTPSCam); // 1ÀÎÄª, 3ÀÎÄª Ä«¸Ş¶ó°ªÀ» °°°Ô 
+            myTPSCam = SpringArmWork(myTPSCam); // 1ì¸ì¹­, 3ì¸ì¹­ ì¹´ë©”ë¼ê°’ì„ ê°™ê²Œ 
 
-        MouseWheelMove(); // 3ÀÎÄª ½Ã¾ß °Å¸®
+        MouseWheelMove(); // 3ì¸ì¹­ ì‹œì•¼ ê±°ë¦¬
         switch (myCameraState)
         {
             case ViewState.Create:
@@ -96,19 +96,19 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
                 isFPSCamRotinTPS = false;
                 myFPSCam = SpringArmWork(myFPSCam);
                 break;
-            case ViewState.TPS: // 3ÀÎÄª
+            case ViewState.TPS: // 3ì¸ì¹­
                 if (myPlayer.ReturnAnim().GetBool("IsMoving"))
                 {
-                    RotatingRoot(mySpring); // ÀÌµ¿Å° ²Ú ´©¸¦½Ã Ä³¸¯ÅÍ È¸Àü
+                    RotatingRoot(mySpring); // ì´ë™í‚¤ ê¾¹ ëˆ„ë¥¼ì‹œ ìºë¦­í„° íšŒì „
 
                     if (!isFPSCamRotinTPS)
                     {
-                        StartCoroutine(RotatingDownUP());  //Ä³¸¯ÅÍ°¡ ¿òÁ÷ÀÏ¶§ fps Ä«¸Ş¶ó »óÇÏ°ª Á¤Áß¾ÓÀ¸·Î
+                        StartCoroutine(RotatingDownUP());  //ìºë¦­í„°ê°€ ì›€ì§ì¼ë•Œ fps ì¹´ë©”ë¼ ìƒí•˜ê°’ ì •ì¤‘ì•™ìœ¼ë¡œ
                         isFPSCamRotinTPS = true;
                     }
                 }
                 if (!myPlayer.ReturnAnim().GetBool("IsMoving"))
-                    isFPSCamRotinTPS = false; //Ä³¸¯ÅÍ°¡ ¾È¿òÁ÷ÀÌ¸é °íÁ¤ ÇØÁ¦
+                    isFPSCamRotinTPS = false; //ìºë¦­í„°ê°€ ì•ˆì›€ì§ì´ë©´ ê³ ì • í•´ì œ
                 break;
             case ViewState.UI:
                 isFPSCamRotinTPS = false;
@@ -120,7 +120,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
 
     float RotationSetTo_180(float angle)
     {
-        // -180 ~ 180À¸·Î °íÁ¤
+        // -180 ~ 180ìœ¼ë¡œ ê³ ì •
         if (angle > 180.0f)
         {
             angle = angle - 360.0f;
@@ -135,11 +135,11 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
 
     IEnumerator RotatingDownUP()
     {
-        //fpsÄ«¸Ş¶ó À§¾Æ·¡ ¹Ù²Ù±â
-        float fpsXr = myFPSCam.myRig.localRotation.eulerAngles.x; //fps ¿ÀÀÏ·¯ »óÇÏ°ª
+        //fpsì¹´ë©”ë¼ ìœ„ì•„ë˜ ë°”ê¾¸ê¸°
+        float fpsXr = myFPSCam.myRig.localRotation.eulerAngles.x; //fps ì˜¤ì¼ëŸ¬ ìƒí•˜ê°’
         float rotDir = 1.0f;
 
-        //xÃà È¸ÀüÀÌ 180ÀÌ ³ÑÀ¸¸é 360»©±â
+        //xì¶• íšŒì „ì´ 180ì´ ë„˜ìœ¼ë©´ 360ë¹¼ê¸°
         fpsXr = RotationSetTo_180(fpsXr);
 
         if (fpsXr > Mathf.Epsilon)
@@ -166,7 +166,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         myFPSCam = CameraSetting(myFPSCam);
         myFPSCam = CopyCurRot(myFPSCam, myFPSCam);
     }
-    IEnumerator UIMoving(Transform tr, UnityAction done = null) //UIÄ«¸Ş¶ó È°¼ºÈ­¶§ ½ÃÁ¡ ÀÚ¿¬½º·´°Ô ¿òÁ÷ÀÓ
+    IEnumerator UIMoving(Transform tr, UnityAction done = null) //UIì¹´ë©”ë¼ í™œì„±í™”ë•Œ ì‹œì  ìì—°ìŠ¤ëŸ½ê²Œ ì›€ì§ì„
     {
         Vector3 dir = tr.position - myUICam.DesirePos.position;
         float dist = dir.magnitude;
@@ -192,9 +192,9 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
 
     IEnumerator UIRotating(Vector3 dir, bool IsUI, Space sp = Space.World)
     {
-        //UIkeyAvailable = false; // Àá±ñ iÅ° ¾È¸ÔÈ÷°Ô
+        //UIkeyAvailable = false; // ì ê¹ ií‚¤ ì•ˆë¨¹íˆê²Œ
 
-        //UIÄ«¸Ş¶ó Ä³¸¯ÅÍ ¸ğµ¨ µ¹¸®±â
+        //UIì¹´ë©”ë¼ ìºë¦­í„° ëª¨ë¸ ëŒë¦¬ê¸°
         float Angle = Vector3.Angle(myModel.forward, dir);
         float rotDir = 1.0f;
         if (Vector3.Dot(myModel.right, dir) < Mathf.Epsilon)
@@ -219,11 +219,11 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
             myModel.Rotate(Vector3.up * delta * rotDir, sp);
             yield return null;
         }
-        //UIkeyAvailable = true; // iÅ° ´Ù½Ã È°¼ºÈ­
+        //UIkeyAvailable = true; // ií‚¤ ë‹¤ì‹œ í™œì„±í™”
     }
     void RotatingRoot(Transform tr)
     {
-        // Ä³¸¯ÅÍ 3ÀÎÄª ½ÃÁ¡ º¯È¯, ´­·¶´Ù ¶¼¸é È¸Àü ÁßÁö
+        // ìºë¦­í„° 3ì¸ì¹­ ì‹œì  ë³€í™˜, ëˆŒë €ë‹¤ ë–¼ë©´ íšŒì „ ì¤‘ì§€
         Vector3 dir = tr.forward;
         float Angle = Vector3.Angle(myRoot.forward, dir);
         float rotDir = 1.0f;
@@ -249,12 +249,12 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     public CameraSet CameraSetting(CameraSet s)
     {
         CameraSet set = s;
-        //xÃà È¸ÀüÀÌ 180ÀÌ ³ÑÀ¸¸é 360»©±â
+        //xì¶• íšŒì „ì´ 180ì´ ë„˜ìœ¼ë©´ 360ë¹¼ê¸°
         set.curRot.x = RotationSetTo_180(set.myRig.localRotation.eulerAngles.x);
         set.curRot.y = set.myRig.parent.localRotation.eulerAngles.y;
         return set;
     }
-    public CameraSet CopyCurRot(CameraSet origin, CameraSet copy) // È¸Àü°ª º¹»ç
+    public CameraSet CopyCurRot(CameraSet origin, CameraSet copy) // íšŒì „ê°’ ë³µì‚¬
     {
         CameraSet set = origin;
 
@@ -264,7 +264,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         return set;
     }
 
-    public CameraSet CopyPaste(CameraSet origin, CameraSet copy) // ¿ÀÀÏ·¯¸¦ ÄõÅÍ´Ï¾ğÀ¸·Î º¯È¯
+    public CameraSet CopyPaste(CameraSet origin, CameraSet copy) // ì˜¤ì¼ëŸ¬ë¥¼ ì¿¼í„°ë‹ˆì–¸ìœ¼ë¡œ ë³€í™˜
     {
         CameraSet set = origin;
 
@@ -283,10 +283,10 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
 
         if (_inventory != null)
         {
-            // OnInventoryToggled ÀÌº¥Æ®¿¡ ÀÌº¥Æ® ÇÚµé·¯ Ãß°¡
+            // OnInventoryToggled ì´ë²¤íŠ¸ì— ì´ë²¤íŠ¸ í•¸ë“¤ëŸ¬ ì¶”ê°€
             _inventory.OnInventoryToggled += HandleInventoryToggled;
 
-            // OnInventoryToggled ÀÌº¥Æ®¿¡¼­ ÀÌº¥Æ® ÇÚµé·¯ Á¦°Å
+            // OnInventoryToggled ì´ë²¤íŠ¸ì—ì„œ ì´ë²¤íŠ¸ í•¸ë“¤ëŸ¬ ì œê±°
             // inventory.OnInventoryToggled -= HandleInventoryToggled;
         }
 
@@ -323,8 +323,8 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
 
         myModel_baseForward.position = myModel.position;
 
-        myFPSCam.DesirePos.position = myEyes.position; // 1ÀÎÄª Ä«¸Ş¶ó À§Ä¡¸¦ Ä³¸¯ÅÍ ´«¿¡ °íÁ¤
-        myUI_basePos.parent.rotation = mySpring.rotation; // uiÄ«¸Ş¶ó(ºÎ¸ğ¸¦ ÁßÁ¡À¸·Î)¸¦ 3ÀÎÄª ÁÂ¿ì È¸Àü°ª°ú µ¿ÀÏÇÏ°Ô
+        myFPSCam.DesirePos.position = myEyes.position; // 1ì¸ì¹­ ì¹´ë©”ë¼ ìœ„ì¹˜ë¥¼ ìºë¦­í„° ëˆˆì— ê³ ì •
+        myUI_basePos.parent.rotation = mySpring.rotation; // uiì¹´ë©”ë¼(ë¶€ëª¨ë¥¼ ì¤‘ì ìœ¼ë¡œ)ë¥¼ 3ì¸ì¹­ ì¢Œìš° íšŒì „ê°’ê³¼ ë™ì¼í•˜ê²Œ
         UICameraSetRot(mySpring);
         StateProcess();
 
@@ -339,29 +339,29 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     public void DebugCamera()
     {
         Debug.Log(myModel.localRotation.eulerAngles.y);
-        Debug.Log("ÄõÅÍ´Ï¾ğ : " + myFPSCam.myRig.rotation.x);
-        Debug.Log("¿ÀÀÏ·¯ : " + myFPSCam.myRig.rotation.eulerAngles.x);
+        Debug.Log("ì¿¼í„°ë‹ˆì–¸ : " + myFPSCam.myRig.rotation.x);
+        Debug.Log("ì˜¤ì¼ëŸ¬ : " + myFPSCam.myRig.rotation.eulerAngles.x);
         if (myFPSCam.myRig.localRotation.eulerAngles.x > 180.0f)
         {
-            Debug.Log("·ÎÄÃ¿ÀÀÏ·¯ : " + (myFPSCam.myRig.localRotation.eulerAngles.x - 360.0f));
+            Debug.Log("ë¡œì»¬ì˜¤ì¼ëŸ¬ : " + (myFPSCam.myRig.localRotation.eulerAngles.x - 360.0f));
         }
         else if (myFPSCam.myRig.localRotation.eulerAngles.x < -180.0f)
         {
-            Debug.Log("·ÎÄÃ¿ÀÀÏ·¯ : " + (myFPSCam.myRig.localRotation.eulerAngles.x + 360.0f));
+            Debug.Log("ë¡œì»¬ì˜¤ì¼ëŸ¬ : " + (myFPSCam.myRig.localRotation.eulerAngles.x + 360.0f));
         }
     }
 
-    void UICameraSetPos(CameraSet cam) // UI Ä«¸Ş¶ó À§Ä¡ ¼³Á¤
+    void UICameraSetPos(CameraSet cam) // UI ì¹´ë©”ë¼ ìœ„ì¹˜ ì„¤ì •
     {
         myUICam.DesirePos.position = cam.DesirePos.position;
     }
 
-    void UICameraSetRot(Transform tr) // UI Ä«¸Ş¶ó È¸Àü ¼³Á¤
+    void UICameraSetRot(Transform tr) // UI ì¹´ë©”ë¼ íšŒì „ ì„¤ì •
     {
-        myUICam.myRig.rotation = tr.rotation; //UI Ä«¸Ş¶ó ¸®±×°¡ µ¹°Ô²û
+        myUICam.myRig.rotation = tr.rotation; //UI ì¹´ë©”ë¼ ë¦¬ê·¸ê°€ ëŒê²Œë”
     }
 
-    public CameraSet SpringArmWork(CameraSet s) // Ä«¸Ş¶ó ¸¶¿ì½º
+    public CameraSet SpringArmWork(CameraSet s) // ì¹´ë©”ë¼ ë§ˆìš°ìŠ¤
     {
         CameraSet set = s;
         if (CursorManager.Instance.IsCurSorLocked())
@@ -376,7 +376,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         return set;
     }
 
-    public CameraSet? GetMyCamera() //ÇöÀç Ä«¸Ş¶ó Æ®·£½ºÆû ¸®ÅÏ
+    public CameraSet? GetMyCamera() //í˜„ì¬ ì¹´ë©”ë¼ íŠ¸ëœìŠ¤í¼ ë¦¬í„´
     {
         switch (myCameraState)
         {
@@ -388,7 +388,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         return null;
     }
 
-    public void MouseWheelMove() // 3ÀÎÄª ½Ã¾ß °Å¸®
+    public void MouseWheelMove() // 3ì¸ì¹­ ì‹œì•¼ ê±°ë¦¬
     {
         if (myCameraState == ViewState.TPS)
         {
@@ -425,7 +425,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         myTPSCam.DesirePos.localPosition = camPos;
     }
 
-    void SelectCamera(CameraSet cam) // Ä«¸Ş¶ó ¼±ÅÃ
+    void SelectCamera(CameraSet cam) // ì¹´ë©”ë¼ ì„ íƒ
     {
         if (cam.realCam.activeSelf) return;
 
@@ -433,7 +433,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         cam.realCam.SetActive(true);
     }
 
-    void AllCameraOff() // ¸ğµç Ä«¸Ş¶ó ²ô±â
+    void AllCameraOff() // ëª¨ë“  ì¹´ë©”ë¼ ë„ê¸°
     {
         myFPSCam.realCam.SetActive(false);
         myTPSCam.realCam.SetActive(false);
@@ -453,15 +453,15 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     private void HandleInventoryToggled(bool isInventoryOpen)
     {
         if (!UIkeyAvailable) return;
-        // ÀÎº¥Åä¸®°¡ ¿­·ÁÀÖ´ÂÁö ¿©ºÎ¿¡ µû¶ó Ã³¸®
+        // ì¸ë²¤í† ë¦¬ê°€ ì—´ë ¤ìˆëŠ”ì§€ ì—¬ë¶€ì— ë”°ë¼ ì²˜ë¦¬
         if (isInventoryOpen)
         {
-            // ÀÎº¥Åä¸®°¡ ¿­¸° °æ¿ì Ã³¸®ÇÒ ³»¿ë
+            // ì¸ë²¤í† ë¦¬ê°€ ì—´ë¦° ê²½ìš° ì²˜ë¦¬í•  ë‚´ìš©
             ChangeState(ViewState.UI);
         }
         else
         {
-            // ÀÎº¥Åä¸®°¡ ´İÈù °æ¿ì Ã³¸®ÇÒ ³»¿ë
+            // ì¸ë²¤í† ë¦¬ê°€ ë‹«íŒ ê²½ìš° ì²˜ë¦¬í•  ë‚´ìš©
             ChangeState(ViewState.Turn);
         }
     }

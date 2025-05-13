@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraShake : MonoBehaviour
@@ -25,10 +24,10 @@ public class CameraShake : MonoBehaviour
         transform.localPosition = originalPos;
     }
     /// <summary>
-    /// Ä«¸Ş¶ó Èçµé¸² Á¶ÀÛ
+    /// ì¹´ë©”ë¼ í”ë“¤ë¦¼ ì¡°ì‘
     /// </summary>
-    /// <param name="shakeTime">Ä«¸Ş¶ó Èçµé¸² Áö¼Ó ½Ã°£</param>
-    /// <param name="shakeIntensity">Ä«¸Ş¶ó Èçµé¸² ¼¼±â</param>
+    /// <param name="shakeTime">ì¹´ë©”ë¼ í”ë“¤ë¦¼ ì§€ì† ì‹œê°„</param>
+    /// <param name="shakeIntensity">ì¹´ë©”ë¼ í”ë“¤ë¦¼ ì„¸ê¸°</param>
     public void OnShakeCamera(float shakeTime = 1.0f, float shakeIntensity = 0.1f, bool isPerlin = false)
     {
         this.shakeTime = shakeTime;
@@ -42,7 +41,7 @@ public class CameraShake : MonoBehaviour
     {
         Vector3 startPosition = transform.localPosition;
         Vector3 shakePos = Vector3.zero;
-        //Random.insideUnitSphere = ¹İÁö¸§ 1 Å©±âÀÇ ±¸ ³»ºÎ Áß ÀÓÀÇÀÇ ÁÂÇ¥ »ı¼º
+        //Random.insideUnitSphere = ë°˜ì§€ë¦„ 1 í¬ê¸°ì˜ êµ¬ ë‚´ë¶€ ì¤‘ ì„ì˜ì˜ ì¢Œí‘œ ìƒì„±
         while (shakeTime > 0.0f)
         {
             float offset = shakeTime * shakeIntensity;

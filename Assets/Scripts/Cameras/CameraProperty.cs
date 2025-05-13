@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -30,17 +28,17 @@ public enum ViewState
 
 public class CameraProperty : MonoBehaviour
 {
-    [Header("fps ¼³Á¤")]
-    public Transform myRoot;//fps ÁÂ¿ì°ª
-    public Transform myEyes; //fpsÄ«¸Ş¶ó ´«¿¡ °íÁ¤
-    [Header("tps ¼³Á¤")]
-    public Transform mySpring; //tps ÁÂ¿ì°ª
-    [Header("ui ¼³Á¤")]
-    public Transform myUI_basePos; //UIÄ«¸Ş¶ó ¿ø·¡À§Ä¡
-    [Header("Ä³¸¯ÅÍ ¸ğµ¨ ¼³Á¤")]
-    public Transform myModel; //Ä³¸¯ÅÍ ¸ğµ¨
-    public Transform myModel_baseForward; //UI»óÅÂÀÏ¶§ Ä³¸¯ÅÍ ¸ğµ¨ÀÌ ¹Ù¶óºÁ¾ß ÇÒ °÷
-    [Header("Ä«¸Ş¶ó ¼³Á¤")]
+    [Header("fps ì„¤ì •")]
+    public Transform myRoot;//fps ì¢Œìš°ê°’
+    public Transform myEyes; //fpsì¹´ë©”ë¼ ëˆˆì— ê³ ì •
+    [Header("tps ì„¤ì •")]
+    public Transform mySpring; //tps ì¢Œìš°ê°’
+    [Header("ui ì„¤ì •")]
+    public Transform myUI_basePos; //UIì¹´ë©”ë¼ ì›ë˜ìœ„ì¹˜
+    [Header("ìºë¦­í„° ëª¨ë¸ ì„¤ì •")]
+    public Transform myModel; //ìºë¦­í„° ëª¨ë¸
+    public Transform myModel_baseForward; //UIìƒíƒœì¼ë•Œ ìºë¦­í„° ëª¨ë¸ì´ ë°”ë¼ë´ì•¼ í•  ê³³
+    [Header("ì¹´ë©”ë¼ ì„¤ì •")]
     public LayerMask crashMask;
     public Vector2 LookupRange = new Vector2(-60.0f, 80.0f);
     public Vector3 curRot = Vector3.zero;

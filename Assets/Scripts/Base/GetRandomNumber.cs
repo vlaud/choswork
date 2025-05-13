@@ -3,17 +3,17 @@ using System.Collections.Generic;
 public static class GetRandomNumber
 {
     /// <summary>
-    /// ·£´ı ¼ıÀÚ ¸ñ·Ï »ı¼º
+    /// ëœë¤ ìˆ«ì ëª©ë¡ ìƒì„±
     /// </summary>
-    /// <param name="StartNum">½ÃÀÛ ¹øÈ£</param>
-    /// <param name="EndNum">³¡ ¹øÈ£ (¹è¿­, ¸®½ºÆ® »çÀÌÁî)</param>
-    /// <param name="ResultAmounts">¹Ş°í ½ÍÀº ¼ıÀÚÀÇ °³¼ö</param>
-    /// <param name="RemoveNums">Á¦¿ÜÇÒ ¼ıÀÚµé</param>
+    /// <param name="StartNum">ì‹œì‘ ë²ˆí˜¸</param>
+    /// <param name="EndNum">ë ë²ˆí˜¸ (ë°°ì—´, ë¦¬ìŠ¤íŠ¸ ì‚¬ì´ì¦ˆ)</param>
+    /// <param name="ResultAmounts">ë°›ê³  ì‹¶ì€ ìˆ«ìì˜ ê°œìˆ˜</param>
+    /// <param name="RemoveNums">ì œì™¸í•  ìˆ«ìë“¤</param>
     /// <returns></returns>
     public static List<int> GetRanNums(int StartNum, int EndNum, int ResultAmounts,
         int[] RemoveNums = null)
     {
-        // Áßº¹ ¼ıÀÚ ¹æÁö
+        // ì¤‘ë³µ ìˆ«ì ë°©ì§€
         List<int> Numbers = new List<int>();
         for (int i = StartNum; i < EndNum; ++i)
         {
@@ -39,15 +39,15 @@ public static class GetRandomNumber
     }
 
     /// <summary>
-    /// ·£´ı ¼ıÀÚ 1°³ »ı¼º
+    /// ëœë¤ ìˆ«ì 1ê°œ ìƒì„±
     /// </summary>
-    /// <param name="StartNum">½ÃÀÛ ¹øÈ£</param>
-    /// <param name="EndNum">³¡ ¹øÈ£</param>
-    /// <param name="RemoveNums">Á¦¿ÜÇÒ ¼ıÀÚµé</param>
+    /// <param name="StartNum">ì‹œì‘ ë²ˆí˜¸</param>
+    /// <param name="EndNum">ë ë²ˆí˜¸</param>
+    /// <param name="RemoveNums">ì œì™¸í•  ìˆ«ìë“¤</param>
     /// <returns></returns>
     public static int GetRanNum(int StartNum, int EndNum, int[] RemoveNums = null)
     {
-        // Áßº¹ ¼ıÀÚ ¹æÁö
+        // ì¤‘ë³µ ìˆ«ì ë°©ì§€
         List<int> Numbers = new List<int>();
         for (int i = StartNum; i < EndNum; ++i)
         {
@@ -66,15 +66,15 @@ public static class GetRandomNumber
     }
 
     /// <summary>
-    /// ·£´ı ¼ıÀÚ 1°³ »ı¼º
+    /// ëœë¤ ìˆ«ì 1ê°œ ìƒì„±
     /// </summary>
-    /// <param name="StartNum">½ÃÀÛ ¹øÈ£</param>
-    /// <param name="EndNum">½ÃÀÛ ¹øÈ£</param>
-    /// <param name="RemoveNum">Á¦¿ÜÇÒ ¼ıÀÚ</param>
+    /// <param name="StartNum">ì‹œì‘ ë²ˆí˜¸</param>
+    /// <param name="EndNum">ì‹œì‘ ë²ˆí˜¸</param>
+    /// <param name="RemoveNum">ì œì™¸í•  ìˆ«ì</param>
     /// <returns></returns>
     public static int GetRanNum(int StartNum, int EndNum, int RemoveNum)
     {
-        // Áßº¹ ¼ıÀÚ ¹æÁö
+        // ì¤‘ë³µ ìˆ«ì ë°©ì§€
         List<int> Numbers = new List<int>();
         for (int i = StartNum; i < EndNum; ++i)
         {

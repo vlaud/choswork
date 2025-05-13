@@ -4,16 +4,16 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class SoundManager : Singleton<SoundManager> // »ç¿îµå ¸Å´ÏÀú´Â ½ÌÅ¬Åæ ¹æ½ÄÀ¸·Î
+public class SoundManager : Singleton<SoundManager> // ì‚¬ìš´ë“œ ë§¤ë‹ˆì €ëŠ” ì‹±í´í†¤ ë°©ì‹ìœ¼ë¡œ
 {
     public AudioSource bgmPlayer = null;
 
-    // Dictionary·Î AudioClip Ä³½Ì
+    // Dictionaryë¡œ AudioClip ìºì‹±
     private Dictionary<string, AudioClip> audioClipCache = new Dictionary<string, AudioClip>();
-    // ÀÌÀü¿¡ Àç»ıÇÑ ¿Àµğ¿À Å¬¸³À» ±â·ÏÇÒ ¸®½ºÆ®
+    // ì´ì „ì— ì¬ìƒí•œ ì˜¤ë””ì˜¤ í´ë¦½ì„ ê¸°ë¡í•  ë¦¬ìŠ¤íŠ¸
     private Dictionary<string, List<AudioClip>> previouslyPlayedClips = new Dictionary<string, List<AudioClip>>();
 
-    // AudioClipÀÌ Á¸ÀçÇÏ´Â ¶óº§ ¸ñ·Ï
+    // AudioClipì´ ì¡´ì¬í•˜ëŠ” ë¼ë²¨ ëª©ë¡
     private List<string> audioLabels = new List<string> { "BGM", "Mobs", "Player", "Damage", "Footstep" };
 
     public float bgmVolume
@@ -92,7 +92,7 @@ public class SoundManager : Singleton<SoundManager> // »ç¿îµå ¸Å´ÏÀú´Â ½ÌÅ¬Åæ ¹æ
                     {
                         if (!audioClipCache.ContainsKey(clip.name))
                         {
-                            // Ä³½Ã¿¡ ÀúÀå
+                            // ìºì‹œì— ì €ì¥
 
                             audioClipCache[clip.name] = clip;
                             Debug.Log($"save in {label}: AudioClip: {clip.name}");
@@ -103,10 +103,10 @@ public class SoundManager : Singleton<SoundManager> // »ç¿îµå ¸Å´ÏÀú´Â ½ÌÅ¬Åæ ¹æ
         }
     }
 
-    // Æ¯Á¤ ¿Àµğ¿À Å¬¸³À» °Ë»öÇÏ°í ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+    // íŠ¹ì • ì˜¤ë””ì˜¤ í´ë¦½ì„ ê²€ìƒ‰í•˜ê³  ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
     public void LoadAudioClip(string clipName, System.Action<AudioClip> onClipLoaded)
     {
-        // Ä³½Ã¿¡ Å¬¸³ÀÌ ÀÖÀ¸¸é ¹Ù·Î ¹İÈ¯
+        // ìºì‹œì— í´ë¦½ì´ ìˆìœ¼ë©´ ë°”ë¡œ ë°˜í™˜
         if (audioClipCache.TryGetValue(clipName, out AudioClip cachedClip))
         {
             Debug.Log($"AudioClip '{clipName}' found in cache.");
@@ -121,12 +121,12 @@ public class SoundManager : Singleton<SoundManager> // »ç¿îµå ¸Å´ÏÀú´Â ½ÌÅ¬Åæ ¹æ
     {
         bool clipFound = false;
 
-        // Ä³½Ã¿¡ ¾øÀ¸¸é ¶óº§¿¡¼­ °Ë»ö
+        // ìºì‹œì— ì—†ìœ¼ë©´ ë¼ë²¨ì—ì„œ ê²€ìƒ‰
         foreach (var label in audioLabels)
         {
             var handle = Addressables.LoadAssetsAsync<AudioClip>(label, null);
 
-            yield return handle; // ºñµ¿±â ÀÛ¾÷ ¿Ï·á¸¦ ´ë±â
+            yield return handle; // ë¹„ë™ê¸° ì‘ì—… ì™„ë£Œë¥¼ ëŒ€ê¸°
 
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
@@ -134,34 +134,34 @@ public class SoundManager : Singleton<SoundManager> // »ç¿îµå ¸Å´ÏÀú´Â ½ÌÅ¬Åæ ¹æ
                 {
                     if (!audioClipCache.ContainsKey(clip.name))
                     {
-                        // Ä³½Ã¿¡ ÀúÀå
+                        // ìºì‹œì— ì €ì¥
                         audioClipCache[clip.name] = clip;
                     }
 
-                    // Ã£Àº ¿Àµğ¿À Å¬¸³ÀÌ ¿äÃ»ÇÑ ÆÄÀÏÀÌ¸é ¹İÈ¯
+                    // ì°¾ì€ ì˜¤ë””ì˜¤ í´ë¦½ì´ ìš”ì²­í•œ íŒŒì¼ì´ë©´ ë°˜í™˜
                     if (clip.name == clipName)
                     {
                         Debug.Log($"{label}: Found AudioClip: {clip.name} in label {label}");
                         onClipLoaded?.Invoke(clip);
                         clipFound = true;
-                        break; // Å¬¸³À» Ã£¾ÒÀ¸¹Ç·Î ³ª¸ÓÁö Å¬¸³ °Ë»öÀ» Áß´Ü
+                        break; // í´ë¦½ì„ ì°¾ì•˜ìœ¼ë¯€ë¡œ ë‚˜ë¨¸ì§€ í´ë¦½ ê²€ìƒ‰ì„ ì¤‘ë‹¨
                     }
                 }
             }
 
-            // Å¬¸³À» Ã£¾ÒÀ¸¸é ³ª¸ÓÁö ¶óº§ °Ë»ö Áß´Ü
+            // í´ë¦½ì„ ì°¾ì•˜ìœ¼ë©´ ë‚˜ë¨¸ì§€ ë¼ë²¨ ê²€ìƒ‰ ì¤‘ë‹¨
             if (clipFound)
                 break;
         }
 
-        // Å¬¸³À» Ã£Áö ¸øÇßÀ» °æ¿ì
+        // í´ë¦½ì„ ì°¾ì§€ ëª»í–ˆì„ ê²½ìš°
         if (!clipFound)
         {
             Debug.LogError($"AudioClip '{clipName}' not found in any label.");
         }
     }
 
-    // ¿Àµğ¿À Å¬¸³À» Àç»ıÇÏ´Â ÇÔ¼ö (¿¹½Ã)
+    // ì˜¤ë””ì˜¤ í´ë¦½ì„ ì¬ìƒí•˜ëŠ” í•¨ìˆ˜ (ì˜ˆì‹œ)
     public void PlayClip(AudioSource audioSource, string clipName)
     {
         LoadAudioClip(clipName, clip =>
@@ -174,7 +174,7 @@ public class SoundManager : Singleton<SoundManager> // »ç¿îµå ¸Å´ÏÀú´Â ½ÌÅ¬Åæ ¹æ
         });
     }
 
-    public void PlayOneShot(AudioSource audioSource, string clipName) // È¿°úÀ½ ÇÑ¹ø¸¸ ³ª¿À°Ô
+    public void PlayOneShot(AudioSource audioSource, string clipName) // íš¨ê³¼ìŒ í•œë²ˆë§Œ ë‚˜ì˜¤ê²Œ
     {
         LoadAudioClip(clipName, clip =>
         {
@@ -185,13 +185,13 @@ public class SoundManager : Singleton<SoundManager> // »ç¿îµå ¸Å´ÏÀú´Â ½ÌÅ¬Åæ ¹æ
         });
     }
 
-    // ¶óº§À» AND Á¶°ÇÀ¸·Î ¸¸Á·ÇÏ´Â Å¬¸³ Áß ÇÏ³ª¸¦ Àç»ı
+    // ë¼ë²¨ì„ AND ì¡°ê±´ìœ¼ë¡œ ë§Œì¡±í•˜ëŠ” í´ë¦½ ì¤‘ í•˜ë‚˜ë¥¼ ì¬ìƒ
     public void PlayRandomClip(AudioSource audioSource, List<string> labels)
     {
-        // Addressables¿¡¼­ ¿©·¯ ¶óº§À» ÀÌ¿ëÇØ ¿¡¼Â ·Îµå
+        // Addressablesì—ì„œ ì—¬ëŸ¬ ë¼ë²¨ì„ ì´ìš©í•´ ì—ì…‹ ë¡œë“œ
         Addressables.LoadAssetsAsync<AudioClip>(labels, null).Completed += OnClipsLoaded;
 
-        // Å¬¸³ ·Îµå ¿Ï·á ÈÄ Ã³¸®
+        // í´ë¦½ ë¡œë“œ ì™„ë£Œ í›„ ì²˜ë¦¬
         void OnClipsLoaded(AsyncOperationHandle<IList<AudioClip>> handle)
         {
             if (handle.Status == AsyncOperationStatus.Succeeded)
@@ -200,18 +200,18 @@ public class SoundManager : Singleton<SoundManager> // »ç¿îµå ¸Å´ÏÀú´Â ½ÌÅ¬Åæ ¹æ
 
                 if (clips.Count > 0)
                 {
-                    // ÀÌÀü¿¡ Àç»ıÇÑ Å¬¸³À» ÀúÀåÇØ µÎ°í, Áßº¹ ¹æÁö¿ëÀ¸·Î »ç¿ë
+                    // ì´ì „ì— ì¬ìƒí•œ í´ë¦½ì„ ì €ì¥í•´ ë‘ê³ , ì¤‘ë³µ ë°©ì§€ìš©ìœ¼ë¡œ ì‚¬ìš©
                     AudioClip previousClip = audioSource.clip;
                     AudioClip randomClip;
 
-                    // Áßº¹µÇÁö ¾Êµµ·Ï ·£´ı Å¬¸³ ¼±ÅÃ
+                    // ì¤‘ë³µë˜ì§€ ì•Šë„ë¡ ëœë¤ í´ë¦½ ì„ íƒ
                     do
                     {
                         randomClip = clips[Random.Range(0, clips.Count)];
                     }
-                    while (randomClip == previousClip && clips.Count > 1); // Å¬¸³ÀÌ ÇÏ³ª¸¸ ÀÖÀ¸¸é °è¼Ó ¼±ÅÃ ¹æÁö
+                    while (randomClip == previousClip && clips.Count > 1); // í´ë¦½ì´ í•˜ë‚˜ë§Œ ìˆìœ¼ë©´ ê³„ì† ì„ íƒ ë°©ì§€
 
-                    // ¿Àµğ¿À ¼Ò½º¿¡ Å¬¸³ ¼³Á¤ ¹× Àç»ı
+                    // ì˜¤ë””ì˜¤ ì†ŒìŠ¤ì— í´ë¦½ ì„¤ì • ë° ì¬ìƒ
                     audioSource.clip = randomClip;
                     audioSource.Play();
                 }
@@ -227,13 +227,13 @@ public class SoundManager : Singleton<SoundManager> // »ç¿îµå ¸Å´ÏÀú´Â ½ÌÅ¬Åæ ¹æ
         }
     }
 
-    // ¶óº§À» AND Á¶°ÇÀ¸·Î ¸¸Á·ÇÏ´Â Å¬¸³ Áß ÇÏ³ª¸¦ Àç»ı
+    // ë¼ë²¨ì„ AND ì¡°ê±´ìœ¼ë¡œ ë§Œì¡±í•˜ëŠ” í´ë¦½ ì¤‘ í•˜ë‚˜ë¥¼ ì¬ìƒ
     public void PlayOneShotRandomClip(AudioSource audioSource, List<string> labels)
     {
-        // Addressables¿¡¼­ ¿©·¯ ¶óº§À» ÀÌ¿ëÇØ ¿¡¼Â ·Îµå
+        // Addressablesì—ì„œ ì—¬ëŸ¬ ë¼ë²¨ì„ ì´ìš©í•´ ì—ì…‹ ë¡œë“œ
         Addressables.LoadAssetsAsync<AudioClip>(labels, null, Addressables.MergeMode.Intersection).Completed += OnClipsLoaded;
 
-        // Å¬¸³ ·Îµå ¿Ï·á ÈÄ Ã³¸®
+        // í´ë¦½ ë¡œë“œ ì™„ë£Œ í›„ ì²˜ë¦¬
         void OnClipsLoaded(AsyncOperationHandle<IList<AudioClip>> handle)
         {
             if (handle.Status == AsyncOperationStatus.Succeeded)
@@ -242,18 +242,18 @@ public class SoundManager : Singleton<SoundManager> // »ç¿îµå ¸Å´ÏÀú´Â ½ÌÅ¬Åæ ¹æ
 
                 if (clips.Count > 0)
                 {
-                    // ÀÌÀü¿¡ Àç»ıÇÑ Å¬¸³À» ÀúÀåÇØ µÎ°í, Áßº¹ ¹æÁö¿ëÀ¸·Î »ç¿ë
+                    // ì´ì „ì— ì¬ìƒí•œ í´ë¦½ì„ ì €ì¥í•´ ë‘ê³ , ì¤‘ë³µ ë°©ì§€ìš©ìœ¼ë¡œ ì‚¬ìš©
                     AudioClip previousClip = audioSource.clip;
                     AudioClip randomClip;
 
-                    // Áßº¹µÇÁö ¾Êµµ·Ï ·£´ı Å¬¸³ ¼±ÅÃ
+                    // ì¤‘ë³µë˜ì§€ ì•Šë„ë¡ ëœë¤ í´ë¦½ ì„ íƒ
                     do
                     {
                         randomClip = clips[Random.Range(0, clips.Count)];
                     }
-                    while (randomClip == previousClip && clips.Count > 1); // Å¬¸³ÀÌ ÇÏ³ª¸¸ ÀÖÀ¸¸é °è¼Ó ¼±ÅÃ ¹æÁö
+                    while (randomClip == previousClip && clips.Count > 1); // í´ë¦½ì´ í•˜ë‚˜ë§Œ ìˆìœ¼ë©´ ê³„ì† ì„ íƒ ë°©ì§€
 
-                    // ¿Àµğ¿À ¼Ò½º¿¡ Å¬¸³ ¼³Á¤ ¹× Àç»ı
+                    // ì˜¤ë””ì˜¤ ì†ŒìŠ¤ì— í´ë¦½ ì„¤ì • ë° ì¬ìƒ
                     audioSource.clip = randomClip;
                     audioSource.PlayOneShot(randomClip);
                 }
