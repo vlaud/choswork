@@ -18,7 +18,7 @@ public class CameraShake : MonoBehaviour
             float y = Random.Range(-1f, 1f) * magnitude;
 
             transform.localPosition = new Vector3(x, y, originalPos.z);
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
 
             yield return null;
         }
@@ -54,7 +54,7 @@ public class CameraShake : MonoBehaviour
                 transform.localPosition = startPosition + Random.insideUnitSphere * shakeIntensity;
             else
                 transform.localPosition = startPosition + shakePos * shakeIntensity;
-            shakeTime -= Time.deltaTime;
+            shakeTime -= Time.unscaledDeltaTime;
 
             yield return null;
         }
@@ -85,7 +85,7 @@ public class CameraShake : MonoBehaviour
                 rot.z = Mathf.PerlinNoise(offset, offset * 2f) - 0.5f;
             rot = rot * power * shakeIntensity;
             transform.localRotation = startRotation * Quaternion.Euler(rot);
-            shakeTime -= Time.deltaTime;
+            shakeTime -= Time.unscaledDeltaTime;
 
             yield return null;
         }

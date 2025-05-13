@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 
@@ -17,14 +19,23 @@ public enum GameState
 
 public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameStatesEvent>
 {
-
+    [Header("게임 상태")]
     public GameState myGameState = GameState.Create;
     [SerializeField] private GameState prevGameState = GameState.Create;
-
+    public bool IsGameClear = false;
+    public bool IsCutscene = false;
     private static GameManagement _inst = null;
     public static GameManagement Inst => _inst;
+
+    [Header("플레이어 관련")]
     public Player myPlayer;
+
+    [Header("몹 관련")]
     public AIPerception[] myMonsters;
+    [SerializeField]
+    private Rigidbody[] rigidbodies;
+
+    [Header("게임 요소 관련")]
     public SpringArms mySpringArms;
     public Inventory myInventory;
     public SoundManager mySound;
@@ -34,12 +45,14 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
     public Canvas myCanvas;
     public TMPro.TMP_Text myActionText;
 
-    [Range(0.01f, 1f)]
+    [Header("시간 속도 설정")]
+    [SerializeField] private float pauseTime = 0f;
+
+    [Range(0f, 1f)]
     public float GameTimeScale = 1f;
     [Range(0f, 0.02f)]
     public float GameFixedTimeScale = 0.02f;
-    public bool IsGameClear = false;
-    public bool IsCutscene = false;
+    
     private float timer;
     [SerializeField] private bool IsBulletTime = false;
     [SerializeField] private float curBulletTime;
@@ -68,7 +81,7 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
                 break;
             case GameState.Pause:
                 StopAllCoroutines();
-                GameTimeScale = 0.01f;
+                GameTimeScale = pauseTime;
                 break;
             case GameState.GameOver:
                 StopAllCoroutines();
@@ -100,7 +113,9 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
     {
         _inst = this;
         Physics.simulationMode = SimulationMode.Script;
-        myMonsters = FindObjectsByType(typeof(AIPerception), FindObjectsSortMode.None) as AIPerception[];
+        myMonsters = FindObjectsByType<AIPerception>(FindObjectsSortMode.None);
+        GetAllMobsRigidbodies();
+        //myMonsters = FindObjectsByType(typeof(AIPerception), FindObjectsSortMode.None) as AIPerception[];
         for (int i = 0; i < myMonsters.Length; ++i)
         {
             myMonsters[i].GetComponent<AIAction>().SetMobIndex(i);
@@ -176,9 +191,22 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
         //Debug.Log("game unSub");
     }
 
+    private void GetAllMobsRigidbodies()
+    {
+        rigidbodies = myMonsters
+            .Select(monster => monster.GetComponent<RagDollAction>()) // RagDollAction 찾기
+            .Where(ragDoll => ragDoll != null) // Null 제거
+            .SelectMany(ragDoll => ragDoll.myRagDolls.GetAllRigidbodies()) // 모든 Rigidbody 가져오기
+            .ToArray();
+
+        Debug.Log($"맵에 있는 Rigidbody 개수: {rigidbodies.Length}");
+    }
+
     public void DoSlowmotion()
     {
-        GameTimeScale = Mathf.Clamp(GameTimeScale, 0.01f, 1f);
+        GameTimeScale = Mathf.Clamp(GameTimeScale, 0f, 1f);
+        // 현재 존재하는 모든 Ragdoll Rigidbody 찾기
+
         Time.timeScale = GameTimeScale;
         GameFixedTimeScale = Time.fixedDeltaTime = Time.timeScale * 0.02f;
     }

@@ -22,6 +22,17 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     // 다른 클래스에서 Inventory 인스턴스에 접근
     [SerializeField] Inventory _inventory;
 
+    public GameObject[] GetAllCams()
+    {
+        GameObject[] cams = new GameObject[3];
+
+        if (myFPSCam.realCam != null) cams[0] = myFPSCam.realCam;
+        if (myTPSCam.realCam != null) cams[1] = myTPSCam.realCam;
+        if (myUICam.realCam != null) cams[2] = myUICam.realCam;
+
+        return cams;
+    }
+
     void ChangeState(ViewState s)
     {
         if (myCameraState == s) return;

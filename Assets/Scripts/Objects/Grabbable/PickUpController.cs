@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class PickUpController : ObjectGrabbable
 {
     private ItemPickUp myItem;

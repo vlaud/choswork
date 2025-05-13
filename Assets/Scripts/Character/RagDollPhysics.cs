@@ -1,6 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 [Serializable]
@@ -22,6 +21,20 @@ public class RagDollPhysics : MonoBehaviour
 {
     public RagDoll myRagDoll;
     public bool isRagdoll;
+
+    public Rigidbody[] GetAllRigidbodies()
+    {
+        FieldInfo[] fields = typeof(RagDoll).GetFields();
+        Rigidbody[] rigidbodies = new Rigidbody[fields.Length];
+
+        for (int i = 0; i < fields.Length; i++)
+        {
+            rigidbodies[i] = (Rigidbody)fields[i].GetValue(myRagDoll);
+        }
+
+        return rigidbodies;
+    }
+
     public void RagDollOnOff(bool v) //래그돌 온오프 함수
     {
         isRagdoll = v;

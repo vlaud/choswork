@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class Door : ObjectNotGrabbable, ItemDesireEvent
 {
     public Item requiredItem;

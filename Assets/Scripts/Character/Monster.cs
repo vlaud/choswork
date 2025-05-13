@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class Monster : RagDollAction, AIAction
-{ 
+{
     private GameManagement myGamemanager;
     public LayerMask enemyMask = default;
     public Transform mobTarget; // for checking myTarget
@@ -27,7 +27,7 @@ public class Monster : RagDollAction, AIAction
     {
         if (myState == s) return;
         myState = s;
-        
+
         switch (myState)
         {
             case STATE.Create:
@@ -140,7 +140,7 @@ public class Monster : RagDollAction, AIAction
     {
         if (myState == STATE.Death || myState == STATE.Angry || myState == STATE.RagDoll ||
             myState == STATE.ResetBones || myState == STATE.StandUp) return;
-        
+
         Transform tempTarget = myGamemanager.myPlayer.transform;
         if ((tempTarget != null && tempTarget.TryGetComponent<PlayerPickUpDrop>(out var target)))
         {
@@ -154,7 +154,7 @@ public class Monster : RagDollAction, AIAction
                 if (grab.IsSoundable)
                 {
                     hearingPos = grab.soundPos;
-                    CheckSoundDist(myPath, filter.areaMask, 
+                    CheckSoundDist(myPath, filter.areaMask,
                         LayerMask.NameToLayer("Ground"), filter, () => LostTarget());
                     //grab.IsSoundable = false;
                 }
@@ -171,16 +171,16 @@ public class Monster : RagDollAction, AIAction
     public override void GetKick(Vector3 dir, float strength)
     {
         if (myState == STATE.RagDoll) return;
-        Vector3 force;
         Debug.Log("kick");
         ChangeState(STATE.RagDoll);
-        force = dir * strength;
+        Vector3 force = dir * strength;
         force.y = strength;
-        myRagDolls.myRagDoll.spineRigidBody.linearVelocity = force * Time.fixedUnscaledDeltaTime / myRagDolls.myRagDoll.spineRigidBody.mass;
+        Rigidbody rb = myRagDolls.myRagDoll.spineRigidBody;
+        rb.AddForce(force, ForceMode.Impulse);
     }
-    public override void ChangeRagDollState(RagDollState ragdoll) 
+    public override void ChangeRagDollState(RagDollState ragdoll)
     {
-        switch(ragdoll)
+        switch (ragdoll)
         {
             case RagDollState.ResetBones:
                 ChangeState(STATE.ResetBones);
@@ -201,7 +201,7 @@ public class Monster : RagDollAction, AIAction
     public void FindTarget(Transform target, STATE state)
     {
         if (myState == STATE.Death) return;
-        if(target == myGamemanager.myPlayer.transform && IsGameOver) return;
+        if (target == myGamemanager.myPlayer.transform && IsGameOver) return;
         myTarget = target;
         StopAllCoroutines();
         ChangeState(state);
@@ -256,7 +256,7 @@ public class Monster : RagDollAction, AIAction
     }
     public AIState GetAIState()
     {
-        if(myState == STATE.Angry)
+        if (myState == STATE.Angry)
         {
             return AIState.Angry;
         }
@@ -266,7 +266,7 @@ public class Monster : RagDollAction, AIAction
     {
         if (!enabled) return;
 
-        if((enemyMask & 1 << collision.gameObject.layer) != 0)
+        if ((enemyMask & 1 << collision.gameObject.layer) != 0)
         {
             if (IsSearchable())
             {
@@ -276,9 +276,9 @@ public class Monster : RagDollAction, AIAction
         }
         if (collision.gameObject.layer == LayerMask.NameToLayer("NotGrabbableObj"))
         {
-            if(collision.gameObject.TryGetComponent<Drawer>(out var obj))
+            if (collision.gameObject.TryGetComponent<Drawer>(out var obj))
             {
-                if(!obj.IsDrawer)
+                if (!obj.IsDrawer)
                     obj.InteractwithMob();
             }
         }

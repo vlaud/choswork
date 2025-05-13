@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Commands.Menu;
+using UnityEngine.Rendering.PostProcessing;
 
 public enum MenuState
 {
@@ -28,6 +29,12 @@ public class Mainmenu : Singleton<Mainmenu>
     public GameObject LoadGamePanel;
     public GameObject Fader;
     public Button SkipButton;
+
+    [Header("메뉴 카메라 설정")]
+    [SerializeField] private Camera menuCam;
+    public Camera MenuCamera => menuCam;
+    [SerializeField] private PostProcessLayer postProcessLayer;
+    public PostProcessLayer PostProcessLayer => postProcessLayer;
 
     [Header("슬라이더 목록")]
     public Slider[] GamePanel_Sliders;
@@ -61,7 +68,7 @@ public class Mainmenu : Singleton<Mainmenu>
     {
         MenuActions.SetKeys(GameManagement.Inst.myMainmenu);
 
-        if (currentSceneName == "Title")
+        if (currentSceneName == "Title" || currentSceneName == "ClearMessage")
         {
             MenuActions.SetCommandKey(MainMenuKeyType.PauseAction, null);
             MenuActions.SetCommandKey(MainMenuKeyType.UnPauseAction, null);
@@ -132,6 +139,7 @@ public class Mainmenu : Singleton<Mainmenu>
         {
             case "Title":
                 newGameSceneName = "CutScene";
+                postProcessLayer.enabled = true;
                 faderAnim?.SetTrigger("FadeIn");
                 SkipButton.gameObject.SetActive(false);
                 // ShowMenuAnim(bool v) => ChangeState(MenuState s) => MenuActions.ChangeKey(MenuState s)가 발동
@@ -153,9 +161,15 @@ public class Mainmenu : Singleton<Mainmenu>
                 GamePanel_Sliders[1].onValueChanged.AddListener((float v) => GraphicManager.Inst.fconstrast = v);
                 GamePanel_Sliders[2].onValueChanged.AddListener((float v) => SoundManager.Inst.bgmVolume = v);
                 GamePanel_Sliders[3].onValueChanged.AddListener((float v) => SoundManager.Inst.effectVolume = v);
-                newGameSceneName = "testScene";
+                newGameSceneName = "ClearMessage";
                 faderAnim?.SetTrigger("FadeIn");
                 DisableUI();
+                break;
+            case "ClearMessage":
+                newGameSceneName = "Title";
+                postProcessLayer.enabled = false;
+                CursorManager.Instance.SetSceneTitle(true);
+                faderAnim.SetTrigger("FadeIn");
                 break;
             case "testScene":
                 newGameSceneName = "GameStage2";
@@ -290,7 +304,7 @@ public class Mainmenu : Singleton<Mainmenu>
         if (!string.IsNullOrEmpty(newGameSceneName))
         {
             GameObject obj = GameObject.Find("SceneLoader");
-            transform.parent.SetParent(obj.transform);
+            transform.SetParent(obj.transform);
             SceneLoader.Inst.ChangeScene(newGameSceneName);
             Debug.Log($"{newGameSceneName} <color=red>loading</color>");
         }
