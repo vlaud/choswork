@@ -87,3 +87,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Hh]orror [Hh]ospital [Pp]ack.meta
 /[Aa]ssets/[Hh]orror [Hh]ospital [Pp]ack/
 /[Aa]ssets/[Hh]orrorHospitalPackFJM.unitypackage.meta
+
+# 스케치팹
+/[Aa]ssets/[Ss]ketchfab [Ff]or [Uu]nity.meta
+/[Aa]ssets/[Ss]ketchfab [Ff]or [Uu]nity/
