@@ -70,3 +70,12 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# 다운로드한 에셋들
+/[Aa]ssets/[Dd]ownloaded.meta
+/[Aa]ssets/[Dd]ownloaded/
+
+# Horror Hosiptal Pack
+/[Aa]ssets/[Hh]orror [Hh]ospital [Pp]ack.meta
+/[Aa]ssets/[Hh]orror [Hh]ospital [Pp]ack/
+/[Aa]ssets/[Hh]orrorHospitalPackFJM.unitypackage.meta
