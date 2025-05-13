@@ -21600,7 +21600,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 910030833}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: c029f7ba1935a46409859d1f022b671f, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -22799,7 +22799,7 @@ GameObject:
   - component: {fileID: 954293132}
   - component: {fileID: 954293134}
   - component: {fileID: 954293133}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: tutorial (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60706,7 +60706,7 @@ GameObject:
   - component: {fileID: 6817271866125724912}
   - component: {fileID: 6817271866125724914}
   - component: {fileID: 6817271866125724913}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60785,7 +60785,7 @@ GameObject:
   - component: {fileID: 6817271866146426618}
   - component: {fileID: 6817271866146426620}
   - component: {fileID: 6817271866146426619}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: tutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
