@@ -71,6 +71,14 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
+# 샘플
+/[Aa]ssets/[Ss]amples.meta
+/[Aa]ssets/[Ss]amples/
+
+# 스타터 에셋
+/[Aa]ssets/[Ss]tarter[Aa]ssets.meta
+/[Aa]ssets/[Ss]tarter[Aa]ssets/
+
 # 다운로드한 에셋들
 /[Aa]ssets/[Dd]ownloaded.meta
 /[Aa]ssets/[Dd]ownloaded/
