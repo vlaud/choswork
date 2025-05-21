@@ -43,7 +43,7 @@ public class Crawler : RagDollAction, AIAction
         {
             case STATE.Create:
                 break;
-            case STATE.Idle: // Æò»ó½Ã
+            case STATE.Idle: // í‰ìƒì‹œ
                 formerState = STATE.Idle;
                 IsStart = !IsStart;
                 myGamemanager.myMapManager.CrawlerChangePath(IsStart);
@@ -57,7 +57,7 @@ public class Crawler : RagDollAction, AIAction
                 break;
             case STATE.Angry:
                 formerState = STATE.Angry;
-                myAnim.SetBool("IsMoving", false); // ¿òÁ÷ÀÓ ºñÈ°¼ºÈ­
+                myAnim.SetBool("IsMoving", false); // ì›€ì§ì„ ë¹„í™œì„±í™”
                 AttackTarget(myPath, myTarget, filter);
                 break;
             case STATE.Search:
@@ -180,7 +180,7 @@ public class Crawler : RagDollAction, AIAction
         LayerMask mask = LayerMask.GetMask("Ceiling") | LayerMask.GetMask("Ground");
         LayerMask formerMask = LayerMask.GetMask("Ceiling");
 
-        Debug.Log("ÃÑ ÄÚ³Ê: " + myPath.corners.Length);
+        Debug.Log("ì´ ì½”ë„ˆ: " + myPath.corners.Length);
 
         for (int i = 0; i < myPath.corners.Length - 1; i++)
         {
@@ -217,7 +217,6 @@ public class Crawler : RagDollAction, AIAction
         PopulateAnimation(_faceDownStandUpClipName, _faceDownStandUpBoneTransforms);
         RagDollSet(false);
         transform.position = myGamemanager.myMapManager.GetCrDestination(false).position;
-        coroutineRunner = new CoroutineRunner(this);
     }
     // Start is called before the first frame update
     void Start()
@@ -335,7 +334,7 @@ public class Crawler : RagDollAction, AIAction
         myAnim.SetBool("IsAngry", false);
         myAnim.SetBool("IsChasing", false);
         myAnim.SetBool("IsRunning", false);
-        myAnim.SetBool("IsMoving", false); // ¿òÁ÷ÀÓ ºñÈ°¼ºÈ­
+        myAnim.SetBool("IsMoving", false); // ì›€ì§ì„ ë¹„í™œì„±í™”
         ChangeState(STATE.Idle);
     }
     public override void DeadMessage(Transform tr)

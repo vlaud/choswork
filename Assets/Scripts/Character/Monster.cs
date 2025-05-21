@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Monster : RagDollAction, AIAction
+public class Monster : RagDollAction, AIAction, IMonsterFunctionality
 {
     private GameManagement myGamemanager;
     public LayerMask enemyMask = default;
@@ -32,7 +32,7 @@ public class Monster : RagDollAction, AIAction
         {
             case STATE.Create:
                 break;
-            case STATE.Idle: // Æò»ó½Ã
+            case STATE.Idle: // í‰ìƒì‹œ
                 IsStart = !IsStart;
                 myGamemanager.myMapManager.MobChangePath(IsStart, mobIndex);
                 FindTarget(myGamemanager.myMapManager.GetDestination(IsStart, mobIndex), STATE.Idle);
@@ -43,7 +43,7 @@ public class Monster : RagDollAction, AIAction
                 CorrectBaseHeight(myPath, myTarget, filter);
                 break;
             case STATE.Angry:
-                myAnim.SetBool("IsMoving", false); // ¿òÁ÷ÀÓ ºñÈ°¼ºÈ­
+                myAnim.SetBool("IsMoving", false); // ì›€ì§ì„ ë¹„í™œì„±í™”
                 AttackTarget(myPath, myTarget, filter);
                 break;
             case STATE.Search:
@@ -114,7 +114,6 @@ public class Monster : RagDollAction, AIAction
 
         RagDollSet(false);
         transform.position = myGamemanager.myMapManager.GetDestination(false, mobIndex).position;
-        coroutineRunner = new CoroutineRunner(this);
     }
     // Start is called before the first frame update
     void Start()
@@ -219,7 +218,7 @@ public class Monster : RagDollAction, AIAction
         myAnim.SetBool("IsAngry", false);
         myAnim.SetBool("IsChasing", false);
         myAnim.SetBool("IsRunning", false);
-        myAnim.SetBool("IsMoving", false); // ¿òÁ÷ÀÓ ºñÈ°¼ºÈ­
+        myAnim.SetBool("IsMoving", false); // ì›€ì§ì„ ë¹„í™œì„±í™”
         ChangeState(STATE.Idle);
     }
     public override void DeadMessage(Transform tr)

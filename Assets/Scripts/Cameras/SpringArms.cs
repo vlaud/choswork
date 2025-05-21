@@ -1,4 +1,5 @@
 using Commands.Camera;
+using Project.Tools.InterfaceHelp;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,12 +16,12 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     public bool isFPSCamRotinTPS = false;
     private bool isGhost = false;
 
-    private CoroutineRunner coroutineRunner;
     private Coroutine currentUIRotatingCoroutine; // 현재 실행 중인 UI 회전 코루틴
     private Coroutine currentUIMovingCoroutine; // 현재 실행 중인 UI 움직임 코루틴
 
-    // 다른 클래스에서 Inventory 인스턴스에 접근
+        // 다른 클래스에서 Inventory 인스턴스에 접근
     [SerializeField] Inventory _inventory;
+    [SerializeField] private InterfaceHolder<IPlayerFunctionality> mplayer;
 
     public GameObject[] GetAllCams()
     {
@@ -52,30 +53,17 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
             case ViewState.UI:
                 UICameraSetPos(IsFps ? myFPSCam : myTPSCam);
 
-                coroutineRunner.StartCurrentCoroutine(
-                    currentUIMovingCoroutine,
-                    out currentUIMovingCoroutine,
-                    UIMoving(myUI_basePos));
-
-                coroutineRunner.StartCurrentCoroutine(
-                    currentUIRotatingCoroutine, 
-                    out currentUIRotatingCoroutine, 
-                    UIRotating(myModel_baseForward.forward, true));
+                this.StartOrRestartCoroutine(ref currentUIMovingCoroutine, UIMoving(myUI_basePos));
+                this.StartOrRestartCoroutine(ref currentUIRotatingCoroutine, UIRotating(myModel_baseForward.forward, true));
 
                 SelectCamera(myUICam);
                 break;
             case ViewState.Turn:
                 ViewState viewState = IsFps ? ViewState.FPS : ViewState.TPS;
                 CameraSet cameraSet = IsFps ? myFPSCam : myTPSCam;
-                coroutineRunner.StartCurrentCoroutine(
-                currentUIMovingCoroutine,
-                out currentUIMovingCoroutine,
-                UIMoving(cameraSet.DesirePos, () => ChangeState(viewState)));
+                this.StartOrRestartCoroutine(ref currentUIMovingCoroutine, UIMoving(cameraSet.DesirePos, () => ChangeState(viewState)));
 
-                coroutineRunner.StartCurrentCoroutine(
-                   currentUIRotatingCoroutine,
-                   out currentUIRotatingCoroutine,
-                   UIRotating(myRoot.forward, false));
+                this.StartOrRestartCoroutine(ref currentUIRotatingCoroutine, UIRotating(myRoot.forward, false));
                 break;
         }
     }
@@ -280,6 +268,8 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         if (!isGhost)
             _inventory = FindFirstObjectByType<Inventory>();
 
+        // IPlayerFunctionality를 상속받는 클래스들을 ComponentTypeFinder를 통해 찾아내어 InterfaceHolder에 저장
+        mplayer.SetValue(ComponentTypeFinder.FindFirstImplementing<IPlayerFunctionality>());
 
         if (_inventory != null)
         {
@@ -289,8 +279,6 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
             // OnInventoryToggled 이벤트에서 이벤트 핸들러 제거
             // inventory.OnInventoryToggled -= HandleInventoryToggled;
         }
-
-        coroutineRunner = new CoroutineRunner(this);
     }
 
     // Start is called before the first frame update

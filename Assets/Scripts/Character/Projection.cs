@@ -11,13 +11,11 @@ public class Projection : MonoBehaviour
     [SerializeField] private GameObject _ghostobj;
     private Dictionary<Transform, Transform> _spawnedObjects = new Dictionary<Transform, Transform>();
 
-    private CoroutineRunner coroutineRunner;
     private Coroutine _simulate;
 
     // Start is called before the first frame update
     void Start()
     {
-        coroutineRunner = new CoroutineRunner(this);
         CreatePhysicsScene();
     }
 
@@ -62,7 +60,7 @@ public class Projection : MonoBehaviour
 
     public void StopSimultation()
     {
-        coroutineRunner.StopCurrentCoroutine(_simulate, out _simulate);
+        this.StopCurrentCoroutine(ref _simulate);
         Debug.Log($"_simulate: {_simulate}, _simulate is Null? : {_simulate == null }");
         IsSimulation = false;
     }
@@ -71,7 +69,7 @@ public class Projection : MonoBehaviour
     {
         if (IsSimulation) return;
 
-        coroutineRunner.StartCurrentCoroutine(_simulate, out _simulate, SimulateTrajectory(objGrab, pos, dir, strength));
+        this.StartOrRestartCoroutine(ref _simulate, SimulateTrajectory(objGrab, pos, dir, strength));
     }
 
     IEnumerator SimulateTrajectory(ObjectGrabbable objGrab, Vector3 pos, Vector3 dir, float strength)
@@ -96,7 +94,7 @@ public class Projection : MonoBehaviour
 
             if (!_ghostobj.activeSelf) _ghostobj.SetActive(true);
 
-            //TODO: objGrab = null ¹æÁö
+            //TODO: objGrab = null ë°©ì§€
             Debug.Log($"objGrab: {objGrab}");
 
             _ghostobj.transform.position = objGrab.transform.position;
