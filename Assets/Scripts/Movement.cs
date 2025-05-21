@@ -39,7 +39,6 @@ public class Movement : RagDollAction, AIAction
         PopulateAnimation(_faceUpStandUpClipName, _faceUpStandUpBoneTransforms);
         PopulateAnimation(_faceDownStandUpClipName, _faceDownStandUpBoneTransforms);
         RagDollSet(false);
-        coroutineRunner = new CoroutineRunner(this);
     }
     private void Start()
     {
@@ -66,7 +65,7 @@ public class Movement : RagDollAction, AIAction
 
     public void FindPlayer(Transform target)
     {
-        Debug.Log("Å¸°Ù È®º¸");
+        Debug.Log("íƒ€ê²Ÿ í™•ë³´");
         aiState = AIState.Angry;
         FindTarget(target);
     }
