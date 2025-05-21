@@ -11,15 +11,15 @@ public class MapManager : MonoBehaviour
         public bool[] status = new bool[6];
     }
     public static MapManager Inst = null;
-    // µğÆúÆ® ÇÁ·ÎÆÛÆ¼
-    [field: Header("ÇÃ·¹ÀÌ¾î À§Ä¡ ¼³Á¤")]
+    // ë””í´íŠ¸ í”„ë¡œí¼í‹°
+    [field: Header("í”Œë ˆì´ì–´ ìœ„ì¹˜ ì„¤ì •")]
     [SerializeField] Vector3 PlayerStartPos = Vector3.zero;
     [field: SerializeField] public Transform PlayerStart
     {
         get;
         private set;
     }
-    [field: Header("¸ó½ºÅÍ À§Ä¡ ¼³Á¤")]
+    [field: Header("ëª¬ìŠ¤í„° ìœ„ì¹˜ ì„¤ì •")]
     [SerializeField] Vector3 MobPos = Vector3.zero;
     [SerializeField] GameObject StartObj;
     [field:SerializeField] public List<Transform> StartPoint
@@ -35,7 +35,7 @@ public class MapManager : MonoBehaviour
         private set;
     }
     public List<int> EndNum;
-    [field: Header("Å©·Ñ·¯ À§Ä¡ ¼³Á¤")]
+    [field: Header("í¬ë¡¤ëŸ¬ ìœ„ì¹˜ ì„¤ì •")]
     [SerializeField] Vector3 Cr_MobPos = Vector3.zero;
     [field: SerializeField] public Transform Cr_StartPoint
     {
@@ -49,18 +49,18 @@ public class MapManager : MonoBehaviour
         private set;
     }
     public int Cr_EndNum;
-    [field: Header("¾ÆÀÌÅÛ À§Ä¡ ¼³Á¤")]
+    [field: Header("ì•„ì´í…œ ìœ„ì¹˜ ì„¤ì •")]
     [field: SerializeField] public Transform ItemPoint
     {
         get;
         private set;
     }
     [SerializeField] Vector3 ItemStartPos = Vector3.zero;
-    [Header("¿ÀºêÁ§Æ® À§Ä¡ ¼³Á¤")]
+    [Header("ì˜¤ë¸Œì íŠ¸ ìœ„ì¹˜ ì„¤ì •")]
     [SerializeField] Vector3 doorPos = Vector3.zero;
     [SerializeField] Vector3 keypadPos = Vector3.zero;
     [SerializeField] Vector3 hintNotePos = Vector3.zero;
-    [Header("¸Ê Å©±â ¼³Á¤")]
+    [Header("ë§µ í¬ê¸° ì„¤ì •")]
     [SerializeField] Vector3Int mapSize = Vector3Int.zero;
     [SerializeField] int startPos = 0;
     public NavMeshSurface surfaces;
@@ -68,13 +68,13 @@ public class MapManager : MonoBehaviour
     public NavMeshSurface[] ceilingSurface;
     public Vector3 offset;
     List<Cell> board;
-    [Header("¿ÀºêÁ§Æ® ¼³Á¤")]
+    [Header("ì˜¤ë¸Œì íŠ¸ ì„¤ì •")]
     [SerializeField] GameObject map;
     [SerializeField] GameObject keyPad;
     [SerializeField] Transform item;
     [SerializeField] Transform doorObj;
     NavMeshPath myPath = null;
-    [ContextMenu("¸Ê »ı¼º")]
+    [ContextMenu("ë§µ ìƒì„±")]
     void CreateMap()
     {
         DestroyMap();
@@ -117,7 +117,7 @@ public class MapManager : MonoBehaviour
             BuildNavMeshes();
         }
     }
-    [ContextMenu("³×ºñ¸Ş½¬ »ı¼º")]
+    [ContextMenu("ë„¤ë¹„ë©”ì‰¬ ìƒì„±")]
     void BuildNavMeshes()
     {
         surfaces.BuildNavMesh();
@@ -154,24 +154,24 @@ public class MapManager : MonoBehaviour
     #region MobAndPlayer
     void PlayerSpawn()
     {
-        int floor = mapSize.x * mapSize.z; // ¾Æ·¡Ãş¿¡¼­¸¸ ¼ÒÈ¯
+        int floor = mapSize.x * mapSize.z; // ì•„ë˜ì¸µì—ì„œë§Œ ì†Œí™˜
 
         PlayerStart.SetParent(transform.GetChild(0));
         PlayerStart.localPosition = PlayerStartPos;
     }
     void CrawlerSpawning()
     {
-        int floor = mapSize.x * mapSize.z; // ¸Ç À§Ãş¿¡¼­¸¸ ¼ÒÈ¯
+        int floor = mapSize.x * mapSize.z; // ë§¨ ìœ„ì¸µì—ì„œë§Œ ì†Œí™˜
 
-        // Áßº¹ ¼ıÀÚ ¹æÁö
+        // ì¤‘ë³µ ìˆ«ì ë°©ì§€
         List<int> spawnNums = GetRandomNumber.GetRanNums(transform.childCount - floor, transform.childCount, 2);
-        //½ÃÀÛ À§Ä¡
+        //ì‹œì‘ ìœ„ì¹˜
         GameObject obj = Instantiate(StartObj);
         Cr_StartPoint = obj.transform;
         Cr_StartNum = spawnNums[0];
         Cr_StartPoint.SetParent(transform.GetChild(Cr_StartNum));
         Cr_StartPoint.localPosition = Cr_MobPos;
-        //³¡ À§Ä¡
+        //ë ìœ„ì¹˜
         obj = Instantiate(EndObj);
         Cr_EndPoint = obj.transform;
         Cr_EndNum = spawnNums[1];
@@ -180,7 +180,7 @@ public class MapManager : MonoBehaviour
     }
     public void CrawlerChangePath(bool isStart)
     {
-        int floor = mapSize.x * mapSize.z; // ¸Ç À§Ãş¿¡¼­¸¸ ¼ÒÈ¯
+        int floor = mapSize.x * mapSize.z; // ë§¨ ìœ„ì¸µì—ì„œë§Œ ì†Œí™˜
 
         int[] remove = { Cr_StartNum, Cr_EndNum };
         List<int> spawnNums = GetRandomNumber.GetRanNums(transform.childCount - floor, transform.childCount, 2, remove);
@@ -200,23 +200,24 @@ public class MapManager : MonoBehaviour
     }
     void MobSpawning()
     {
-        int floor = mapSize.x * mapSize.z; // 1Ãş¿¡¼± ¼ÒÈ¯ ¾ÈµÇ°Ô²û
+        int floor = mapSize.x * mapSize.z; // 1ì¸µì—ì„  ì†Œí™˜ ì•ˆë˜ê²Œë”
 
         for (int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
         {
-            Debug.Log(GetMonsterTypeClass.GetRagdollAction(GameManagement.Inst.myMonsters[i].transform));
+            var obj = ComponentTypeFinder.GetType<IMonsterFunctionality>(GameManagement.Inst.myMonsters[i].transform);
+            Debug.Log(obj);
         }
         for (int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
         {
-            // Áßº¹ ¼ıÀÚ ¹æÁö
+            // ì¤‘ë³µ ìˆ«ì ë°©ì§€
             List<int> spawnNums = GetRandomNumber.GetRanNums(floor, transform.childCount, 2);
-            //½ÃÀÛ À§Ä¡
+            //ì‹œì‘ ìœ„ì¹˜
             GameObject obj = Instantiate(StartObj);
             StartPoint.Add(obj.transform);
             StartNum.Add(spawnNums[0]);
             StartPoint[i].SetParent(transform.GetChild(StartNum[i]));
             StartPoint[i].localPosition = MobPos;
-            //³¡ À§Ä¡
+            //ë ìœ„ì¹˜
             obj = Instantiate(EndObj);
             EndPoint.Add(obj.transform);
             EndNum.Add(spawnNums[1]);
@@ -226,7 +227,7 @@ public class MapManager : MonoBehaviour
     }
     public void MobChangePath(bool isStart, int mobindex)
     {
-        int floor = mapSize.x * mapSize.z; // 1Ãş¿¡¼± ¼ÒÈ¯ ¾ÈµÇ°Ô²û
+        int floor = mapSize.x * mapSize.z; // 1ì¸µì—ì„  ì†Œí™˜ ì•ˆë˜ê²Œë”
 
         int[] remove = { StartNum[mobindex], EndNum[mobindex] };
         List<int> spawnNums = GetRandomNumber.GetRanNums(floor, transform.childCount, 2, remove);
@@ -285,7 +286,7 @@ public class MapManager : MonoBehaviour
             tiles[i].StairPlusOffset();
         }
     }
-    [ContextMenu("·£´ı ¸Ê »ı¼º")]
+    [ContextMenu("ëœë¤ ë§µ ìƒì„±")]
     void MazeGenerator()
     {
         DestroyMap();
@@ -425,7 +426,7 @@ public class MapManager : MonoBehaviour
         }
         return neighbors;
     }
-    [ContextMenu("¸Ê »èÁ¦")]
+    [ContextMenu("ë§µ ì‚­ì œ")]
     void DestroyMap()
     {
         while (transform.childCount > 0)
