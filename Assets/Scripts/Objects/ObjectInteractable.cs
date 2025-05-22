@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class ObjectInteractable : MonoBehaviour
 {
-    [SerializeField] protected TMPro.TMP_Text actionText;  // Çàµ¿À» º¸¿© ÁÙ ÅØ½ºÆ®
-    public string ShowMessage = " ¿­±â ";
+    [SerializeField] protected TMPro.TMP_Text actionText;  // í–‰ë™ì„ ë³´ì—¬ ì¤„ í…ìŠ¤íŠ¸
+    public string ShowMessage = " ì—´ê¸° ";
 
     protected void SetActionText()
     {
         if (actionText == null) actionText = GameManagement.Inst.myActionText;
     }
-    public virtual void SetItemInfoAppear(bool v) //¿ÀºêÁ§Æ®¿Í ¾ÆÀÌÅÛ Áı±â UI º¸ÀÌ±â
+    public virtual void SetItemInfoAppear(bool v) //ì˜¤ë¸Œì íŠ¸ì™€ ì•„ì´í…œ ì§‘ê¸° UI ë³´ì´ê¸°
     {
         actionText?.gameObject.SetActive(v);
     }

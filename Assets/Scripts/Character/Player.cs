@@ -2,7 +2,7 @@ using UnityEngine;
 
 public enum PlayerStates { Play = 0, Pause, Death, Global }
 
-public class Player : BattleSystem, iSubscription, EventListener<PlayerStatesEvent>, EventListener<GameStatesEvent>, IPlayerFunctionality
+public class Player : BattleSystem, iSubscription, EventListener<PlayerStatesEvent>, EventListener<GameStatesEvent>, iPlayerFunctionality
 {
     Vector2 targetDir = Vector2.zero;
     [Header("플레이어 기본 설정")]

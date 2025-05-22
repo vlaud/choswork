@@ -204,7 +204,7 @@ public class MapManager : MonoBehaviour
 
         for (int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
         {
-            var obj = ComponentTypeFinder.GetType<IMonsterFunctionality>(GameManagement.Inst.myMonsters[i].transform);
+            var obj = ComponentTypeFinder.GetType<iMonsterFunctionality>(GameManagement.Inst.myMonsters[i].transform);
             Debug.Log(obj);
         }
         for (int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)

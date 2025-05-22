@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Monster : RagDollAction, AIAction, IMonsterFunctionality
+public class Monster : RagDollAction, AIAction, iMonsterFunctionality
 {
     private GameManagement myGamemanager;
     public LayerMask enemyMask = default;

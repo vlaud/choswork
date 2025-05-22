@@ -114,7 +114,6 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
         Physics.simulationMode = SimulationMode.Script;
         myMonsters = FindObjectsByType<AIPerception>(FindObjectsSortMode.None);
         GetAllMobsRigidbodies();
-        //myMonsters = FindObjectsByType(typeof(AIPerception), FindObjectsSortMode.None) as AIPerception[];
         for (int i = 0; i < myMonsters.Length; ++i)
         {
             myMonsters[i].GetComponent<AIAction>().SetMobIndex(i);
@@ -180,14 +179,12 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
     {
         if (myMainmenu?.CurrentSceneName == "Title") return;
         this.EventStartingListening<GameStatesEvent>();
-        //Debug.Log(myMainmenu?.CurrentSceneName + ": game Sub");
     }
 
     public void Unsubscribe()
     {
         if (myMainmenu?.CurrentSceneName == "Title") return;
         this.EventStopListening<GameStatesEvent>();
-        //Debug.Log("game unSub");
     }
 
     private void GetAllMobsRigidbodies()
