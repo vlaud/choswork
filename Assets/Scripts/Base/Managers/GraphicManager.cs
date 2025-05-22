@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+
 public class GraphicManager : Singleton<GraphicManager> // 사운드 매니저는 싱클톤 방식으로
 {
     public PostProcessProfile brightness;
     public PostProcessProfile constrast;
-    public PostProcessLayer layer;
 
     ColorGrading grading;
 

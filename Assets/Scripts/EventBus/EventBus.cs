@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 #region Event_Listener_Interface
 public interface EventListenerBase { }
@@ -19,19 +17,19 @@ public interface iSubscription
 
 #endregion
 
-// °ÔÀÓ ÀÌº¥Æ® °ü¸®ÀÚ Å¬·¡½º
+// ê²Œì„ ì´ë²¤íŠ¸ ê´€ë¦¬ì í´ë˜ìŠ¤
 #region GameEventManager
 /// <summary>
-/// °ÔÀÓ ÀÌº¥Æ® °ü¸®ÀÚ Å¬·¡½º
+/// ê²Œì„ ì´ë²¤íŠ¸ ê´€ë¦¬ì í´ë˜ìŠ¤
 /// </summary>
 public class GameEventManager
 {
-    // ÀÌº¥Æ® Å¸ÀÔº°·Î ±¸µ¶ÀÚ(¸®½º³Ê) ¸ñ·ÏÀ» °ü¸®ÇÏ´Â »çÀü
+    // ì´ë²¤íŠ¸ íƒ€ì…ë³„ë¡œ êµ¬ë…ì(ë¦¬ìŠ¤ë„ˆ) ëª©ë¡ì„ ê´€ë¦¬í•˜ëŠ” ì‚¬ì „
     private static readonly Dictionary<Type, List<EventListenerBase>> _subscribersList
         = new Dictionary<Type, List<EventListenerBase>>();
 
     /// <summary>
-    /// ÀÌº¥Æ®¸¦ ±¸µ¶ÇÏ´Â ¸Ş¼­µå
+    /// ì´ë²¤íŠ¸ë¥¼ êµ¬ë…í•˜ëŠ” ë©”ì„œë“œ
     /// </summary>
     /// <typeparam name="GameEvents"></typeparam>
     /// <param name="listener"></param>
@@ -51,7 +49,7 @@ public class GameEventManager
     }
 
     /// <summary>
-    /// ÀÌº¥Æ® ±¸µ¶ Ãë¼Ò ¸Ş¼­µå
+    /// ì´ë²¤íŠ¸ êµ¬ë… ì·¨ì†Œ ë©”ì„œë“œ
     /// </summary>
     /// <typeparam name="GameEvents"></typeparam>
     /// <param name="listener"></param>
@@ -68,7 +66,7 @@ public class GameEventManager
         {
             if (subscriberList[i] == listener)
             {
-                subscriberList.Remove(subscriberList[i]);
+                subscriberList.RemoveAt(i);
 
                 if (subscriberList.Count == 0)
                 {
@@ -80,7 +78,7 @@ public class GameEventManager
     }
 
     /// <summary>
-    /// ÀÌ¹Ì ±¸µ¶ ÁßÀÎÁö È®ÀÎÇÏ´Â ¸Ş¼­µå
+    /// ì´ë¯¸ êµ¬ë… ì¤‘ì¸ì§€ í™•ì¸í•˜ëŠ” ë©”ì„œë“œ
     /// </summary>
     /// <param name="type"></param>
     /// <param name="receiver"></param>
@@ -104,7 +102,7 @@ public class GameEventManager
     }
 
     /// <summary>
-    /// ÀÌº¥Æ®¸¦ ¹ß»ı½ÃÅ°´Â ¸Ş¼­µå
+    /// ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¤ëŠ” ë©”ì„œë“œ
     /// </summary>
     /// <typeparam name="GameEvents"></typeparam>
     /// <param name="events"></param>
@@ -125,18 +123,18 @@ public class GameEventManager
 }
 #endregion
 
-// ÀÌº¥Æ® ¸®½º³Ê¸¦ µî·Ï ¹× ÇØÁ¦ÇÏ´Â È®Àå ¸Ş¼­µå
+// ì´ë²¤íŠ¸ ë¦¬ìŠ¤ë„ˆë¥¼ ë“±ë¡ ë° í•´ì œí•˜ëŠ” í™•ì¥ ë©”ì„œë“œ
 
 #region GameEventsRegister
 /// <summary>
-/// ÀÌº¥Æ® ¸®½º³Ê¸¦ µî·Ï ¹× ÇØÁ¦ÇÏ´Â È®Àå ¸Ş¼­µå
+/// ì´ë²¤íŠ¸ ë¦¬ìŠ¤ë„ˆë¥¼ ë“±ë¡ ë° í•´ì œí•˜ëŠ” í™•ì¥ ë©”ì„œë“œ
 /// </summary>
 public static class GameEventsRegister
 {
     public delegate void Delegate<T>(T eventType);
 
     /// <summary>
-    /// ÀÌº¥Æ® ¸®½º³Ê¸¦ µî·ÏÇÏ´Â È®Àå ¸Ş¼­µå
+    /// ì´ë²¤íŠ¸ ë¦¬ìŠ¤ë„ˆë¥¼ ë“±ë¡í•˜ëŠ” í™•ì¥ ë©”ì„œë“œ
     /// </summary>
     /// <typeparam name="EventType"></typeparam>
     /// <param name="caller"></param>
@@ -146,7 +144,7 @@ public static class GameEventsRegister
     }
 
     /// <summary>
-    /// ÀÌº¥Æ® ¸®½º³Ê¸¦ ÇØÁ¦ÇÏ´Â È®Àå ¸Ş¼­µå
+    /// ì´ë²¤íŠ¸ ë¦¬ìŠ¤ë„ˆë¥¼ í•´ì œí•˜ëŠ” í™•ì¥ ë©”ì„œë“œ
     /// </summary>
     /// <typeparam name="EventType"></typeparam>
     /// <param name="caller"></param>

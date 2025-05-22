@@ -1,82 +1,97 @@
 namespace Commands.Camera
 {
-    public class OnGameFPS : iCommandType<SpringArms>
+    /// <summary>
+    /// 게임 상태 시 FPS로 전환
+    /// </summary>
+    public class OnGameFPS : iCommandType<iSpringArmFunctionality>
     {
-        public void Execute()
+        public void Execute(iSpringArmFunctionality target)
         {
             CameraStatesEvent.Trigger(CameraEventType.FPS);
-            CameraActions.ChangeState(CameraKeyType.FPS);
         }
 
-        public void Undo()
+        public void Undo(iSpringArmFunctionality target)
+        {
+            
+        }
+    }
+
+    /// <summary>
+    /// UI 활성화시 FPS로 미리 전환
+    /// </summary>
+    public class OnMenuFPS : iCommandType<iSpringArmFunctionality>
+    {
+        public void Execute(iSpringArmFunctionality target)
+        {
+
+        }
+
+        public void Undo(iSpringArmFunctionality target)
         {
 
         }
     }
 
-    public class OnMenuFPS : iCommandType<SpringArms>
+    /// <summary>
+    /// 게임 상태 시 TPS로 전환
+    /// </summary>
+    public class OnGameTPS : iCommandType<iSpringArmFunctionality>
     {
-        public void Execute()
-        {
-            CameraActions.ChangeState(CameraKeyType.FPS);
-        }
-
-        public void Undo()
-        {
-
-        }
-    }
-
-    public class OnGameTPS : iCommandType<SpringArms>
-    {
-        public void Execute()
+        public void Execute(iSpringArmFunctionality target)
         {
             CameraStatesEvent.Trigger(CameraEventType.TPS);
-            CameraActions.ChangeState(CameraKeyType.TPS);
         }
 
-        public void Undo()
+        public void Undo(iSpringArmFunctionality target)
         {
 
         }
     }
 
-    public class OnMenuTPS : iCommandType<SpringArms>
+    /// <summary>
+    /// UI 활성화시 TPS로 미리 전환
+    /// </summary>
+    public class OnMenuTPS : iCommandType<iSpringArmFunctionality>
     {
-        public void Execute()
+        public void Execute(iSpringArmFunctionality target)
         {
-            CameraActions.ChangeState(CameraKeyType.TPS);
+
         }
 
-        public void Undo()
+        public void Undo(iSpringArmFunctionality target)
         {
 
         }
     }
 
-    public class UI : iCommandType<SpringArms>
+    /// <summary>
+    /// UI 활성화
+    /// </summary>
+    public class UI : iCommandType<iSpringArmFunctionality>
     {
-        public void Execute()
+        public void Execute(iSpringArmFunctionality target)
         {
             CameraStatesEvent.Trigger(CameraEventType.UI);
-            CameraActions.ChangeToMenuMode(true);
         }
 
-        public void Undo()
+
+        public void Undo(iSpringArmFunctionality target)
         {
 
         }
     }
 
-    public class NotUI : iCommandType<SpringArms>
+    /// <summary>
+    /// UI 비활성화
+    /// </summary>
+    public class NotUI : iCommandType<iSpringArmFunctionality>
     {
-        public void Execute()
+        public void Execute(iSpringArmFunctionality target)
         {
             CameraStatesEvent.Trigger(CameraEventType.NotUI);
-            CameraActions.ChangeToMenuMode(false);
         }
 
-        public void Undo()
+        public void Undo(iSpringArmFunctionality target)
         {
 
         }

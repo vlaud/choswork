@@ -2,23 +2,23 @@ using UnityEngine;
 
 public enum PlayerStates { Play = 0, Pause, Death, Global }
 
-public class Player : BattleSystem, iSubscription, EventListener<PlayerStatesEvent>, EventListener<GameStatesEvent>
+public class Player : BattleSystem, iSubscription, EventListener<PlayerStatesEvent>, EventListener<GameStatesEvent>, iPlayerFunctionality
 {
     Vector2 targetDir = Vector2.zero;
-    [Header("ÇÃ·¹ÀÌ¾î ±âº» ¼³Á¤")]
+    [Header("í”Œë ˆì´ì–´ ê¸°ë³¸ ì„¤ì •")]
     public float smoothMoveSpeed = 10.0f;
     public float myMoveSpeed = 1.0f;
     public float KickStrength = 10000.0f;
     public SpringArms myCameras;
-    public GameObject KickPoint; // ½ÇÁ¦ ¹ßÂ÷±â È¿°ú À§Ä¡
-    public Transform KickTransform; // ¹ßÂ÷±â ¼Ò¸® À§Ä¡
+    public GameObject KickPoint; // ì‹¤ì œ ë°œì°¨ê¸° íš¨ê³¼ ìœ„ì¹˜
+    public Transform KickTransform; // ë°œì°¨ê¸° ì†Œë¦¬ ìœ„ì¹˜
     public bool IsWall = false;
     [SerializeField] private bool isGhost = false;
     public HPBar myHPBar;
     private float animOffset = 0.04f;
     private GameManagement myGamemanager;
     public Transform myHips;
-    [Header("Ä«¸Ş¶ó ÀÌÆåÆ® ¼³Á¤")]
+    [Header("ì¹´ë©”ë¼ ì´í™íŠ¸ ì„¤ì •")]
     public CameraShake camShake;
     [SerializeField] private CameraSet? curCamset;
     [SerializeField] private GameObject playerCamera;
@@ -26,19 +26,19 @@ public class Player : BattleSystem, iSubscription, EventListener<PlayerStatesEve
     [SerializeField] private float shake_magnitude;
     [SerializeField] private bool IsPosPerlin;
     [SerializeField] private bool IsRotPerlin;
-    [Header("ÀÌÆåÆ® ¼³Á¤")]
+    [Header("ì´í™íŠ¸ ì„¤ì •")]
     [SerializeField] private GameObject bloodEffect_origin;
     [SerializeField] private GameObject bloodEffect;
     [SerializeField] private Transform bloodPos;
     [SerializeField] private GameObject timeStopEffect;
-    [Header("¾ÆÀÌÅÛ ¼³Á¤")]
+    [Header("ì•„ì´í…œ ì„¤ì •")]
     public Item timeStopItem;
     public bool IsTimtStopAvailable = false;
     public enum STATE
     {
         Create, Play, Pause, Death
     }
-    [Header("»óÅÂ ¼³Á¤")]
+    [Header("ìƒíƒœ ì„¤ì •")]
     public STATE myState = STATE.Create;
 
     private PlayerStates currentState;
@@ -180,14 +180,14 @@ public class Player : BattleSystem, iSubscription, EventListener<PlayerStatesEve
 
     void Dash()
     {
-        myMoveSpeed = (!IsWall) ? 1.5f : myStat.MoveSpeed; // º® Ãæµ¹½Ã¿£ ÁúÁÖ off
+        myMoveSpeed = (!IsWall) ? 1.5f : myStat.MoveSpeed; // ë²½ ì¶©ëŒì‹œì—” ì§ˆì£¼ off
         myAnim.speed = myMoveSpeed;
     }
 
     public void PlayerMove()
     {
         float x, z;
-        if (myCameras?.myCameraState == ViewState.UI) targetDir = Vector2.zero; //UI »óÅÂ¿¡¼± ¸ø¿òÁ÷ÀÌ°Ô
+        if (myCameras?.myCameraState == ViewState.UI) targetDir = Vector2.zero; //UI ìƒíƒœì—ì„  ëª»ì›€ì§ì´ê²Œ
         else
         {
             targetDir.x = Input.GetAxisRaw("Horizontal");
@@ -197,18 +197,18 @@ public class Player : BattleSystem, iSubscription, EventListener<PlayerStatesEve
         x = Mathf.Lerp(myAnim.GetFloat("x"), targetDir.x, Time.unscaledDeltaTime * smoothMoveSpeed);
         z = Mathf.Lerp(myAnim.GetFloat("z"), targetDir.y, Time.unscaledDeltaTime * smoothMoveSpeed);
 
-        //x, z°ªÀÌ 0¿¡ °¡±î¿ì¸é 0À¸·Î °íÁ¤
+        //x, zê°’ì´ 0ì— ê°€ê¹Œìš°ë©´ 0ìœ¼ë¡œ ê³ ì •
         if (Mathf.Epsilon - animOffset < x && x < Mathf.Epsilon + animOffset) x = 0.0f;
         if (Mathf.Epsilon - animOffset < z && z < Mathf.Epsilon + animOffset) z = 0.0f;
         myAnim.SetFloat("x", x);
         myAnim.SetFloat("z", z);
     }
 
-    private void OnCollisionStay(Collision collision) // º® Ãæµ¹½Ã¿£ ÁúÁÖ off
+    private void OnCollisionStay(Collision collision) // ë²½ ì¶©ëŒì‹œì—” ì§ˆì£¼ off
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
-            //myMoveSpeed = 0.5f; º®Ãæµ¹ ÀÌµ¿¼Óµµ´Â ³ªÁß¿¡ ¼öÁ¤
+            //myMoveSpeed = 0.5f; ë²½ì¶©ëŒ ì´ë™ì†ë„ëŠ” ë‚˜ì¤‘ì— ìˆ˜ì •
             IsWall = true;
         }
     }
@@ -248,7 +248,7 @@ public class Player : BattleSystem, iSubscription, EventListener<PlayerStatesEve
     public void KickTarget()
     {
         Collider[] list = Physics.OverlapSphere(KickPoint.transform.position, 0.2f, 1 << LayerMask.NameToLayer("Enemy"));
-        // ±×³É LayerMask.NameToLayer("Enemy"))À» ÇÏ¸é ·¹ÀÌ¾î°¡ ¾û¶×ÇÑ°Ô ¼±ÅÃµÈ´Ù
+        // ê·¸ëƒ¥ LayerMask.NameToLayer("Enemy"))ì„ í•˜ë©´ ë ˆì´ì–´ê°€ ì—‰ëš±í•œê²Œ ì„ íƒëœë‹¤
         foreach (Collider col in list)
         {
             Debug.Log(col);
@@ -288,5 +288,10 @@ public class Player : BattleSystem, iSubscription, EventListener<PlayerStatesEve
     public void SetGhost(bool v)
     {
         isGhost = v;
+    }
+
+    public Animator GetAnimator()
+    {
+        return myAnim;
     }
 }

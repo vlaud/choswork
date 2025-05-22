@@ -9,12 +9,10 @@ public class CharacterMovement : CharacterProperty
     Coroutine attackCo = null;
     Coroutine CoRoot = null;
 
-    protected CoroutineRunner coroutineRunner;
-
     public void RePath(NavMeshPath myPath, Transform target, NavMeshQueryFilter filter, UnityAction done = null, string anim = "IsMoving")
     {
         StopAllCoroutines();
-        //Debug.Log("¸ñÇ¥ÁöÁ¡: " + pos);
+        //Debug.Log("ëª©í‘œì§€ì : " + pos);
         StartCoroutine(MovingByPath(myPath, target, filter, anim, done));
     }
 
@@ -27,11 +25,11 @@ public class CharacterMovement : CharacterProperty
         float dist = dir.magnitude;
         dir.Normalize();
 
-        while (dist > 1.0f) // µµÂø ÆÇÁ¤
+        while (dist > 1.0f) // ë„ì°© íŒì •
         {
             dir = target.position - transform.position;
             dist = dir.magnitude;
-            NavMesh.CalculatePath(transform.position, target.position, filter, myPath); // ½Ç½Ã°£À¸·Î ³×ºñ¸Ş½¬ °Ë»ç
+            NavMesh.CalculatePath(transform.position, target.position, filter, myPath); // ì‹¤ì‹œê°„ìœ¼ë¡œ ë„¤ë¹„ë©”ì‰¬ ê²€ì‚¬
 
             if (cur < myPath.corners.Length)
             {
@@ -39,7 +37,7 @@ public class CharacterMovement : CharacterProperty
                 {
                     Debug.DrawLine(myPath.corners[i], myPath.corners[i + 1], Color.red);
                 }
-                //Debug.Log("ÇöÀç ÄÚ³Ê: " + cur + "¹øÂ°: " + list[cur] + "ÃÑ ÄÚ³Ê: " + list.Length);
+                //Debug.Log("í˜„ì¬ ì½”ë„ˆ: " + cur + "ë²ˆì§¸: " + list[cur] + "ì´ ì½”ë„ˆ: " + list.Length);
                 MoveToPosition(myPath.corners[cur], anim, () => cur++);
             }
             yield return null;
@@ -50,28 +48,26 @@ public class CharacterMovement : CharacterProperty
     public void AttackTarget(NavMeshPath myPath, Transform target, NavMeshQueryFilter filter)
     {
         StopAllCoroutines();
-        coroutineRunner.StartCurrentCoroutine(attackCo,
-            out attackCo,
-            AttackRoot(myPath, target, filter, myStat.AttackRange, myStat.AttackDelay));
+        this.StartOrRestartCoroutine(ref attackCo, AttackRoot(myPath, target, filter, myStat.AttackRange, myStat.AttackDelay));
     }
 
     public void RotateToTarget(Vector3 pos, UnityAction done = null)
     {
-        coroutineRunner.StartCurrentCoroutine(CoroutineAngle, out CoroutineAngle, RotatingToPosition(pos));
+        this.StartOrRestartCoroutine(ref CoroutineAngle, RotatingToPosition(pos));
     }
 
     protected void MoveToPosition(Vector3 pos, string anim, UnityAction done = null, bool Rot = true)
     {
-        coroutineRunner.StopCurrentCoroutine(attackCo, out attackCo);
+        this.StopCurrentCoroutine(ref attackCo);
 
-        coroutineRunner.StartCurrentCoroutine(CoRoot, out CoRoot, RootMotionMoving(pos, done, anim));
+        this.StartOrRestartCoroutine(ref CoRoot, RootMotionMoving(pos, done, anim));
         CoRoot = StartCoroutine(RootMotionMoving(pos, done, anim));
 
         if (Rot)
         {
-            //TODO: ÄÚ·çÆ¾ È¸Àü Å×½ºÆ®
+            //TODO: ì½”ë£¨í‹´ íšŒì „ í…ŒìŠ¤íŠ¸
             //coroutineRunner.StopCurrentCoroutine(CoroutineAngle, out CoroutineAngle);
-            coroutineRunner.StartCurrentCoroutine(CoroutineAngle, out CoroutineAngle, RotatingToPosition(pos));
+            this.StartOrRestartCoroutine(ref CoroutineAngle, RotatingToPosition(pos));
         }
         //coroutineRunner.StartCurrentCoroutine(CoroutineAngle, out CoroutineAngle, RotatingToPosition(pos));
     }
@@ -105,7 +101,7 @@ public class CharacterMovement : CharacterProperty
         }
     }
 
-    // ¾È¾¸
+    // ì•ˆì”€
     IEnumerator LerpToPosition(Vector3 pos, Vector2 desireAnim, UnityAction done)
     {
         Vector3 dir = pos - transform.position;
@@ -113,7 +109,7 @@ public class CharacterMovement : CharacterProperty
         dir.Normalize();
         Vector2 desireDir = Vector2.zero;
 
-        //´Ş¸®±â ½ÃÀÛ
+        //ë‹¬ë¦¬ê¸° ì‹œì‘
         while (dist > 0.0f)
         {
             if (!myAnim.GetBool("IsAttacking"))
@@ -134,7 +130,7 @@ public class CharacterMovement : CharacterProperty
             yield return null;
 
         }
-        //´Ş¸®±â ³¡
+        //ë‹¬ë¦¬ê¸° ë
         desireDir = Vector2.Lerp(desireDir, new Vector2(0, 0), Time.deltaTime * myStat.MoveSpeed);
         myAnim.SetFloat("x", desireDir.x);
         myAnim.SetFloat("y", desireDir.y);
@@ -142,13 +138,13 @@ public class CharacterMovement : CharacterProperty
         done?.Invoke();
     }
 
-    // ·çÆ®¸ğ¼Ç ¿òÁ÷ÀÓ
+    // ë£¨íŠ¸ëª¨ì…˜ ì›€ì§ì„
     IEnumerator RootMotionMoving(Vector3 pos, UnityAction done, string anim)
     {
         Vector3 dir = pos - transform.position;
         float dist = dir.magnitude;
         dir.Normalize();
-        //´Ş¸®±â ½ÃÀÛ
+        //ë‹¬ë¦¬ê¸° ì‹œì‘
         myAnim.SetBool(anim, true);
 
         while (dist > Mathf.Epsilon)
@@ -160,20 +156,20 @@ public class CharacterMovement : CharacterProperty
             }
             yield return null;
         }
-        //´Ş¸®±â ³¡
+        //ë‹¬ë¦¬ê¸° ë
         myAnim.SetBool(anim, false);
         Debug.Log("anim: " + anim);
         done?.Invoke();
     }
 
-    // ¾È¾¸
+    // ì•ˆì”€
     IEnumerator MovingToPosition(Vector3 pos, UnityAction done)
     {
         Vector3 dir = pos - transform.position;
         float dist = dir.magnitude;
         dir.Normalize();
 
-        //´Ş¸®±â ½ÃÀÛ
+        //ë‹¬ë¦¬ê¸° ì‹œì‘
         myAnim.SetBool("IsMoving", true);
         while (dist > 0.0f)
         {
@@ -190,12 +186,12 @@ public class CharacterMovement : CharacterProperty
             yield return null;
 
         }
-        //´Ş¸®±â ³¡
+        //ë‹¬ë¦¬ê¸° ë
         myAnim.SetBool("IsMoving", false);
         done?.Invoke();
     }
 
-    // ¾È¾¸
+    // ì•ˆì”€
     IEnumerator AttackT(Transform target, float AttackRange, float AttackDelay)
     {
         float playTime = 0.0f;
@@ -203,7 +199,7 @@ public class CharacterMovement : CharacterProperty
         while (target != null)
         {
             if (!myAnim.GetBool("IsAttacking")) playTime += Time.deltaTime;
-            // ÀÌµ¿
+            // ì´ë™
             Vector3 dir = target.position - transform.position;
             float dist = dir.magnitude;
             dir.Normalize();
@@ -223,12 +219,12 @@ public class CharacterMovement : CharacterProperty
                 myAnim.SetBool("IsMoving", false);
                 if (playTime >= AttackDelay)
                 {
-                    //°ø°İ
+                    //ê³µê²©
                     playTime = 0.0f;
                     myAnim.SetTrigger("Attack");
                 }
             }
-            // È¸Àü
+            // íšŒì „
             delta = myStat.RotSpeed * Time.deltaTime;
 
             float Angle = Vector3.Angle(dir, transform.forward);
@@ -245,7 +241,7 @@ public class CharacterMovement : CharacterProperty
         myAnim.SetBool("IsMoving", false);
     }
 
-    // ·çÆ®¸ğ¼Ç °ø°İ
+    // ë£¨íŠ¸ëª¨ì…˜ ê³µê²©
     IEnumerator AttackRoot(NavMeshPath myPath, Transform target, NavMeshQueryFilter filter, float AttackRange, float AttackDelay)
     {
         float playTime = 0.0f;
@@ -253,7 +249,7 @@ public class CharacterMovement : CharacterProperty
         while (target != null)
         {
             if (!myAnim.GetBool("IsAttacking")) playTime += Time.deltaTime;
-            // ÀÌµ¿
+            // ì´ë™
             NavMesh.CalculatePath(transform.position, target.position, filter, myPath);
             Vector3[] list = myPath.corners;
             Vector3 dir = target.position - transform.position;
@@ -278,14 +274,14 @@ public class CharacterMovement : CharacterProperty
                 myAnim.SetBool("IsRunning", false);
                 if (playTime >= AttackDelay)
                 {
-                    //°ø°İ
+                    //ê³µê²©
                     playTime = 0.0f;
                     myAnim.SetTrigger("Attack");
                 }
             }
-            if (!myAnim.GetBool("IsAttacking")) // ÀÚ¿¬½º·¯¿î ¿òÁ÷ÀÓÀ» À§ÇØ °ø°İ½Ã¿£ È¸Àü ºñÈ°¼ºÈ­
+            if (!myAnim.GetBool("IsAttacking")) // ìì—°ìŠ¤ëŸ¬ìš´ ì›€ì§ì„ì„ ìœ„í•´ ê³µê²©ì‹œì—” íšŒì „ ë¹„í™œì„±í™”
             {
-                // È¸Àü
+                // íšŒì „
                 delta = myStat.RotSpeed * Time.deltaTime;
                 dir.y = 0.0f;
                 float Angle = Vector3.Angle(dir, transform.forward);
@@ -308,7 +304,7 @@ public class CharacterMovement : CharacterProperty
         int fIndex = list.Length - 1;
         if (list[fIndex] != myTarget.position)
         {
-            Debug.Log(transform + ": ºÒÀÏÄ¡");
+            Debug.Log(transform + ": ë¶ˆì¼ì¹˜");
             if (NavMesh.SamplePosition(list[fIndex], out NavMeshHit hit, 10f, filter))
             {
                 myTarget.position = hit.position;

@@ -5,36 +5,40 @@ using UnityEngine;
 /// <summary>
 /// 모든 코루틴을 돌리는 클래스
 /// </summary>
-public class CoroutineRunner
+public static class CoroutineRunner
 {
-    private MonoBehaviour currentMono;
-
-    public CoroutineRunner(MonoBehaviour currentMono)
+    public static void StopCurrentCoroutine(this MonoBehaviour mono, ref Coroutine coroutine)
     {
-        this.currentMono = currentMono;
-    }
-
-    public void StopCurrentCoroutine(Coroutine currentCoroutine, out Coroutine coroutine)
-    {
-        coroutine = currentCoroutine;
-
         if (coroutine != null)
         {
-            currentMono.StopCoroutine(coroutine);
+            mono.StopCoroutine(coroutine);
             coroutine = null;
         }
     }
 
-    public void StartCurrentCoroutine(Coroutine currentCoroutine, out Coroutine coroutine, IEnumerator coAction)
+    public static void StartOrRestartCoroutine(this MonoBehaviour mono, ref Coroutine coroutine, IEnumerator coAction)
     {
-        if (currentCoroutine == null)
-        {
-            coroutine = currentMono.StartCoroutine(coAction);
-            return;
-        }
-        
-        StopCurrentCoroutine(currentCoroutine, out coroutine);
-        coroutine = currentMono.StartCoroutine(coAction);
+        StopCurrentCoroutine(mono, ref coroutine);
+        coroutine = mono.StartCoroutine(coAction);
     }
 
+    public static void StartManagedCoroutine<TKey>(this MonoBehaviour mono, ref Dictionary<TKey, Coroutine> dict, TKey key, IEnumerator routine)
+    {
+        if (dict.TryGetValue(key, out Coroutine existing))
+        {
+            StopCurrentCoroutine(mono, ref existing);
+        }
+
+        StartOrRestartCoroutine(mono, ref existing, routine);
+        dict[key] = existing;
+    }
+
+    public static void StopManagedCoroutine<TKey>(this MonoBehaviour mono, ref Dictionary<TKey, Coroutine> dict, TKey key)
+    {
+        if (dict.TryGetValue(key, out Coroutine existing))
+        {
+            StopCurrentCoroutine(mono, ref existing);
+            dict.Remove(key);
+        }
+    }
 }

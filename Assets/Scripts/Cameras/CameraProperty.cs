@@ -49,5 +49,4 @@ public class CameraProperty : MonoBehaviour
     public float Offset = 0.1f;
     public float desireDistance = 0.0f;
     public float myRotSpeed;
-    public bool IsFps = true;
 }

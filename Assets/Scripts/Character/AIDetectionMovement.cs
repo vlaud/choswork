@@ -5,9 +5,9 @@ using UnityEngine.Events;
 public class AIDetectionMovement : BattleSystem
 {
     //ai hearing
-    public Transform HearingTr; // ½ÇÁ¦ ÃßÀû À§Ä¡
+    public Transform HearingTr; // ì‹¤ì œ ì¶”ì  ìœ„ì¹˜
     public Vector3 hearingPos;
-    public Transform hearingObj; // ¹°°Ç À§Ä¡
+    public Transform hearingObj; // ë¬¼ê±´ ìœ„ì¹˜
     public bool aiHeardPlayer = false;
     public float noiseTravelDistance = 10f;
 
@@ -18,18 +18,18 @@ public class AIDetectionMovement : BattleSystem
 
         if (NavMesh.SamplePosition(hearingPos, out NavMeshHit hit, 10f, navlayer))
         {
-            if (player.position.y < hit.position.y) // ¹°°ÇÀÌ ÃµÀåÀ¸·Î to ceiling
+            if (player.position.y < hit.position.y) // ë¬¼ê±´ì´ ì²œì¥ìœ¼ë¡œ to ceiling
             {
                 if (Physics.Raycast(hearingPos, Vector3.down, out RaycastHit thit,
                     20f, 1 << Physicsmask))
                 {
-                    Debug.Log("ÃµÀå" + thit.point);
+                    Debug.Log("ì²œì¥" + thit.point);
                     hearingPos = thit.point;
                 }
             }
-            else  // ¹°°ÇÀÌ ¹Ù´ÚÀ¸·Î to floor
+            else  // ë¬¼ê±´ì´ ë°”ë‹¥ìœ¼ë¡œ to floor
             {
-                Debug.Log("¹Ù´Ú" + hit.position);
+                Debug.Log("ë°”ë‹¥" + hit.position);
                 hearingPos = hit.position;
             }
         }
@@ -45,22 +45,22 @@ public class AIDetectionMovement : BattleSystem
             if(myPath.status != NavMeshPathStatus.PathComplete)
             {
                 Debug.Log(transform + "'s status: " + myPath.status);
-                Debug.Log("¼Ò¸®¸¦ µé¾úÀ¸³ª ³Ê¹« ¸Ö´Ù.");
+                Debug.Log("ì†Œë¦¬ë¥¼ ë“¤ì—ˆìœ¼ë‚˜ ë„ˆë¬´ ë©€ë‹¤.");
                 aiHeardPlayer = false;
             }
             else
             {
                 myTarget = HearingTr;
                 RePath(myPath, myTarget, filter, done, anim);
-                Debug.Log("¸÷ÀÌ ¼Ò¸®¸¦ µé¾ú´Ù.");
-                Debug.Log("µè´Â À§Ä¡: " + hearingPos);
-                Debug.Log("°Å¸®: " + dist);
+                Debug.Log("ëª¹ì´ ì†Œë¦¬ë¥¼ ë“¤ì—ˆë‹¤.");
+                Debug.Log("ë“£ëŠ” ìœ„ì¹˜: " + hearingPos);
+                Debug.Log("ê±°ë¦¬: " + dist);
                 aiHeardPlayer = true;
             }
         }
         else
         {
-            Debug.Log("¸ø µé¾ú´Ù.");
+            Debug.Log("ëª» ë“¤ì—ˆë‹¤.");
             aiHeardPlayer = false;
         }
     }
@@ -68,7 +68,7 @@ public class AIDetectionMovement : BattleSystem
     {
         if (myPath.status != NavMeshPathStatus.PathComplete)
         {
-            Debug.Log("°æ·Î ½ÇÆĞ: " + transform);
+            Debug.Log("ê²½ë¡œ ì‹¤íŒ¨: " + transform);
             Debug.Log(transform + "'s status: " + myPath.status);
             return true;
         }

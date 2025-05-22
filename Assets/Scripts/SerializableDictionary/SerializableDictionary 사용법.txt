@@ -1,0 +1,3 @@
+SerializableDictionary 사용법
+
+[SerializeField] SerializableDictionary<DIR, NewClimbAction> ClimbActions;

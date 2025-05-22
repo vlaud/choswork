@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c4a4f38739b2f214285296818ef463ee
+guid: 4892e122a8987f346b44912ea4e0c271
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -8,11 +8,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Open Sans
   fontNames:
   - Open Sans
-  fallbackFontReferences:
-  - {fileID: 12800000, guid: d0c1e17b8ba97c842b0b830abcbbaa34, type: 3}
+  fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

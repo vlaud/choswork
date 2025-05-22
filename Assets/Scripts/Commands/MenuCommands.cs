@@ -1,92 +1,66 @@
 namespace Commands.Menu
 {
-    public class Pause : iCommandType<Mainmenu>
+    public class Pause : iCommandType<iMainmenuFunctionality>
     {
-        private Mainmenu _mainMenu;
-
-        public Pause(Mainmenu mainMenu)
-        {
-            _mainMenu = mainMenu;
-        }
-
-        public void Execute()
+        public void Execute(iMainmenuFunctionality target)
         {
             GameStatesEvent.Trigger(GameEventType.Pause);
             MenuActions.ChangeKey(MainMenuKeyType.UnPauseAction);
-            _mainMenu?.ShowMenuAnim(true);
+            target?.ShowMenuAnim(true);
         }
 
-        public void Undo()
+        public void Undo(iMainmenuFunctionality target)
         {
             GameStatesEvent.Trigger(GameEventType.UnPause);
             MenuActions.ChangeKey(MainMenuKeyType.PauseAction);
 
-            _mainMenu?.ShowMenuAnim(false);
-            _mainMenu?.DisableUI();
+            target?.ShowMenuAnim(false);
+            target?.DisableUI();
         }
     }
 
-    public class UnPause : iCommandType<Mainmenu>
+    public class UnPause : iCommandType<iMainmenuFunctionality>
     {
-        private Mainmenu _mainMenu;
-
-        public UnPause(Mainmenu mainMenu)
-        {
-            _mainMenu = mainMenu;
-        }
-
-        public void Execute()
+        public void Execute(iMainmenuFunctionality target)
         {
             GameStatesEvent.Trigger(GameEventType.UnPause);
             MenuActions.ChangeKey(MainMenuKeyType.PauseAction);
 
-            _mainMenu?.ShowMenuAnim(false);
-            _mainMenu?.DisableUI();
+            target?.ShowMenuAnim(false);
+            target?.DisableUI();
         }
 
-        public void Undo()
+
+        public void Undo(iMainmenuFunctionality target)
         {
             GameStatesEvent.Trigger(GameEventType.Pause);
             MenuActions.ChangeKey(MainMenuKeyType.UnPauseAction);
-            _mainMenu?.ShowMenuAnim(true);
+            target?.ShowMenuAnim(true);
         }
     }
 
-    public class BackToMain : iCommandType<Mainmenu>
+    public class BackToMain : iCommandType<iMainmenuFunctionality>
     {
-        private Mainmenu _mainMenu;
-
-        public BackToMain(Mainmenu mainMenu)
+        public void Execute(iMainmenuFunctionality target)
         {
-            _mainMenu = mainMenu;
+            target?.back_options();
         }
 
-        public void Execute()
-        {
-            _mainMenu?.back_options();
-        }
 
-        public void Undo()
+        public void Undo(iMainmenuFunctionality target)
         {
-
         }
     }
 
-    public class BackToOptions : iCommandType<Mainmenu>
+    public class BackToOptions : iCommandType<iMainmenuFunctionality>
     {
-        private Mainmenu _mainMenu;
-
-        public BackToOptions(Mainmenu mainMenu)
+        public void Execute(iMainmenuFunctionality target)
         {
-            _mainMenu = mainMenu;
+            target?.back_options_panels();
         }
 
-        public void Execute()
-        {
-            _mainMenu?.back_options_panels();
-        }
 
-        public void Undo()
+        public void Undo(iMainmenuFunctionality target)
         {
 
         }
