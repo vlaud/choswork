@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Commands.Menu
 {
     public enum MainMenuKeyType
@@ -14,69 +16,62 @@ namespace Commands.Menu
         private static MenuActions m;
         public static MenuActions Inst => m;
 
-        private iCommandType<Mainmenu> EscapeKey;
+        private iMainmenuFunctionality _mainMenuTarget;
 
-        private iCommandType<Mainmenu> PauseAction;
-        private iCommandType<Mainmenu> UnPauseAction;
-        private iCommandType<Mainmenu> BackToMenu;
-        private iCommandType<Mainmenu> BackToOptions;
+        private MainMenuKeyType currentKey = MainMenuKeyType.PauseAction;
 
-        public static void SetKeys(Mainmenu mainmenu)
+        private readonly Dictionary<MainMenuKeyType, iCommandType<iMainmenuFunctionality>> commands = new();
+        /// <summary>
+        /// 사용 가능 상태 : 인스턴스가 존재하고 타겟이 null이 아닐 때
+        /// </summary>
+        private static bool IsValid => m != null && m._mainMenuTarget != null;
+
+        public static void SetKeys(iMainmenuFunctionality mainmenu)
         {
             if (m == null) m = new MenuActions();
 
-            m.PauseAction = new Pause(mainmenu);
-            m.UnPauseAction = new UnPause(mainmenu);
-            m.BackToMenu = new BackToMain(mainmenu);
-            m.BackToOptions = new BackToOptions(mainmenu);
+            m._mainMenuTarget = mainmenu;
 
-            m.EscapeKey = m.PauseAction;
+            m.commands.TryAdd(MainMenuKeyType.PauseAction, new Pause());
+            m.commands.TryAdd(MainMenuKeyType.UnPauseAction, new UnPause());
+            m.commands.TryAdd(MainMenuKeyType.BackToMenu, new BackToMain());
+            m.commands.TryAdd(MainMenuKeyType.BackToOptions, new BackToOptions());
+
+            m.currentKey = MainMenuKeyType.PauseAction;
         }
 
         public static void ChangeKey(MainMenuKeyType type)
         {
-            switch (type)
-            {
-                case MainMenuKeyType.None:
-                    m.EscapeKey = null;
-                    break;
-                case MainMenuKeyType.PauseAction:
-                    m.EscapeKey = m.PauseAction;
-                    break;
-                case MainMenuKeyType.UnPauseAction:
-                    m.EscapeKey = m.UnPauseAction;
-                    break;
-                case MainMenuKeyType.BackToMenu:
-                    m.EscapeKey = m.BackToMenu;
-                    break;
-                case MainMenuKeyType.BackToOptions:
-                    m.EscapeKey = m.BackToOptions;
-                    break;
-            }
+            //if (!IsValid || !m.commands.ContainsKey(type)) return;
+            m.currentKey = type;
         }
 
-        public static void SetCommandKey(MainMenuKeyType type, iCommandType<Mainmenu> command)
+        /// <summary>
+        /// 커맨드 키를 설정합니다.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="command"></param>
+        public static void SetCommandKey(MainMenuKeyType type, iCommandType<iMainmenuFunctionality> command)
         {
-            switch (type)
-            {
-                case MainMenuKeyType.PauseAction:
-                    m.PauseAction = command;
-                    break;
-                case MainMenuKeyType.UnPauseAction:
-                    m.UnPauseAction = command;
-                    break;
-                case MainMenuKeyType.BackToMenu:
-                    m.BackToMenu = command;
-                    break;
-                case MainMenuKeyType.BackToOptions:
-                    m.BackToOptions = command;
-                    break;
-            }
+            // 타깃이 없거나 인스턴스가 없으면 아무것도 하지 않음
+            //if (!IsValid) return;
+
+            // MainMenuKeyType에 따라 명령을 설정
+            m.commands[type] = command;
         }
 
         public static void Execute()
         {
-            CommandManager.ExecuteCommand(m.EscapeKey);
+            //Debug.Log($"{m._mainMenuTarget}'s command : {m.commands[m.currentKey]}");
+            //if (!IsValid) return;
+            CommandManager.ExecuteCommand(m._mainMenuTarget, m.commands[m.currentKey]);
+        }
+
+        public static void Reset()
+        {
+            if (m == null) return;
+            m.commands.Clear();
+            m._mainMenuTarget = null;
         }
     }
 }

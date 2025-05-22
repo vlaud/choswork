@@ -1,15 +1,16 @@
+using Commands.Menu;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Commands.Menu;
-using UnityEngine.Rendering.PostProcessing;
 
 public enum MenuState
 {
     Create, None, Menu, Options, SubOptions
 }
 
-public class Mainmenu : Singleton<Mainmenu>
+public class Mainmenu : Singleton<Mainmenu>, iMainmenuFunctionality
 {
     Animator anim;
     Animator faderAnim;
@@ -19,7 +20,7 @@ public class Mainmenu : Singleton<Mainmenu>
     public string newGameSceneName;
     public int quickSaveSlotID;
 
-    [Header("ø…º« º≥¡§")]
+    [Header("ÏòµÏÖò ÏÑ§Ï†ï")]
     public GameObject MainScreenPanel;
     public GameObject MainOptionsPanel;
     public GameObject StartGameOptionsPanel;
@@ -30,15 +31,16 @@ public class Mainmenu : Singleton<Mainmenu>
     public GameObject Fader;
     public Button SkipButton;
 
-    [Header("∏ﬁ¥∫ ƒ´∏ﬁ∂Û º≥¡§")]
+    [Header("Î©îÎâ¥ Ïπ¥Î©îÎùº ÏÑ§Ï†ï")]
     [SerializeField] private Camera menuCam;
     public Camera MenuCamera => menuCam;
     [SerializeField] private PostProcessLayer postProcessLayer;
     public PostProcessLayer PostProcessLayer => postProcessLayer;
 
-    [Header("ΩΩ∂Û¿Ã¥ı ∏Ò∑œ")]
+    [Header("Ïä¨ÎùºÏù¥Îçî Î™©Î°ù")]
     public Slider[] GamePanel_Sliders;
 
+    private static readonly Dictionary<string, MenuCommandProfile> SceneCommandProfiles = new();
 
     public MenuState myState = MenuState.Create;
 
@@ -66,16 +68,18 @@ public class Mainmenu : Singleton<Mainmenu>
 
     private void SetMenuCommands()
     {
-        MenuActions.SetKeys(GameManagement.Inst.myMainmenu);
+        MenuActions.SetKeys(this);
 
-        if (currentSceneName == "Title" || currentSceneName == "ClearMessage")
+        if (!SceneCommandProfiles.ContainsKey(currentSceneName))
         {
-            MenuActions.SetCommandKey(MainMenuKeyType.PauseAction, null);
-            MenuActions.SetCommandKey(MainMenuKeyType.UnPauseAction, null);
-            Debug.Log($"{currentSceneName} <color=red>SetMenuCommands</color>");
+            SceneCommandProfiles[currentSceneName] = MenuCommandProfileFactory.Create(currentSceneName);
         }
-        else Debug.Log($"{currentSceneName} <color=yellow>SetMenuCommands</color>");
 
+        foreach (var kvp in SceneCommandProfiles[currentSceneName].Commands)
+        {
+            MenuActions.SetCommandKey(kvp.Key, kvp.Value);
+            Debug.Log($"{currentSceneName} <color=cyan>SetMenuCommands</color>");
+        }
     }
 
     private void Awake()
@@ -96,6 +100,8 @@ public class Mainmenu : Singleton<Mainmenu>
         GamePanel_Sliders[2].value = SoundManager.Inst.bgmVolume;
         GamePanel_Sliders[3].value = SoundManager.Inst.effectVolume;
     }
+
+
 
     #region Scene Change
     void OnEnable()
@@ -131,8 +137,8 @@ public class Mainmenu : Singleton<Mainmenu>
         currentSceneName = SceneManager.GetActiveScene().name;
         Debug.Log(currentSceneName);
 
-        // => ø©±‚ currentSceneName name¿Ã πŸ≤Ó∞Ì ≥™º≠
-        // InputManger¿« SetMenuCommands()∏¶ Ω««‡«ÿæﬂ «—¥Ÿ
+        // => Ïó¨Í∏∞ currentSceneName nameÏù¥ Î∞îÎÄåÍ≥† ÎÇòÏÑú
+        // InputMangerÏùò SetMenuCommands()Î•º Ïã§ÌñâÌï¥Ïïº ÌïúÎã§
         CommandManager.ClearCommands();
         SetMenuCommands();
         switch (scene.name)
@@ -142,7 +148,6 @@ public class Mainmenu : Singleton<Mainmenu>
                 postProcessLayer.enabled = true;
                 faderAnim?.SetTrigger("FadeIn");
                 SkipButton.gameObject.SetActive(false);
-                // ShowMenuAnim(bool v) => ChangeState(MenuState s) => MenuActions.ChangeKey(MenuState s)∞° πﬂµø
                 ShowMenuAnim(true);
                 CursorManager.Instance.SetSceneTitle(true);
                 SoundManager.Inst.PlayBGM("titleBGM");

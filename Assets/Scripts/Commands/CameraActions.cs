@@ -1,133 +1,97 @@
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace Commands.Camera
 {
-    public enum CameraKeyType
-    {
-        None,
-        FPS,
-        TPS,
-        UI,
-        NotUI,
-    }
-
-    public class CameraActions
+    public class CameraActions : iCameraContextProvider
     {
         private static CameraActions m;
 
         public static CameraActions Inst => m;
 
-        private iCommandType<SpringArms> VKey;
-        private iCommandType<SpringArms> IKey;
+        private readonly Dictionary<(CameraMode, UIMode), iCommandType<iSpringArmFunctionality>> cameraModeActions = new();
+        private readonly Dictionary<UIMode, iCommandType<iSpringArmFunctionality>> uiActions = new();
 
-        private iCommandType<SpringArms> FPSAction;
-        private iCommandType<SpringArms> GameFPSAction;
-        private iCommandType<SpringArms> MenuFPSAction;
+        private CameraContext ctx;
+        private iSpringArmFunctionality _springArmsTarget;
 
-        private iCommandType<SpringArms> TPSAction;
-        private iCommandType<SpringArms> GameTPSAction;
-        private iCommandType<SpringArms> MenuTPSAction;
+        private static bool IsValid => m != null && m._springArmsTarget != null;
 
-        private iCommandType<SpringArms> UIAction;
-        private iCommandType<SpringArms> NotUIAction;
+        public CameraContext Context => m.ctx;
 
-        private CameraKeyType camState = CameraKeyType.None;
-        private CameraKeyType prevState = CameraKeyType.None;
-
-        public static void SetKeys()
+        public static void SetKeys(iSpringArmFunctionality iSpringArm)
         {
             if (m == null) m = new CameraActions();
 
-            m.GameFPSAction = new OnGameFPS();
-            m.MenuFPSAction = new OnMenuFPS();
+            m._springArmsTarget = iSpringArm;
+            m.ctx = new CameraContext();
 
-            m.GameTPSAction = new OnGameTPS();
-            m.MenuTPSAction = new OnMenuTPS();
+            // FPS/TPS 명령 매핑
+            m.cameraModeActions[(CameraMode.FPS, UIMode.NotUI)] = new OnGameFPS();
+            m.cameraModeActions[(CameraMode.FPS, UIMode.UI)] = new OnMenuFPS();
+            m.cameraModeActions[(CameraMode.TPS, UIMode.NotUI)] = new OnGameTPS();
+            m.cameraModeActions[(CameraMode.TPS, UIMode.UI)] = new OnMenuTPS();
 
-            m.UIAction = new UI();
-            m.NotUIAction = new NotUI();
+            // UI 상태 매핑
+            m.uiActions[UIMode.UI] = new UI();
+            m.uiActions[UIMode.NotUI] = new NotUI();
 
-            ChangeToMenuMode(false);
-            ChangeState(CameraKeyType.FPS);
-            m.prevState = CameraKeyType.TPS;
+            SetMode(CameraMode.FPS);
+            SetUI(UIMode.NotUI);
         }
 
-        public static CameraKeyType GetState()
+        public static void SetMode(CameraMode mode) => m.ctx.SetMode(mode);
+        public static void SetUI(UIMode ui) => m.ctx.SetUI(ui);
+
+        /// <summary>
+        /// FPS ↔ TPS 전환
+        /// </summary>
+        public static void ToggleCameraMode()
         {
-            return m.camState;
+            if (!IsValid) return;
+            // ctx의 카메라 모드를 전환한다. FPS면 TPS로, 아니면 FPS로
+            var newMode = m.ctx.Mode == CameraMode.FPS ? CameraMode.TPS : CameraMode.FPS;
+            SetMode(newMode);
+            ExecuteCameraCommand();
         }
 
-        public static void ChangeState(CameraKeyType type)
+        /// <summary>
+        /// 실제로 카메라 전환을 담당하는 함수. UI 활성화 여부에 따라 커맨드가 달라짐
+        /// </summary>
+        public static void ExecuteCameraCommand()
         {
-            if (m.camState == type) return;
+            // 키: 현재 ctx의 카메라 모드와, UI 활성화 여부
+            var key = (m.ctx.Mode, m.ctx.UI);
 
-            m.prevState = m.camState;
-            m.camState = type;
-
-            switch (m.camState)
+            // cameraModeActions에서 키를 검색하여 커맨드 탐색
+            if (m.cameraModeActions.TryGetValue(key, out var cmd))
             {
-                case CameraKeyType.FPS:
-                    ChangeVKey(CameraKeyType.TPS);
-                    break;
-                case CameraKeyType.TPS:
-                    ChangeVKey(CameraKeyType.FPS);
-                    break;
+                //Debug.Log($"{m._springArmsTarget}'s command : {m.cameraModeActions[key]}");
+                CommandManager.ExecuteCommand(m._springArmsTarget, cmd);
             }
         }
 
-        public static void ChangeToMenuMode(bool v)
+        /// <summary>
+        /// 게임 ↔ UI 전환 
+        /// </summary>
+        public static void ToggleUIMode()
         {
-            if (v)
-            {
-                m.FPSAction = m.MenuFPSAction;
-                m.TPSAction = m.MenuTPSAction;
-                ChangeIKey(CameraKeyType.NotUI);
-            }
-            else
-            {
-                m.FPSAction = m.GameFPSAction;
-                m.TPSAction = m.GameTPSAction;
-                ChangeIKey(CameraKeyType.UI);
-            }
-
-            ChangeVKey(m.prevState);
+            if (!IsValid) return;
+            // ui 모드 전호나. NotUI면 UI, 아니면 NotUI
+            var ui = m.ctx.UI == UIMode.NotUI ? UIMode.UI : UIMode.NotUI;
+            SetUI(ui);
+            ExecuteUICommand();
         }
 
-        public static void ChangeVKey(CameraKeyType type)
+        /// <summary>
+        /// 실제로 UI 전환을 담당하는 함수
+        /// </summary>
+        public static void ExecuteUICommand()
         {
-            switch (type)
+            if (m.uiActions.TryGetValue(m.ctx.UI, out var cmd))
             {
-                case CameraKeyType.FPS:
-                    m.VKey = m.FPSAction;
-                    break;
-                case CameraKeyType.TPS:
-                    m.VKey = m.TPSAction;
-                    break;
+                //Debug.Log($"{m._springArmsTarget}'s command : {m.uiActions[m.ctx.UI]}");
+                CommandManager.ExecuteCommand(m._springArmsTarget, cmd);
             }
-        }
-
-        public static void ChangeIKey(CameraKeyType type)
-        {
-            switch (type)
-            {
-                case CameraKeyType.UI:
-                    m.IKey = m.UIAction;
-                    break;
-                case CameraKeyType.NotUI:
-                    m.IKey = m.NotUIAction;
-                    break;
-            }
-
-        }
-
-        public static void ExecuteVKey()
-        {
-            CommandManager.ExecuteCommand(m.VKey);
-        }
-
-        public static void ExecuteIKey()
-        {
-            CommandManager.ExecuteCommand(m.IKey);
         }
     }
 }

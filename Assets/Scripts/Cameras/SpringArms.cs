@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSubscription
+public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSubscription, iSpringArmFunctionality
 {
     [Header("카메라 상태 설정")]
     public ViewState myCameraState = ViewState.Create; // 카메라 상태기계
@@ -12,17 +12,29 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     public CameraSet myTPSCam;
     public CameraSet myUICam;
     public Player myPlayer;
-    public bool UIkeyAvailable = true;
     public bool isFPSCamRotinTPS = false;
     private bool isGhost = false;
 
     private Coroutine currentUIRotatingCoroutine; // 현재 실행 중인 UI 회전 코루틴
     private Coroutine currentUIMovingCoroutine; // 현재 실행 중인 UI 움직임 코루틴
 
-        // 다른 클래스에서 Inventory 인스턴스에 접근
+    // 다른 클래스에서 Inventory 인스턴스에 접근
     [SerializeField] Inventory _inventory;
-    [SerializeField] private InterfaceHolder<IPlayerFunctionality> mplayer;
+    [SerializeField] private InterfaceHolder<iPlayerFunctionality> mplayer;
 
+    private iCameraContextProvider _contextProvider;
+    private bool IsFps
+    {
+        get
+        {
+            if (_contextProvider?.Context == null)
+            {
+                Debug.LogWarning("Camera context not ready");
+                return false;
+            }
+            return _contextProvider.Context.Mode == CameraMode.FPS;
+        }
+    }
     public GameObject[] GetAllCams()
     {
         GameObject[] cams = new GameObject[3];
@@ -180,8 +192,6 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
 
     IEnumerator UIRotating(Vector3 dir, bool IsUI, Space sp = Space.World)
     {
-        //UIkeyAvailable = false; // 잠깐 i키 안먹히게
-
         //UI카메라 캐릭터 모델 돌리기
         float Angle = Vector3.Angle(myModel.forward, dir);
         float rotDir = 1.0f;
@@ -207,7 +217,6 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
             myModel.Rotate(Vector3.up * delta * rotDir, sp);
             yield return null;
         }
-        //UIkeyAvailable = true; // i키 다시 활성화
     }
     void RotatingRoot(Transform tr)
     {
@@ -266,19 +275,15 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     private void Awake()
     {
         if (!isGhost)
+        {
             _inventory = FindFirstObjectByType<Inventory>();
+            SetPlayer(GameManagement.Inst.myPlayer);
+            CameraActions.SetKeys(this);
+            _contextProvider = CameraActions.Inst;
+        }
 
         // IPlayerFunctionality를 상속받는 클래스들을 ComponentTypeFinder를 통해 찾아내어 InterfaceHolder에 저장
-        mplayer.SetValue(ComponentTypeFinder.FindFirstImplementing<IPlayerFunctionality>());
-
-        if (_inventory != null)
-        {
-            // OnInventoryToggled 이벤트에 이벤트 핸들러 추가
-            _inventory.OnInventoryToggled += HandleInventoryToggled;
-
-            // OnInventoryToggled 이벤트에서 이벤트 핸들러 제거
-            // inventory.OnInventoryToggled -= HandleInventoryToggled;
-        }
+        mplayer.SetValue(ComponentTypeFinder.FindFirstImplementing<iPlayerFunctionality>());
     }
 
     // Start is called before the first frame update
@@ -286,12 +291,6 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     {
         camPos = myTPSCam.DesirePos.localPosition;
         desireDistance = camPos.z;
-
-        if (!isGhost)
-        {
-            SetPlayer(GameManagement.Inst.myPlayer);
-            CameraActions.SetKeys();
-        }
 
         myFPSCam = CameraSetting(myFPSCam);
         myTPSCam = CameraSetting(myTPSCam);
@@ -315,8 +314,6 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         myUI_basePos.parent.rotation = mySpring.rotation; // ui카메라(부모를 중점으로)를 3인칭 좌우 회전값과 동일하게
         UICameraSetRot(mySpring);
         StateProcess();
-
-        IsFps = CameraActions.GetState() == CameraKeyType.FPS;
     }
 
     private void OnDestroy()
@@ -438,22 +435,6 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         myPlayer = player;
     }
 
-    private void HandleInventoryToggled(bool isInventoryOpen)
-    {
-        if (!UIkeyAvailable) return;
-        // 인벤토리가 열려있는지 여부에 따라 처리
-        if (isInventoryOpen)
-        {
-            // 인벤토리가 열린 경우 처리할 내용
-            ChangeState(ViewState.UI);
-        }
-        else
-        {
-            // 인벤토리가 닫힌 경우 처리할 내용
-            ChangeState(ViewState.Turn);
-        }
-    }
-
     public void OnEvent(CameraStatesEvent eventType)
     {
         switch (eventType.cameraEventType)
@@ -463,6 +444,12 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
                 break;
             case CameraEventType.TPS:
                 ChangeState(ViewState.TPS);
+                break;
+            case CameraEventType.NotUI:
+                ChangeState(ViewState.Turn);
+                break;
+            case CameraEventType.UI:
+                ChangeState(ViewState.UI);
                 break;
             case CameraEventType.Debug:
                 DebugCamera();

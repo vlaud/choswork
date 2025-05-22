@@ -6,7 +6,7 @@ public class InputManager : MonoBehaviour
 {
     private void Awake()
     {
-        SetMenuCommands();
+        if (!GameManagement.Inst.myMainmenu) SetMenuCommands();
     }
 
     private void Update()
@@ -20,17 +20,7 @@ public class InputManager : MonoBehaviour
 
     private void SetMenuCommands()
     {
-        string sceneName = GameManagement.Inst.myMainmenu?.CurrentSceneName;
-        MenuActions.SetKeys(GameManagement.Inst.myMainmenu);
-
-        if (sceneName == "Title")
-        {
-            MenuActions.SetCommandKey(MainMenuKeyType.PauseAction, null);
-            MenuActions.SetCommandKey(MainMenuKeyType.UnPauseAction, null);
-            Debug.Log($"{sceneName} <color=red>SetMenuCommands</color>");
-        }
-        else Debug.Log($"{sceneName} <color=yellow>SetMenuCommands</color>");
-
+        MenuActions.SetKeys(null);
     }
 
     /// <summary>
@@ -90,11 +80,11 @@ public class InputManager : MonoBehaviour
         // 카메라
         if (Input.GetKeyDown(KeyCode.V))
         {
-            CameraActions.ExecuteVKey();
+            CameraActions.ToggleCameraMode();
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
-            CameraActions.ExecuteIKey();
+            CameraActions.ToggleUIMode();
         }
         if (Input.GetKeyDown(KeyCode.C))
         {

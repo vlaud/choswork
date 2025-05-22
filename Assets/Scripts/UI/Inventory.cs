@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour, ItemTargeting, EventListener<CameraStatesEvent>, iSubscription
+public class Inventory : MonoBehaviour, ItemTargeting, EventListener<CameraStatesEvent>, EventListener<GameStatesEvent>, iSubscription
 {
     [SerializeField] private GameObject InventoryBase;
     [SerializeField] private GameObject SlotParent;
@@ -12,7 +12,20 @@ public class Inventory : MonoBehaviour, ItemTargeting, EventListener<CameraState
     [SerializeField] private Transform myTargetObj;
     private Dictionary<Item, List<ItemSlot>> itemTypeToSlotListMap = new Dictionary<Item, List<ItemSlot>>();
 
-    public event Action<bool> OnInventoryToggled;
+    public bool IsUIOpen { get; private set; }
+    public bool IsPause { get; private set; }
+
+    public void SetUIOpen(bool isOpen)
+    {
+        IsUIOpen = isOpen;
+        ToggleInventory();
+    }
+
+    public void SetPause(bool isPaused)
+    {
+        IsPause = isPaused;
+        ToggleInventory();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -38,23 +51,15 @@ public class Inventory : MonoBehaviour, ItemTargeting, EventListener<CameraState
         Unsubscribe();
     }
 
-    public void ToggleInventory(bool showInventory)
+    public void ToggleInventory()
     {
-        isInventory = showInventory;
+        // isInventoryÎäî UIÍ∞Ä Ïó¥Î†§ÏûàÍ≥†, Í≤åÏûÑÏù¥ Ïû¨Í∞úÏ§ëÏùº ÎïåÎßå trueÍ∞Ä ÎêúÎã§.
+        isInventory = IsUIOpen && !IsPause;
+
+        Debug.Log($"IsUIOpen: {IsUIOpen}, IsResume: {IsPause} == isInventory: {isInventory}");
         InventoryBase.SetActive(isInventory);
 
-        OnInventoryToggled?.Invoke(isInventory);
-
         CursorManager.Instance.SetUIOpen(isInventory);
-
-        if (InventoryBase.activeSelf == true)
-        {
-            //Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            //Cursor.lockState = CursorLockMode.Locked;
-        }
     }
 
     public void AcquireItem(Item _item, int _count = 1)
@@ -70,18 +75,18 @@ public class Inventory : MonoBehaviour, ItemTargeting, EventListener<CameraState
                     return;
                 }
             }
-            else if (curitem == null) // ΩΩ∑‘¿Ã ∫ÒæÓ¿÷¥Ÿ
+            else if (curitem == null) // Ïä¨Î°ØÏù¥ ÎπÑÏñ¥ÏûàÎã§
             {
-                slot.GetItem(_item, _count); // æ∆¿Ã≈€ »πµÊ
+                slot.GetItem(_item, _count); // ÏïÑÏù¥ÌÖú ÌöçÎìù
                 if (!itemTypeToSlotListMap.ContainsKey(_item))
                 {
                     itemTypeToSlotListMap[_item] = new List<ItemSlot>() { slot };
-                    Debug.Log(_item + "ΩΩ∑‘ ª˝º∫");
+                    Debug.Log(_item + "Ïä¨Î°Ø ÏÉùÏÑ±");
                 }
                 else
                 {
                     itemTypeToSlotListMap[_item].Add(slot);
-                    Debug.Log(_item + "ΩΩ∑‘ø° √ﬂ∞°");
+                    Debug.Log(_item + "Ïä¨Î°ØÏóê Ï∂îÍ∞Ä");
                 }
                 return;
             }
@@ -112,14 +117,15 @@ public class Inventory : MonoBehaviour, ItemTargeting, EventListener<CameraState
                 if (itemSlot.itemCount < 1) itemTypeToSlotListMap[_item].Remove(itemSlot);
             }
         }
-        else Debug.Log("æ∆¿Ã≈€¿Ã æ¯Ω¿¥œ¥Ÿ.");
+        else Debug.Log("ÏïÑÏù¥ÌÖúÏù¥ ÏóÜÏäµÎãàÎã§.");
         SortItems();
     }
+
     public void SortItems()
     {
         var firstEmptySlot = FindSlot(true, false);
         int emptySlotIndex = Array.FindIndex(mySlots, slot => slot.GetItemValue() == null);
-        //int emptySlotIndex = Array.IndexOf(mySlots, firstEmptySlot);
+
         for (int i = emptySlotIndex; i < mySlots.Length; i++)
         {
             if (mySlots[i].GetItemValue() != null)
@@ -149,18 +155,15 @@ public class Inventory : MonoBehaviour, ItemTargeting, EventListener<CameraState
         return itemTypeToSlotListMap.ContainsKey(item);
     }
 
-    public bool IsInventoryEnabled()
-    {
-        return isInventory;
-    }
-
     public void Subscribe()
     {
+        this.EventStartingListening<GameStatesEvent>();
         this.EventStartingListening<CameraStatesEvent>();
     }
 
     public void Unsubscribe()
     {
+        this.EventStopListening<GameStatesEvent>();
         this.EventStopListening<CameraStatesEvent>();
     }
 
@@ -169,10 +172,23 @@ public class Inventory : MonoBehaviour, ItemTargeting, EventListener<CameraState
         switch (eventType.cameraEventType)
         {
             case CameraEventType.UI:
-                ToggleInventory(true);
+                SetUIOpen(true);
                 break;
             case CameraEventType.NotUI:
-                ToggleInventory(false);
+                SetUIOpen(false);
+                break;
+        }
+    }
+
+    public void OnEvent(GameStatesEvent eventType)
+    {
+        switch (eventType.gameEventType)
+        {
+            case GameEventType.Pause:
+                SetPause(true);
+                break;
+            case GameEventType.UnPause:
+                SetPause(false);
                 break;
         }
     }
