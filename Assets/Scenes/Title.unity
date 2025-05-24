@@ -7019,9 +7019,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Skip
-
-'
+  m_Text: "\uC2A4\uD0B5"
 --- !u!222 &2078438439
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15030,7 +15028,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Quit
+  m_Text: "\uC885\uB8CC"
 --- !u!114 &4590418292119857561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16863,7 +16861,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Options
+  m_Text: "\uC635\uC158"
 --- !u!114 &4590662035128245155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18178,7 +18176,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Start
+  m_Text: "\uC2DC\uC791"
 --- !u!114 &4591243333691348609
 MonoBehaviour:
   m_ObjectHideFlags: 0
