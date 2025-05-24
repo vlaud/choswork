@@ -31,8 +31,6 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
 
     [Header("몹 관련")]
     public AIPerception[] myMonsters;
-    [SerializeField]
-    private Rigidbody[] rigidbodies;
 
     [Header("게임 요소 관련")]
     public SpringArms mySpringArms;
@@ -113,7 +111,6 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
         _inst = this;
         Physics.simulationMode = SimulationMode.Script;
         myMonsters = FindObjectsByType<AIPerception>(FindObjectsSortMode.None);
-        GetAllMobsRigidbodies();
         for (int i = 0; i < myMonsters.Length; ++i)
         {
             myMonsters[i].GetComponent<AIAction>().SetMobIndex(i);
@@ -189,17 +186,6 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
     {
         if (myMainmenu?.CurrentSceneName == "Title") return;
         this.EventStopListening<GameStatesEvent>();
-    }
-
-    private void GetAllMobsRigidbodies()
-    {
-        rigidbodies = myMonsters
-            .Select(monster => monster.GetComponent<RagDollAction>()) // RagDollAction 찾기
-            .Where(ragDoll => ragDoll != null) // Null 제거
-            .SelectMany(ragDoll => ragDoll.myRagDolls.GetAllRigidbodies()) // 모든 Rigidbody 가져오기
-            .ToArray();
-
-        Debug.Log($"맵에 있는 Rigidbody 개수: {rigidbodies.Length}");
     }
 
     public void DoSlowmotion()
