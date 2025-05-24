@@ -15,11 +15,14 @@ public class ObjectGrabbable : ObjectInteractable
     private Collider objectCollider;
     private Transform objectGrabPointTransform;
     private bool _isGhost;
+
     public enum STATE
     {
         Create, Idle, Grab, Throw, WallHit
     }
+
     public STATE myState = STATE.Create;
+
     void ChangeState(STATE s)
     {
         if (myState == s) return;
@@ -29,7 +32,7 @@ public class ObjectGrabbable : ObjectInteractable
         {
             case STATE.Create:
                 break;
-            case STATE.Idle: // ∆ÚªÛΩ√
+            case STATE.Idle: // ÌèâÏÉÅÏãú
                 IsSoundable = false;
                 break;
             case STATE.Grab:
@@ -41,16 +44,18 @@ public class ObjectGrabbable : ObjectInteractable
                 soundPos = transform.position;
                 IsSoundable = true;
                 foreach (var hear in hearings) hear.Invoke();
-                Debug.Log("π∞∞« ¿ßƒ°: " + soundPos);
+                Debug.Log("Î¨ºÍ±¥ ÏúÑÏπò: " + soundPos);
                 StartCoroutine(DelayState(STATE.Idle));
                 break;
         }
     }
+
     IEnumerator DelayState(STATE s)
     {
         yield return new WaitForSeconds(_changeStateTime);
         ChangeState(s);
     }
+
     private void Awake()
     {
         objectRigidbody = GetComponent<Rigidbody>();
@@ -59,49 +64,57 @@ public class ObjectGrabbable : ObjectInteractable
         SetItemInfoAppear(false);
         ChangeState(STATE.Idle);
     }
+
     private void Start()
     {
         for (int i = 0; i < GameManagement.Inst.myMonsters.Length; ++i)
-             hearings.Add(GameManagement.Inst.myMonsters[i].GetComponent<AIAction>().HearingSound);
+            hearings.Add(GameManagement.Inst.myMonsters[i].GetComponent<AIAction>().HearingSound);
     }
+
     public void Grab(Transform objectGrabPointTransform)
     {
         this.objectGrabPointTransform = objectGrabPointTransform;
         SetObjectPhysics(false);
         ChangeState(STATE.Grab);
     }
+
     public void Drop()
     {
         Throw(Vector3.down, dropSpeed);
     }
+
     public void Throw(Vector3 dir, float strength, bool isGhost = false)
     {
         FreeObj(isGhost);
         Vector3 force;
         force = dir * strength;
-        objectRigidbody.linearVelocity += force * Time.fixedDeltaTime / (Time.timeScale * objectRigidbody.mass);
+        objectRigidbody.linearVelocity = force * Time.fixedUnscaledDeltaTime / objectRigidbody.mass;
         ChangeState(STATE.Throw);
     }
+
     public void ReleaseObj(bool isGhost = false, STATE state = STATE.Idle)
     {
         FreeObj(isGhost);
         ChangeState(state);
     }
+
     void FreeObj(bool isGhost = false)
     {
         _isGhost = isGhost;
         this.objectGrabPointTransform = null;
         SetObjectPhysics(true);
     }
+
     public void SetObjectPhysics(bool v)
     {
         objectRigidbody.useGravity = v;
         objectRigidbody.isKinematic = !v;
         objectCollider.isTrigger = !v;
     }
+
     private void FixedUpdate()
     {
-        if(objectGrabPointTransform != null)
+        if (objectGrabPointTransform != null)
         {
             float speed = 10f;
             Vector3 newPos = Vector3.Lerp(transform.position, objectGrabPointTransform.position, speed * Time.deltaTime);
@@ -109,13 +122,14 @@ public class ObjectGrabbable : ObjectInteractable
         }
         if (objectRigidbody.useGravity) objectRigidbody.AddForce(Physics.gravity * (objectRigidbody.mass * objectRigidbody.mass));
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (_isGhost) return;
         if (myState != STATE.Throw) return;
         if ((objectMask & 1 << collision.gameObject.layer) != 0)
         {
-            //ø¿∫Í¡ß∆Æø° ∫Œµ˙ƒ• ∂ß
+            //Ïò§Î∏åÏ†ùÌä∏Ïóê Î∂ÄÎî™Ïπ† Îïå
             ChangeState(STATE.WallHit);
         }
     }

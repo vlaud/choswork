@@ -148,7 +148,11 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
             while (timer >= Time.fixedDeltaTime)
             {
                 timer -= Time.fixedDeltaTime;
-                Physics.Simulate(Time.fixedDeltaTime);
+                // GameTimeScale이 0이 아닐 때만 물리 시뮬레이션 실행
+                if (GameTimeScale > 0)
+                {
+                    Physics.Simulate(Time.fixedDeltaTime * GameTimeScale);
+                }
             }
             DoSlowmotion();
             StateProcess();
