@@ -108,11 +108,13 @@ public class PlayerBulletTime : MonoBehaviour, iSubscription, EventListener<Game
         transform.GetComponent<Player>().ReturnAnim().updateMode = mode;
         ghostPlayer.GetComponent<Player>().ReturnAnim().updateMode = mode;
     }
+
     void SetBulletTime()
     {
         if (myState != State.Start) _physicsScene.Simulate(Time.fixedUnscaledDeltaTime);
         else _physicsScene.Simulate(Time.fixedDeltaTime);
     }
+    
     void CreatePhysicsScene()
     {
         _simulationScene = SceneManager.CreateScene("Physics", new CreateSceneParameters(LocalPhysicsMode.Physics3D));

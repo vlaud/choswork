@@ -11,16 +11,13 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
     public CameraSet myFPSCam;
     public CameraSet myTPSCam;
     public CameraSet myUICam;
-    public Player myPlayer;
+    [SerializeField] private InterfaceHolder<iPlayerFunctionality> myPlayer;
     public bool isFPSCamRotinTPS = false;
     private bool isGhost = false;
 
     private Coroutine currentUIRotatingCoroutine; // 현재 실행 중인 UI 회전 코루틴
     private Coroutine currentUIMovingCoroutine; // 현재 실행 중인 UI 움직임 코루틴
 
-    // 다른 클래스에서 Inventory 인스턴스에 접근
-    [SerializeField] Inventory _inventory;
-    [SerializeField] private InterfaceHolder<iPlayerFunctionality> mplayer;
 
     private iCameraContextProvider _contextProvider;
     private bool IsFps
@@ -57,7 +54,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
                 break;
             case ViewState.FPS:
                 SelectCamera(myFPSCam);
-                myTPSCam = CopyPaste(myTPSCam, myFPSCam); // 3인칭에서 1인칭 전환시 3인칭 값을 1인칭 값으로
+                CopyPaste(ref myTPSCam, myFPSCam); // 3인칭에서 1인칭 전환시 3인칭 값을 1인칭 값으로
                 break;
             case ViewState.TPS:
                 SelectCamera(myTPSCam);
@@ -97,7 +94,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
                 myFPSCam = SpringArmWork(myFPSCam);
                 break;
             case ViewState.TPS: // 3인칭
-                if (myPlayer.ReturnAnim().GetBool("IsMoving"))
+                if (myPlayer.Value.GetAnimator().GetBool("IsMoving"))
                 {
                     RotatingRoot(mySpring); // 이동키 꾹 누를시 캐릭터 회전
 
@@ -107,7 +104,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
                         isFPSCamRotinTPS = true;
                     }
                 }
-                if (!myPlayer.ReturnAnim().GetBool("IsMoving"))
+                if (!myPlayer.Value.GetAnimator().GetBool("IsMoving"))
                     isFPSCamRotinTPS = false; //캐릭터가 안움직이면 고정 해제
                 break;
             case ViewState.UI:
@@ -164,8 +161,9 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
             yield return null;
         }
         myFPSCam = CameraSetting(myFPSCam);
-        myFPSCam = CopyCurRot(myFPSCam, myFPSCam);
+        CopyCurRot(ref myFPSCam, myFPSCam);
     }
+    
     IEnumerator UIMoving(Transform tr, UnityAction done = null) //UI카메라 활성화때 시점 자연스럽게 움직임
     {
         Vector3 dir = tr.position - myUICam.DesirePos.position;
@@ -241,8 +239,9 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
             myRoot.Rotate(Vector3.up * delta * rotDir, Space.World);
         }
         myFPSCam = CameraSetting(myFPSCam);
-        myFPSCam = CopyCurRot(myFPSCam, myFPSCam);
+        CopyCurRot(ref myFPSCam, myFPSCam);
     }
+
     public CameraSet CameraSetting(CameraSet s)
     {
         CameraSet set = s;
@@ -251,39 +250,31 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         set.curRot.y = set.myRig.parent.localRotation.eulerAngles.y;
         return set;
     }
-    public CameraSet CopyCurRot(CameraSet origin, CameraSet copy) // 회전값 복사
+
+    public void CopyCurRot(ref CameraSet origin, CameraSet copy) // 회전값 복사
     {
-        CameraSet set = origin;
-
-        set.curRot.x = copy.curRot.x;
-        set.curRot.y = copy.curRot.y;
-
-        return set;
+        origin.curRot.x = copy.curRot.x;
+        origin.curRot.y = copy.curRot.y;
     }
 
-    public CameraSet CopyPaste(CameraSet origin, CameraSet copy) // 오일러를 쿼터니언으로 변환
+    public void CopyPaste(ref CameraSet origin, CameraSet copy) // 오일러를 쿼터니언으로 변환
     {
-        CameraSet set = origin;
-
-        set.myRig.localRotation = Quaternion.Euler(copy.curRot.x, 0, 0);
-        set.myRig.parent.localRotation = Quaternion.Euler(0, copy.curRot.y, 0);
-        set = CopyCurRot(set, copy);
-
-        return set;
+        origin.myRig.localRotation = Quaternion.Euler(copy.curRot.x, 0, 0);
+        origin.myRig.parent.localRotation = Quaternion.Euler(0, copy.curRot.y, 0);
+        CopyCurRot(ref origin, copy);
     }
 
     private void Awake()
     {
         if (!isGhost)
         {
-            _inventory = FindFirstObjectByType<Inventory>();
             SetPlayer(GameManagement.Inst.myPlayer);
             CameraActions.SetKeys(this);
             _contextProvider = CameraActions.Inst;
         }
 
         // IPlayerFunctionality를 상속받는 클래스들을 ComponentTypeFinder를 통해 찾아내어 InterfaceHolder에 저장
-        mplayer.SetValue(ComponentTypeFinder.FindFirstImplementing<iPlayerFunctionality>());
+        myPlayer.SetValue(ComponentTypeFinder.FindFirstImplementing<iPlayerFunctionality>());
     }
 
     // Start is called before the first frame update
@@ -298,7 +289,6 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         AllCameraOff();
         Subscribe();
         ChangeState(ViewState.FPS);
-        if (isGhost) _inventory = null;
     }
 
     // Update is called once per frame
@@ -430,9 +420,9 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         isGhost = vGhost;
     }
 
-    public void SetPlayer(Player player)
+    public void SetPlayer(iPlayerFunctionality player)
     {
-        myPlayer = player;
+        myPlayer.SetValue(player);
     }
 
     public void OnEvent(CameraStatesEvent eventType)
