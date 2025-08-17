@@ -30,7 +30,23 @@ public class RagDollAction : AIDetectionMovement
     protected BoneTransform[] _faceDownStandUpBoneTransforms;
     protected BoneTransform[] _ragdollTransforms;
     private bool _isFacingUp;
+    
     public virtual void GetKick(Vector3 dir, float strength) {}
+
+    public bool IsRagdolled()
+    {
+        return myRagDolls != null && myRagDolls.isRagdoll;
+    }
+
+    public Rigidbody[] GetRagdollRigidbodies()
+    {
+        if (myRagDolls != null)
+        {
+            return myRagDolls.GetAllRigidbodies();
+        }
+        return new Rigidbody[0];
+    }
+
 
     public void RagDollSet(bool v)
     {

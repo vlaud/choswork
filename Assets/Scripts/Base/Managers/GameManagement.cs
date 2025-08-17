@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
+using Project.Tools.InterfaceHelp;
 
 public interface ItemDesireEvent
 {
@@ -41,19 +42,9 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
     public Mainmenu myMainmenu;
     public Canvas myCanvas;
     public TMPro.TMP_Text myActionText;
+    public InterfaceHolder<iTimeFunctionality> myTimeManager; // TimeManager 참조 추가
 
-    [Header("시간 속도 설정")]
-    [SerializeField] private float pauseTime = 0f;
-
-    [Range(0f, 1f)]
-    public float GameTimeScale = 1f;
-    [Range(0f, 0.02f)]
-    public float GameFixedTimeScale = 0.02f;
-    
-    private float timer;
-    [SerializeField] private bool IsBulletTime = false;
-    [SerializeField] private float curBulletTime;
-    [SerializeField] private float desireScale;
+    private float prevTimeScale = 1f;  // 이전 시간 스케일 저장
 
     void ChangeState(GameState s)
     {
@@ -69,16 +60,26 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
         switch (myGameState)
         {
             case GameState.Play:
-                IsBulletTime = false;
-                if (curBulletTime > Mathf.Epsilon) SetBulletTime(desireScale, curBulletTime);
-                else GameTimeScale = 1f;
+                // TimeManager를 통해 시간 조절
+                if (myTimeManager != null)
+                {
+                    myTimeManager.Value.UnPause(prevTimeScale);
+                }
+                // 재개 시 물리 상태 초기화
+                Physics.SyncTransforms();
                 break;
             case GameState.FadeToLevel:
                 myMainmenu?.FadeToLevel();
                 break;
             case GameState.Pause:
-                StopAllCoroutines();
-                GameTimeScale = pauseTime;
+                // TimeManager를 통해 시간 조절
+                if (myTimeManager != null)
+                {
+                    prevTimeScale = myTimeManager.Value.GameTimeScale;
+                    myTimeManager.Value.Pause();
+                }
+                // 일시정지 시 물리 상태 초기화
+                Physics.SyncTransforms();
                 break;
             case GameState.GameOver:
                 StopAllCoroutines();
@@ -91,25 +92,13 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
                 break;
         }
     }
-    void StateProcess()
-    {
-        switch (myGameState)
-        {
-            case GameState.Play:
-                if (IsBulletTime) curBulletTime -= Time.unscaledDeltaTime;
-                break;
-            case GameState.FadeToLevel:
-                break;
-            case GameState.Pause:
-                break;
-            case GameState.GameOver:
-                break;
-        }
-    }
+
     private void Awake()
     {
         _inst = this;
-        Physics.simulationMode = SimulationMode.Script;
+        // TimeManager 인스턴스 찾기 또는 생성
+        myTimeManager.SetValue(ComponentTypeFinder.FindFirstImplementing<iTimeFunctionality>());
+
         myMonsters = FindObjectsByType<AIPerception>(FindObjectsSortMode.None);
         for (int i = 0; i < myMonsters.Length; ++i)
         {
@@ -135,25 +124,6 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
     private void Start()
     {
         Subscribe();
-    }
-
-    private void Update()
-    {
-        if (!IsCutscene)
-        {
-            timer += Time.deltaTime;
-            while (timer >= Time.fixedDeltaTime)
-            {
-                timer -= Time.fixedDeltaTime;
-                // GameTimeScale이 0이 아닐 때만 물리 시뮬레이션 실행
-                if (GameTimeScale > 0)
-                {
-                    Physics.Simulate(Time.fixedDeltaTime * GameTimeScale);
-                }
-            }
-            DoSlowmotion();
-            StateProcess();
-        }
     }
 
     private void OnDestroy()
@@ -188,45 +158,13 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
         this.EventStopListening<GameStatesEvent>();
     }
 
-    public void DoSlowmotion()
-    {
-        GameTimeScale = Mathf.Clamp(GameTimeScale, 0f, 1f);
-        // 현재 존재하는 모든 Ragdoll Rigidbody 찾기
-
-        Time.timeScale = GameTimeScale;
-        GameFixedTimeScale = Time.fixedDeltaTime = Time.timeScale * 0.02f;
-    }
     public void GameClear()
     {
         if (IsGameClear) ChangeState(GameState.FadeToLevel);
     }
-    public void SetBulletTime(float SetScale, float Cooltime)
-    {
-        if (IsBulletTime) return;
-        IsBulletTime = true;
-        curBulletTime = Cooltime;
-        desireScale = SetScale;
-        StartCoroutine(BulletTime(SetScale, Cooltime));
-    }
-    IEnumerator BulletTime(float SetScale, float Cooltime)
-    {
-        GameTimeScale = SetScale;
-        Debug.Log("Slow Time Start: " + Cooltime + "sec");
-        myPlayer.TimeStopCheck(true);
-        yield return new WaitForSecondsRealtime(Cooltime);
-        GameTimeScale = 1f;
-        Debug.Log("Slow Time End");
-        IsBulletTime = false;
-        myPlayer.TimeStopCheck(false);
-    }
-
+    
     public void GameOver()
     {
         ChangeState(GameState.GameOver);
-    }
-
-    public bool GetIsBulletTime()
-    {
-        return IsBulletTime;
     }
 }

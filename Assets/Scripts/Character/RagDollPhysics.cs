@@ -35,30 +35,48 @@ public class RagDollPhysics : MonoBehaviour
         return rigidbodies;
     }
 
-    public void RagDollOnOff(bool v) //���׵� �¿��� �Լ�
+    public void RagDollOnOff(bool v)
     {
         isRagdoll = v;
-        myRagDoll.headRigidBody.isKinematic = !v;
-        myRagDoll.headRigidBody.GetComponent<Collider>().enabled = v;
-        myRagDoll.hipsRigidBody.isKinematic = !v;
-        myRagDoll.hipsRigidBody.GetComponent<Collider>().enabled = v;
-        myRagDoll.leftUpLegRigidBody.isKinematic = !v;
-        myRagDoll.leftUpLegRigidBody.GetComponent<Collider>().enabled = v;
-        myRagDoll.leftLegRigidBody.isKinematic = !v;
-        myRagDoll.leftLegRigidBody.GetComponent<Collider>().enabled = v;
-        myRagDoll.rightUpLegRigidBody.isKinematic = !v;
-        myRagDoll.rightUpLegRigidBody.GetComponent<Collider>().enabled = v;
-        myRagDoll.rightLegRigidBody.isKinematic = !v;
-        myRagDoll.rightLegRigidBody.GetComponent<Collider>().enabled = v;
-        myRagDoll.spineRigidBody.isKinematic = !v;
-        myRagDoll.spineRigidBody.GetComponent<Collider>().enabled = v;
-        myRagDoll.leftArmRigidBody.isKinematic = !v;
-        myRagDoll.leftArmRigidBody.GetComponent<Collider>().enabled = v;
-        myRagDoll.leftForeArmRigidBody.isKinematic = !v;
-        myRagDoll.leftForeArmRigidBody.GetComponent<Collider>().enabled = v;
-        myRagDoll.rightArmRigidBody.isKinematic = !v;
-        myRagDoll.rightArmRigidBody.GetComponent<Collider>().enabled = v;
-        myRagDoll.rightForeArmRigidBody.isKinematic = !v;
-        myRagDoll.rightForeArmRigidBody.GetComponent<Collider>().enabled = v;
+        Rigidbody[] rigidbodies = GetAllRigidbodies();
+        foreach (Rigidbody rb in rigidbodies)
+        {
+            rb.isKinematic = !v;
+            rb.GetComponent<Collider>().enabled = v;
+            
+            if (v)
+            {
+                // Ragdoll 활성화 시 설정
+                rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+                rb.interpolation = RigidbodyInterpolation.Interpolate;
+                
+                // // 속도 제한 설정
+                // rb.maxLinearVelocity = 10f;
+                // rb.maxAngularVelocity = 10f;
+                
+                // // 마찰력과 감쇠 설정
+                // rb.linearDamping = 0.5f;
+                // rb.angularDamping = 0.5f;
+                
+                // // CharacterJoint가 있다면 충돌 활성화
+                // CharacterJoint joint = rb.GetComponent<CharacterJoint>();
+                // if (joint != null)
+                // {
+                //     joint.enableCollision = true;
+                //     joint.enablePreprocessing = true;
+                    
+                //     // 관절 제한 설정
+                //     SoftJointLimit limit = new SoftJointLimit();
+                //     limit.limit = 30f;
+                //     limit.bounciness = 0f;
+                //     limit.contactDistance = 0f;
+                    
+                //     joint.lowTwistLimit = limit;
+                //     joint.highTwistLimit = limit;
+                //     joint.swing1Limit = limit;
+                //     joint.swing2Limit = limit;
+                // }
+            }
+        }
     }
 }
