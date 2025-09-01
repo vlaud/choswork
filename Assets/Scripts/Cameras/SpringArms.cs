@@ -82,7 +82,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         if (GameManagement.Inst.myGameState != GameState.Play) return;
 
         if (myCameraState != ViewState.UI)
-            myTPSCam = SpringArmWork(myTPSCam); // 1인칭, 3인칭 카메라값을 같게 
+            RotateCamera(ref myTPSCam); // 1인칭, 3인칭 카메라값을 같게
 
         MouseWheelMove(); // 3인칭 시야 거리
         switch (myCameraState)
@@ -91,7 +91,7 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
                 break;
             case ViewState.FPS:
                 isFPSCamRotinTPS = false;
-                myFPSCam = SpringArmWork(myFPSCam);
+                RotateCamera(ref myFPSCam);
                 break;
             case ViewState.TPS: // 3인칭
                 if (myPlayer.Value.GetAnimator().GetBool("IsMoving"))
@@ -336,19 +336,21 @@ public class SpringArms : CameraProperty, EventListener<CameraStatesEvent>, iSub
         myUICam.myRig.rotation = tr.rotation; //UI 카메라 리그가 돌게끔
     }
 
-    public CameraSet SpringArmWork(CameraSet s) // 카메라 마우스
+    /// <summary>
+    /// 카메라 마우스 움직임
+    /// </summary>
+    /// <param name="s">1, 3인칭 카메라</param>
+    public void RotateCamera(ref CameraSet s) // 카메라 마우스
     {
-        CameraSet set = s;
         if (CursorManager.Instance.IsCurSorLocked())
         {
-            set.curRot.x -= Input.GetAxisRaw("Mouse Y") * LookupSpeed;
-            set.curRot.x = Mathf.Clamp(set.curRot.x, LookupRange.x, LookupRange.y);
+            s.curRot.x -= Input.GetAxisRaw("Mouse Y") * LookupSpeed;
+            s.curRot.x = Mathf.Clamp(s.curRot.x, LookupRange.x, LookupRange.y);
 
-            set.curRot.y += Input.GetAxisRaw("Mouse X") * LookupSpeed;
-            set.myRig.localRotation = Quaternion.Euler(set.curRot.x, 0, 0);
-            set.myRig.parent.localRotation = Quaternion.Euler(0, set.curRot.y, 0);
+            s.curRot.y += Input.GetAxisRaw("Mouse X") * LookupSpeed;
+            s.myRig.localRotation = Quaternion.Euler(s.curRot.x, 0, 0);
+            s.myRig.parent.localRotation = Quaternion.Euler(0, s.curRot.y, 0);
         }
-        return set;
     }
 
     public CameraSet? GetMyCamera() //현재 카메라 트랜스폼 리턴
