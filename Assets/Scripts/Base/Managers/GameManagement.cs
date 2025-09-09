@@ -18,7 +18,7 @@ public enum GameState
 
 public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameStatesEvent>
 {
-    [Header("게임 상태")]
+    [CustomHeader("게임 상태")]
     public GameState myGameState = GameState.Create;
     [SerializeField] private GameState prevGameState = GameState.Create;
     public bool IsGameClear = false;
@@ -26,13 +26,13 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
     private static GameManagement _inst = null;
     public static GameManagement Inst => _inst;
 
-    [Header("플레이어 관련")]
+    [CustomHeader("플레이어 관련")]
     public Player myPlayer;
-
-    [Header("몹 관련")]
+    
+    [CustomHeader("몹 관련")]
     public AIPerception[] myMonsters;
 
-    [Header("게임 요소 관련")]
+    [CustomHeader("게임 요소 관련")]
     public SpringArms mySpringArms;
     public Inventory myInventory;
     public SoundManager mySound;
