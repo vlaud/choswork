@@ -10,17 +10,19 @@ public class TimeManager : MonoBehaviour, iTimeFunctionality, EventListener<Item
 
     [Header("시간 속도 설정")]
     [SerializeField] private float pauseTime = 0.01f;
+    [SerializeField] private float normalTime = 1f;
 
     [Range(0f, 1f)]
     private float gameTimeScale = 1f;
+    [Tooltip("게임 재개 시 복귀할 시간 스케일")]
+    private float prevTimeScale = 1f;  // 이전 시간 스케일 저장
     public float GameTimeScale => gameTimeScale;
     
-    [ReadOnly]
-    public float GameFixedTimeScale = 0.02f;
-
     private const float BaseFixedTime = 0.02f;
     private bool isSlowing = false;
     public bool IsSlowing => isSlowing;
+    private GameState myGameState = GameState.Play;
+    private float remainingDuration = 0f;
     private Coroutine timeStopCoroutine;
 
     private void Awake()
@@ -30,12 +32,10 @@ public class TimeManager : MonoBehaviour, iTimeFunctionality, EventListener<Item
             _inst = this;
             DontDestroyOnLoad(gameObject);
             this.EventStartingListening<ItemEffectStatesEvent>(); // GameEventManager를 통해 구독
-            //Physics.simulationMode = SimulationMode.Script;
         }
         else
         {
             Destroy(gameObject);
-            //Physics.simulationMode = SimulationMode.FixedUpdate;
         }
     }
 
@@ -47,50 +47,22 @@ public class TimeManager : MonoBehaviour, iTimeFunctionality, EventListener<Item
         }
     }
 
-    private float timer;
-
     private void Update()
     {
         Time.timeScale = GameTimeScale;
-        //GameFixedTimeScale = Time.timeScale * BaseFixedTime;
-
-        // // 수동 물리 업데이트
-        // if (GameTimeScale > 0)
-        // {
-        //     timer += Time.deltaTime;
-        //     while (timer >= GameFixedTimeScale)
-        //     {
-        //         timer -= GameFixedTimeScale;
-        //         Physics.SyncTransforms();
-        //         Physics.Simulate(GameFixedTimeScale);
-        //     }
-        // }
     }
 
     public void Pause()
     {
-        isSlowing = false;
-        StopAllCoroutines();
+        myGameState = GameState.Pause;
+        prevTimeScale = gameTimeScale;
         gameTimeScale = pauseTime;
     }
 
-    public void UnPause(float previousTimeScale)
+    public void UnPause()
     {
-        gameTimeScale = previousTimeScale;
-    }
-
-    public void StartSlowMotion(float targetScale)
-    {
-        if (isSlowing) return;
-        isSlowing = true;
-        this.StartOrRestartCoroutine(ref timeStopCoroutine, ChangeTimeScale(targetScale));
-    }
-
-    public void StopSlowMotion()
-    {
-        if (!isSlowing) return;
-        isSlowing = false;
-        this.StartOrRestartCoroutine(ref timeStopCoroutine, ChangeTimeScale(1.0f));
+        myGameState = GameState.Play;
+        gameTimeScale = prevTimeScale;
     }
 
     // EventListener<TimeStopEvent> 인터페이스 구현
@@ -105,51 +77,20 @@ public class TimeManager : MonoBehaviour, iTimeFunctionality, EventListener<Item
     
     private IEnumerator ProcessTimeStop(float targetScale, float duration)
     {
-        yield return StartCoroutine(ChangeTimeScale(targetScale));
+        gameTimeScale = targetScale;
+        remainingDuration = duration;
 
-        // Time.timeScale에 영향을 받지 않는 실제 시간으로 대기
-        yield return new WaitForSecondsRealtime(duration);
+        while (remainingDuration > 0f)
+        {
+            if (myGameState == GameState.Play)
+            {
+                remainingDuration -= Time.unscaledDeltaTime;
+            }
+            yield return null;
+        }
 
         // 시간이 다 되면 원래 속도로 복귀
-        StopSlowMotion();
-    }
-
-    private IEnumerator ChangeTimeScale(float targetScale)
-    {
-        // 1. 문제가 될 수 있는 (거의 멈춰있는) Rigidbody만 kinematic으로 전환
-        List<Rigidbody> settledRigidbodies = new List<Rigidbody>();
-        var allRagdollActions = FindObjectsByType<RagDollAction>(FindObjectsSortMode.None);
-
-        foreach (var action in allRagdollActions)
-        {
-            if (action.IsRagdolled())
-            {
-                var rigidbodies = action.GetRagdollRigidbodies();
-                foreach (var rb in rigidbodies)
-                {
-                    if (rb != null && !rb.isKinematic && rb.linearVelocity.magnitude < 0.1f)
-                    {
-                        rb.isKinematic = true;
-                        settledRigidbodies.Add(rb);
-                    }
-                }
-            }
-        }
-
-        // 2. Time.timeScale 변경
-        gameTimeScale = targetScale;
-
-        // 3. 한 물리 프레임 대기
-        yield return new WaitForFixedUpdate();
-
-        // 4. Kinematic 상태를 원상 복구
-        foreach (var rb in settledRigidbodies)
-        {
-            if (rb != null)
-            {
-                rb.isKinematic = false;
-                rb.WakeUp();
-            }
-        }
+        gameTimeScale = normalTime;
+        isSlowing = false;
     }
 }

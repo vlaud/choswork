@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 using Project.Tools.InterfaceHelp;
 
 public interface ItemDesireEvent
@@ -44,8 +43,6 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
     public TMPro.TMP_Text myActionText;
     public InterfaceHolder<iTimeFunctionality> myTimeManager; // TimeManager 참조 추가
 
-    private float prevTimeScale = 1f;  // 이전 시간 스케일 저장
-
     void ChangeState(GameState s)
     {
         if (myGameState == s) return;
@@ -61,10 +58,7 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
         {
             case GameState.Play:
                 // TimeManager를 통해 시간 조절
-                if (myTimeManager != null)
-                {
-                    myTimeManager.Value.UnPause(prevTimeScale);
-                }
+                myTimeManager?.Value?.UnPause();
                 // 재개 시 물리 상태 초기화
                 Physics.SyncTransforms();
                 break;
@@ -73,11 +67,8 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
                 break;
             case GameState.Pause:
                 // TimeManager를 통해 시간 조절
-                if (myTimeManager != null)
-                {
-                    prevTimeScale = myTimeManager.Value.GameTimeScale;
-                    myTimeManager.Value.Pause();
-                }
+                myTimeManager?.Value?.Pause();
+
                 // 일시정지 시 물리 상태 초기화
                 Physics.SyncTransforms();
                 break;
@@ -162,7 +153,7 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
     {
         if (IsGameClear) ChangeState(GameState.FadeToLevel);
     }
-    
+
     public void GameOver()
     {
         ChangeState(GameState.GameOver);
