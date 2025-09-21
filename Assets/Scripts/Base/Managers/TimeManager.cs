@@ -8,7 +8,7 @@ public class TimeManager : MonoBehaviour, iTimeFunctionality, EventListener<Item
     private static TimeManager _inst = null;
     public static TimeManager Inst => _inst;
 
-    [CustomHeader("시간 속도 설정")]
+    [Header("시간 속도 설정")]
     [SerializeField] private float pauseTime = 0.01f;
     [SerializeField] private float normalTime = 1f;
 

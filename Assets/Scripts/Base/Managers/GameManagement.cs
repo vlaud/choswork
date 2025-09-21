@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Linq;
 using UnityEngine;
 using Project.Tools.InterfaceHelp;
 
@@ -18,7 +16,7 @@ public enum GameState
 
 public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameStatesEvent>
 {
-    [CustomHeader("게임 상태")]
+    [Header("게임 상태")]
     public GameState myGameState = GameState.Create;
     [SerializeField] private GameState prevGameState = GameState.Create;
     public bool IsGameClear = false;
@@ -26,13 +24,13 @@ public class GameManagement : MonoBehaviour, iSubscription, EventListener<GameSt
     private static GameManagement _inst = null;
     public static GameManagement Inst => _inst;
 
-    [CustomHeader("플레이어 관련")]
+    [Header("플레이어 관련")]
     public Player myPlayer;
     
-    [CustomHeader("몹 관련")]
+    [Header("몹 관련")]
     public AIPerception[] myMonsters;
 
-    [CustomHeader("게임 요소 관련")]
+    [Header("게임 요소 관련")]
     public SpringArms mySpringArms;
     public Inventory myInventory;
     public SoundManager mySound;
