@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // === Interfaces ===
@@ -6,6 +7,25 @@ public interface IDependencyInjector
     iBaseFunctionality Resolve<T>() where T : class;
 }
 public interface iBaseFunctionality { }
+
+/// <summary>
+/// Update 함수 내에서 돌아갈 액션들을 관리
+/// </summary>
+public interface iUpdateActionFunctionality : iBaseFunctionality
+{
+    /// <summary>
+    /// 업데이트 액션 등록
+    /// </summary>
+    /// <param name="action">등록할 액션</param>
+    void SetUpdateAction(Action action);
+
+    /// <summary>
+    /// 업데이트 액션 해제
+    /// </summary>
+    /// <param name="action">해제할 액션</param>
+    void ReleaseUpdateAction(Action action);
+}
+
 public interface iPlayerFunctionality : iBaseFunctionality
 {
     Animator GetAnimator();
@@ -30,7 +50,7 @@ public interface iMainmenuFunctionality : iBaseFunctionality
 public interface iTimeFunctionality : iBaseFunctionality
 {
     void Pause();
-    void UnPause(float previousTimeScale);
+    void UnPause();
     float GameTimeScale { get; }
     bool IsSlowing { get; }
 }

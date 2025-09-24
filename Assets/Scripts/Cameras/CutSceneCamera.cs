@@ -1,71 +1,51 @@
 using UnityEngine;
+using Project.Tools.InterfaceHelp;
 
-public class CutSceneCamera : MonoBehaviour
+namespace Unity.Cinemachine
 {
-    public CameraSet CutsceneCam;
-    public Transform myEyes; //fps카메라 눈에 고정
-
-    public enum State
+    public class CutSceneCamera : MonoBehaviour
     {
-        Create, Car, Outting, Out
-    }
-    public State myState = State.Create;
+        [SerializeField] private CinemachineCamera cam;
 
-    void ChangeState(State s)
-    {
-        if (myState == s) return;
-        myState = s;
+        /// <summary>
+        /// 원하는 위치
+        /// </summary>
+        [SerializeField] private Transform desirePos;
+        [SerializeField] private Transform eyes;
 
-        switch (myState)
+        /// <summary>
+        /// 원하는 각도
+        /// </summary>
+        Vector3 desireRot = Vector3.zero;
+        public InterfaceHolder<iUpdateActionFunctionality> cutscenePlayer;
+
+        bool isCarOut = false;
+
+        void OnEnable()
         {
-            case State.Car:
-                CutsceneCam.DesirePos.SetParent(myEyes);
-                CutsceneCam.DesirePos.localPosition = Vector3.zero;
-                break;
-            case State.Outting:
-                CutsceneCam.DesirePos.SetParent(CutsceneCam.myRig);
-                CutsceneCam.DesirePos.localPosition = Vector3.zero;
-                break;
-            case State.Out:
-                break;
+            cutscenePlayer?.Value?.SetUpdateAction(CarOutMovement);
         }
-    }
 
-    void StateProcess()
-    {
-        switch (myState)
+        void OnDisable()
         {
-            case State.Car:
-                break;
-            case State.Outting:
-                CarOutMovement();
-                break;
-            case State.Out:
-                break;
+            cutscenePlayer?.Value?.ReleaseUpdateAction(CarOutMovement);
         }
-    }
 
-    void Start()
-    {
-        ChangeState(State.Car);
-    }
+        /// <summary>
+        /// 차에서 나오면 eyes의 위치와 y축 회전만 받아오는 desirePos로 시네머신 카메라 위치 설정
+        /// </summary>
+        void CarOutMovement()
+        {
+            if (!isCarOut || cam.Follow == null) return;
+            desirePos.position = eyes.position;
+            desireRot.y = eyes.rotation.eulerAngles.y;
+            desirePos.rotation = Quaternion.Euler(desireRot);
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        StateProcess();
-        CutsceneCam.SetCamPos();
-    }
-
-    void CarOutMovement()
-    {
-        CutsceneCam.DesirePos.position = myEyes.position;
-        CutsceneCam.curRot.y = myEyes.rotation.eulerAngles.y;
-        CutsceneCam.myRig.rotation = Quaternion.Euler(CutsceneCam.curRot);
-    }
-
-    public void CarOut()
-    {
-        ChangeState(State.Outting);
+        public void CarOut()
+        {
+            isCarOut = true;
+            cam.Follow = desirePos;
+        }
     }
 }
