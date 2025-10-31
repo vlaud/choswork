@@ -4,7 +4,7 @@ using System.Collections.Generic;
 #region Event_Listener_Interface
 public interface EventListenerBase { }
 
-public interface EventListener<T> : EventListenerBase
+public interface EventListener<T> : EventListenerBase where T : struct
 {
     void OnEvent(T eventType);
 }
@@ -17,12 +17,12 @@ public interface iSubscription
 
 #endregion
 
-// 게임 이벤트 관리자 클래스
-#region GameEventManager
+// 클래스 이름을 EventBus로 변경하고, 게임 이벤트 관리자 역할을 명시
+#region EventBus
 /// <summary>
-/// 게임 이벤트 관리자 클래스
+/// 게임 이벤트 버스 클래스
 /// </summary>
-public class GameEventManager
+public static class EventBus
 {
     // 이벤트 타입별로 구독자(리스너) 목록을 관리하는 사전
     private static readonly Dictionary<Type, List<EventListenerBase>> _subscribersList
@@ -31,11 +31,12 @@ public class GameEventManager
     /// <summary>
     /// 이벤트를 구독하는 메서드
     /// </summary>
-    /// <typeparam name="GameEvents"></typeparam>
+    /// <typeparam name="T"></typeparam>
     /// <param name="listener"></param>
-    public static void Subscribe<GameEvents>(EventListener<GameEvents> listener) where GameEvents : struct
+    // 제네릭 제약조건을 IGameEvent로 변경
+    public static void Subscribe<T>(EventListener<T> listener) where T : struct
     {
-        Type eventType = typeof(GameEvents);
+        Type eventType = typeof(T);
 
         if (!_subscribersList.ContainsKey(eventType))
         {
@@ -51,11 +52,12 @@ public class GameEventManager
     /// <summary>
     /// 이벤트 구독 취소 메서드
     /// </summary>
-    /// <typeparam name="GameEvents"></typeparam>
+    /// <typeparam name="T"></typeparam>
     /// <param name="listener"></param>
-    public static void Unsubscribe<GameEvents>(EventListener<GameEvents> listener) where GameEvents : struct
+    // 제네릭 제약조건을 IGameEvent로 변경
+    public static void Unsubscribe<T>(EventListener<T> listener) where T : struct
     {
-        Type eventType = typeof(GameEvents);
+        Type eventType = typeof(T);
 
         if (!_subscribersList.ContainsKey(eventType))
             return;
@@ -102,13 +104,14 @@ public class GameEventManager
     }
 
     /// <summary>
-    /// 이벤트를 발생시키는 메서드
+    /// 이벤트를 발생시키는 메서드 (이름을 Trigger로 변경)
     /// </summary>
-    /// <typeparam name="GameEvents"></typeparam>
+    /// <typeparam name="T"></typeparam>
     /// <param name="events"></param>
-    public static void TriggerEvent<GameEvents>(GameEvents events) where GameEvents : struct
+    // 제네릭 제약조건을 IGameEvent로 변경
+    public static void Trigger<T>(T events) where T : struct
     {
-        Type eventType = typeof(GameEvents);
+        Type eventType = typeof(T);
         List<EventListenerBase> list;
         if (!_subscribersList.TryGetValue(eventType, out list))
         {
@@ -117,7 +120,7 @@ public class GameEventManager
 
         for (int i = list.Count - 1; i >= 0; i--)
         {
-            (list[i] as EventListener<GameEvents>).OnEvent(events);
+            (list[i] as EventListener<T>).OnEvent(events);
         }
     }
 }
@@ -136,21 +139,23 @@ public static class GameEventsRegister
     /// <summary>
     /// 이벤트 리스너를 등록하는 확장 메서드
     /// </summary>
-    /// <typeparam name="EventType"></typeparam>
+    /// <typeparam name="T"></typeparam>
     /// <param name="caller"></param>
-    public static void EventStartingListening<EventType>(this EventListener<EventType> caller) where EventType : struct
+    // 제네릭 제약조건을 IGameEvent로 변경
+    public static void EventStartingListening<T>(this EventListener<T> caller) where T : struct
     {
-        GameEventManager.Subscribe(caller);
+        EventBus.Subscribe(caller); // EventBus 클래스 이름 변경에 맞춰 수정
     }
 
     /// <summary>
     /// 이벤트 리스너를 해제하는 확장 메서드
     /// </summary>
-    /// <typeparam name="EventType"></typeparam>
+    /// <typeparam name="T"></typeparam>
     /// <param name="caller"></param>
-    public static void EventStopListening<EventType>(this EventListener<EventType> caller) where EventType : struct
+    // 제네릭 제약조건을 IGameEvent로 변경
+    public static void EventStopListening<T>(this EventListener<T> caller) where T : struct
     {
-        GameEventManager.Unsubscribe(caller);
+        EventBus.Unsubscribe(caller); // EventBus 클래스 이름 변경에 맞춰 수정
     }
 }
 #endregion
